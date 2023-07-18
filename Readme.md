@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Сергей Назаров](https://up.htmlacademy.ru/nodejs-2/4/user/2055165).
-* Наставник: `Неизвестно`.
+* Наставник: [Константин Ильин](https://htmlacademy.ru/profile/id2374827).
 
 ---
 
