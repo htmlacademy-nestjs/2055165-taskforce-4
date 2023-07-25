@@ -2,7 +2,7 @@ import { City } from "./city.enum";
 import { UserRole } from "./user-role.enum";
 
 export interface User {
-  id?: string,
+  readonly id: number,
   name: string,
   email: string,
   aboutInfo?: string,
@@ -11,7 +11,8 @@ export interface User {
   birthDate: Date,
   city: City,
   role: UserRole,
-  registrationDate: Date,
+  readonly createdAt: Date,
+  updatedAt: Date
   // specialization?: string[],
   // publishedTasksCount?: number,
   // newTasksCount?: number

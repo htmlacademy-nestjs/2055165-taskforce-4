@@ -8,6 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "strict": true,
     "target": "es2015",
     "module": "esnext",
     "lib": ["es2020", "dom"],
@@ -16,6 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@project/shared/app-types": ["libs/shared/app-types/src/index.ts"],
+      "@project/shared/entities": ["libs/shared/entities/src/index.ts"],
+      "@project/shared/repositories": ["libs/shared/repositories/src/index.ts"],
       "@project/util/util-core": ["libs/util/util-core/src/index.ts"],
       "@project/util/util-types": ["libs/util/util-types/src/index.ts"]
     }
