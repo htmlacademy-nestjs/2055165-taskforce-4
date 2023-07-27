@@ -6,12 +6,12 @@ import { Executor, User, UserType } from '@project/shared/app-types';
 
 @Injectable()
 export class UserMemoryRepository implements CRUDRepository<UserEntity, User> {
-  private repository: Record<number, UserType<Executor | User>> = {};
+  private repository: Record<number, UserType<Executor>> = {};
 
 
   public async create(item: UserEntity): Promise<User> {
     const entry = item.toObject();
-    this.repository[item.id] = entry;
+    // this.repository[item.id] = entry;
 
     return entry;
   }
