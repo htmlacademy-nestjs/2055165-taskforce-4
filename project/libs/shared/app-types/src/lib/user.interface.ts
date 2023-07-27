@@ -13,11 +13,4 @@ export interface User {
   role: UserRole,
   readonly createdAt: Date,
   updatedAt: Date
-  // specialization?: string[],
-  // publishedTasksCount?: number,
-  // newTasksCount?: number
-  // completedTasksCount?: number,
-  // failedTasksCount?: number,
-  // rating?: number,
-  // ratingPosition?: number
 }

@@ -3,9 +3,8 @@ import * as nanoid from 'nanoid';
 
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
-import { UserMemoryRepository } from '@project/shared/repositories';
+import { UserMemoryRepository, UserEntity } from '@project/database-service';
 import CreateUserDTO from './dto/create-user.dto';
-import { UserEntity } from '@project/shared/entities';
 import { User, UserRole } from '@project/shared/app-types';
 import AuthUserDTO from './dto/auth-user.dto';
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './auth.constants';

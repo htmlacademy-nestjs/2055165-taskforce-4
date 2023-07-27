@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
 import { CRUDRepository } from '@project/util/util-types';
-import { UserEntity } from '@project/shared/entities';
-import { User } from '@project/shared/app-types';
+import { UserEntity } from '../entities/user.entity';
+import { Executor, User, UserType } from '@project/shared/app-types';
 
 @Injectable()
 export class UserMemoryRepository implements CRUDRepository<UserEntity, User> {
-  private repository: Record<number, User> = {};
+  private repository: Record<number, UserType<Executor | User>> = {};
 
 
   public async create(item: UserEntity): Promise<User> {
@@ -17,7 +17,7 @@ export class UserMemoryRepository implements CRUDRepository<UserEntity, User> {
   }
 
 
-  public async findById(id: number): Promise<User | null> {
+  public async findById(id: number): Promise<User | Executor | null> {
     if (! this.repository[id]) {
       return null
     }
@@ -26,7 +26,7 @@ export class UserMemoryRepository implements CRUDRepository<UserEntity, User> {
   }
 
 
-  public async findByEmail(email: string): Promise<User | null> {
+  public async findByEmail(email: string): Promise<User | Executor | null> {
     const existUser = Object.values(this.repository).find((userItem) => userItem.email === email);
 
     if (! existUser) {
@@ -42,8 +42,8 @@ export class UserMemoryRepository implements CRUDRepository<UserEntity, User> {
   }
 
 
-  public async update(id: number, item: UserEntity): Promise<User> {
-    this.repository[id] = {...this.repository[id], ...item.toObject()};
-    return {...this.repository[id]};
+  public async update(userId: number, item: Partial<Omit<UserEntity, 'id'>>): Promise<User> {
+    this.repository[userId] = {...this.repository[userId], ...item};
+    return {...this.repository[userId]};
   }
 }

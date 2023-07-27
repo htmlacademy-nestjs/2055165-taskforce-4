@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { UserMemoryRepository } from '@project/shared/repositories';
+import { UserMemoryRepository } from '@project/database-service';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 
