@@ -1,9 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { CRUDRepository } from "@project/util/util-types";
-import { TaskEntity } from "../entities/task.entity";
-import { Category, Reply, Task, UpdateTaskData} from "@project/shared/app-types";
-import { CategoryEntity } from "../entities/category.entity";
-import { ReplyEntity } from "../entities/reply.entity";
+import { Injectable } from '@nestjs/common';
+
+import { CRUDRepository } from '@project/util/util-types';
+import { TaskEntity } from '../entities/task.entity';
+import { Category, Reply, Task, UpdateTaskData} from '@project/shared/app-types';
+import { CategoryEntity } from '../entities/category.entity';
+import { ReplyEntity } from '../entities/reply.entity';
 
 @Injectable()
 export class TaskMemoryRepository implements CRUDRepository<TaskEntity, UpdateTaskData, Task> {

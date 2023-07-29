@@ -1,8 +1,10 @@
-export interface FeedBack {
-  id: string;
+export interface Feedback {
+  readonly id: string;
   text: string;
   taskId: string;
-  authorId: string;
+  employerId: string;
   executorId: string; //как лучше сделать?
   rating: number;
+  readonly createdAt: Date;
+  updatedAt: Date;
 }

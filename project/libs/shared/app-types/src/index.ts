@@ -4,8 +4,11 @@ export * from './lib/executor.interface';
 export * from './lib/user-role.enum';
 export * from './lib/city.enum';
 export * from './lib/update-user-data.type';
+export * from './lib/feedback.interface';
 export * from './lib/task.interface';
-export * from './lib/task-status.enum'
-export * from './lib/category.interface'
-export * from './lib/update-task-data.type'
-export * from './lib/reply.interface'
+export * from './lib/comment.interface';
+export * from './lib/task-status.enum';
+export * from './lib/category.interface';
+export * from './lib/update-task-data.type';
+export * from './lib/update-feedback-data.type'
+export * from './lib/reply.interface';

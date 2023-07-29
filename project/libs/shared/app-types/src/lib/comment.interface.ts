@@ -1,6 +1,8 @@
 export interface Comment {
-  id: string;
+  readonly id: string;
   text: string;
   taskId: string;
   authorId: string;
+  readonly createdAt: Date;
+  updatedAt: Date;
 }

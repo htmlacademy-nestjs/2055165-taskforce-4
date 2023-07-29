@@ -71,7 +71,7 @@ export class TaskService {
   }
 
 
-  public async updateTask(taskId: string, dto: UpdateTaskDTO ) {
+  public async updateTask(taskId: string, dto: UpdateTaskDTO) {
     const {title, description, category, price, expirationDate, image, address, tags, city, status} = dto;
 
     const existTask = await this.taskRepository.findById(taskId);

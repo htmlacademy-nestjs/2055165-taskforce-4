@@ -3,6 +3,6 @@ export interface Reply {
   text: string;
   taskId: string;
   executorId: string;
-  createdAt: Date;
+  readonly createdAt: Date;
   updatedAt: Date;
 }
