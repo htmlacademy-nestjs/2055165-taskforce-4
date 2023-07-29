@@ -26,7 +26,7 @@ export class UserEntity implements User {
     this.id = user.id;
     this.name = user.name;
     this.email = user.email;
-    this.aboutInfo = user?.aboutInfo;
+    this.aboutInfo = user.aboutInfo;
     this.avatar = user.avatar;
     this.hashPassword = user.hashPassword;
     this.birthDate = user.birthDate;

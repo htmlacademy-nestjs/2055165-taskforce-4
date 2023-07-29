@@ -5,7 +5,7 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 
 import { UserMemoryRepository, UserEntity } from '@project/database-service';
 import CreateUserDTO from './dto/create-user.dto';
-import { User, UserRole } from '@project/shared/app-types';
+import { Employer, Executor, User, UserRole } from '@project/shared/app-types';
 import AuthUserDTO from './dto/auth-user.dto';
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './auth.constants';
 
@@ -19,13 +19,13 @@ export class AuthService {
   ) {}
 
 
-  private generateEmployerAdditionalFields = (user: UserEntity) => Object.assign(user, {
+  private generateEmployerAdditionalFields = (user: User): Employer => Object.assign(user, {
     publishedTasksCount: 0,
     newTasksCount: 0
   });
 
 
-  private generateExecutorAdditionalFields = (user: UserEntity) => Object.assign(user, {
+  private generateExecutorAdditionalFields = (user: User): Executor => Object.assign(user, {
     specialization: [],
     completedTasksCount: 0,
     failedTasksCount: 0,
@@ -49,7 +49,7 @@ export class AuthService {
       throw new ConflictException(AUTH_USER_EXISTS);
     }
 
-    const newUser = {
+    const newData: User = {
       id: Number.parseInt(userIdGenerator(), 10),
       name,
       email,
@@ -62,9 +62,11 @@ export class AuthService {
       hashPassword: ''
     };
 
+    const newUser = this.additionalFields[newData.role](newData);
+
     const userEntity = await new UserEntity(newUser).setPassword(password);
 
-    return this.userRepository.create(this.additionalFields[userEntity.role](userEntity));
+    return this.userRepository.create(userEntity);
   }
 
 

@@ -2,10 +2,10 @@ import { City } from "./city.enum";
 import { TaskStatus } from "./task-status.enum";
 
 export interface Task {
-  id?: string;
+  readonly id: string;
   title: string;
   description: string;
-  categoryId: string; //Ref?
+  categoryId: number; //Ref?
   price: number;
   expirationDate?: Date;
   image?: string;
@@ -14,4 +14,6 @@ export interface Task {
   city: City;
   status: TaskStatus;
   employerId: string; //Ref?
+  readonly createdAt: Date;
+  updatedAt: Date
 }

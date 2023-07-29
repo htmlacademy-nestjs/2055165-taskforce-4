@@ -1,5 +1,8 @@
 export interface Reply {
-  id: string;
+  readonly id: string;
+  text: string;
   taskId: string;
   executorId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

@@ -9,24 +9,23 @@ import AuthUserRDO from './rdo/auth-user.rdo';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService
-  ) {}
+  constructor
+    (private readonly authService: AuthService) {}
 
   @Post('register')
-  public async create(@Body() dto: CreateUserDTO) {
+  public async createUser(@Body() dto: CreateUserDTO) {
     const newUser = await this.authService.register(dto);
     return fillRDO(UserBasicRDO, newUser);
   }
 
   @Post('login')
-  public async login(@Body() dto: AuthUserDTO) {
+  public async loginUser(@Body() dto: AuthUserDTO) {
     const verifiedUser = await this.authService.authorize(dto);
     return fillRDO(AuthUserRDO, verifiedUser);
   }
 
   @Get()
-  public async checkAuth() {
+  public async checkUserAuth() {
     throw new Error('Will be implemented after JWT tokens realisation')
   }
 }
