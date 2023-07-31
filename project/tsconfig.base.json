@@ -8,13 +8,19 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
+    "strict": true,
+    "target": "es2020",
     "module": "esnext",
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@project/database-service": ["libs/database-service/src/index.ts"],
+      "@project/shared/app-types": ["libs/shared/app-types/src/index.ts"],
+      "@project/util/util-core": ["libs/util/util-core/src/index.ts"],
+      "@project/util/util-types": ["libs/util/util-types/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

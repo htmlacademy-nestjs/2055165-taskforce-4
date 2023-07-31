@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { ProfileModule } from './profile/profile.module';
+import { StaticModule } from './static/static.module';
 
 @Module({
-  imports: [ProfileModule],
+  imports: [StaticModule],
   controllers: [],
   providers: [],
 })
