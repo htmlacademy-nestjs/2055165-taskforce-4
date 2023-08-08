@@ -16,6 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@project/config/config-mongo": ["libs/config/config-mongo/src/index.ts"],
       "@project/database-service": ["libs/database-service/src/index.ts"],
       "@project/shared/app-types": ["libs/shared/app-types/src/index.ts"],
       "@project/util/util-core": ["libs/util/util-core/src/index.ts"],
