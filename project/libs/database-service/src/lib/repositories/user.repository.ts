@@ -10,23 +10,37 @@ import { PrismaMongoService } from '../prisma/prisma-mongo.service'
 export class UserRepository implements CRUDRepository<UserEntity, UpdateUserData, User> {
   constructor(private readonly prisma: PrismaMongoService) {}
 
-  public async create(item: UserEntity): Promise<User | null> {
+
+  public async create(item: UserEntity): Promise<User> {
     const data = item.toObject();
-    const user = await this.prisma.user.create({data})
-    console.log(user);
-    return null;
+    return this.prisma.user.create({data})
   }
 
 
-  findById(id: string | number): Promise<User | null> {
-    throw new Error('Method not implemented.');
+  public async findByEmail(email: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {email}
+    })
   }
 
-  update(id: string | number, item: UpdateUserData): Promise<User> {
-    throw new Error('Method not implemented.');
+
+  public async findById(userId: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {id:userId}
+    })
   }
-  delete(id: string | number): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  public async update(userId: string, item: UpdateUserData): Promise<User> {
+    return this.prisma.user.update({
+      where: {id: userId},
+      data: {...item}
+    })
+  }
+
+  public async delete(userId: string): Promise<void> {
+    await this.prisma.user.delete({
+      where: {id: userId}
+    });
   }
 
 

@@ -1,6 +1,8 @@
 import { registerAs } from '@nestjs/config';
 import * as Joi from 'joi';
 
+
+//к удалению...
 const DEFAULT_MONGO_PORT = 27017;
 const DEFAULT_MONGO_HOST = 'localhost;'
 

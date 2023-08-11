@@ -3,10 +3,9 @@ import { City } from "./city.enum"
 export type UpdateUserData = {
   name?: string,
   birthDate?: Date,
-  avatar?: string,
+  avatar?: string | null,
   city?: City,
-  aboutInfo?: string,
+  aboutInfo?: string | null,
   specialization?: string[],
-  hashPassword?: string,
-  updatedAt: Date
+  hashPassword?: string
 }

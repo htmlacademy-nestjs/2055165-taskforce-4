@@ -18,16 +18,16 @@ export class AuthController {
     return fillRDO(UserBasicRDO, newUser);
   }
 
-  // @Post('login')
-  // public async loginUser(@Body() dto: AuthUserDTO) {
-  //   const verifiedUser = await this.authService.authorize(dto);
-  //   return fillRDO(AuthUserRDO, verifiedUser);
-  // }
+  @Post('login')
+  public async loginUser(@Body() dto: AuthUserDTO) {
+    const verifiedUser = await this.authService.authorize(dto);
+    return fillRDO(AuthUserRDO, verifiedUser);
+  }
 
-  // @Get()
-  // public async checkUserAuth() {
-  //   throw new Error('Will be implemented after JWT tokens realisation')
-  // }
+  @Get()
+  public async checkUserAuth() {
+    throw new Error('Will be implemented after JWT tokens realization')
+  }
 }
 
 

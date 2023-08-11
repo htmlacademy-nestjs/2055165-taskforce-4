@@ -15,9 +15,10 @@ export class ProfileController {
   ) {}
 
   //полноценная реализация после добавления JWT токенов
-  @Patch('/profile/edit')
-  public async updateUserInfo(@Body() dto: UpdateUserDTO, userId: string) {
-    const updatedUser = await this.profileService.UpdateUserProfile(Number.parseInt(userId, 10), dto);
+  @Patch(':id')
+  public async updateUserInfo(@Body() dto: UpdateUserDTO, @Param('id') userId: string) {
+
+    const updatedUser = await this.profileService.UpdateUserProfile(userId, dto);
     if (updatedUser.role === UserRole.Employer) {
       return fillRDO(EmployerFullRDO, updatedUser);
     }
@@ -28,7 +29,7 @@ export class ProfileController {
 
   @Get(':id')
   public async getUserInfo(@Param('id') userId: string) {
-    const user = await this.profileService.getUserProfile(Number.parseInt(userId, 10));
+    const user = await this.profileService.getUserProfile(userId);
 
     if (user.role === UserRole.Employer) {
       return fillRDO(EmployerFullRDO, user);
