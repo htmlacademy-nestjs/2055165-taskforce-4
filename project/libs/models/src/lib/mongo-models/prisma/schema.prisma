@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../../../node_modules/.prisma/client/mongo-schema"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+  email               String   @unique
+  aboutInfo           String?  @default("")
+  avatar              String?
+  hashPassword        String
+  birthDate           DateTime
+  city                City
+  role                Role
+  specialization      String[]
+  completedTasksCount Int?
+  failedTasksCount    Int?
+  rating              Int?
+  ratingPosition      Int?
+  publishedTasksCount Int?
+  newTasksCount       Int?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum City {
+  Moscow
+  SaintPetersburg
+  Vladivostok
+}
+
+enum Role {
+  Employer
+  Executor
+}

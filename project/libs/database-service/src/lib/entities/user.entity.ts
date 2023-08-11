@@ -5,11 +5,11 @@ import { UserRole, City, User } from '@project/shared/app-types';
 const SALT_ROUNDS = 10;
 
 export class UserEntity implements User {
-  id!: number;
+  id!: string;
   name!: string;
   email!: string;
-  aboutInfo?: string;
-  avatar?: string;
+  aboutInfo?: string | null;
+  avatar?: string | null;
   hashPassword!: string;
   birthDate!: Date;
   city!: City;

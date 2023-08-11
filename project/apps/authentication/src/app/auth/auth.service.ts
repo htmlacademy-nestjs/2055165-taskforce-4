@@ -3,7 +3,7 @@ import * as nanoid from 'nanoid';
 
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
-import { UserMemoryRepository, UserEntity } from '@project/database-service';
+import { UserRepository, UserEntity } from '@project/database-service';
 import CreateUserDTO from './dto/create-user.dto';
 import { Employer, Executor, User, UserRole } from '@project/shared/app-types';
 import AuthUserDTO from './dto/auth-user.dto';
@@ -15,7 +15,7 @@ const userIdGenerator = nanoid.customAlphabet('1234567890', 10);
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserMemoryRepository
+    private readonly userRepository: UserRepository
   ) {}
 
 
@@ -40,17 +40,17 @@ export class AuthService {
   }
 
 
-  public async register(dto: CreateUserDTO): Promise<User> {
+  public async register(dto: CreateUserDTO): Promise<void> {
     const {name, email, password, avatar, birthDate, role, city} = dto;
 
-    const existUser = await this.userRepository.findByEmail(email);
+    // const existUser = await this.userRepository.findByEmail(email);
 
-    if (existUser) {
-      throw new ConflictException(AUTH_USER_EXISTS);
-    }
+    // if (existUser) {
+    //   throw new ConflictException(AUTH_USER_EXISTS);
+    // }
 
     const newData: User = {
-      id: Number.parseInt(userIdGenerator(), 10),
+      id: userIdGenerator(),
       name,
       email,
       avatar,
@@ -66,23 +66,23 @@ export class AuthService {
 
     const userEntity = await new UserEntity(newUser).setPassword(password);
 
-    return this.userRepository.create(userEntity);
+    await this.userRepository.create(userEntity);
   }
 
 
-  public async authorize(dto: AuthUserDTO) {
-    const {email, password} = dto;
-    const existUser = await this.userRepository.findByEmail(email);
+  // public async authorize(dto: AuthUserDTO) {
+  //   const {email, password} = dto;
+  //   const existUser = await this.userRepository.findByEmail(email);
 
-    if (!existUser) {
-      throw new NotFoundException(AUTH_USER_NOT_FOUND);
-    }
+  //   if (!existUser) {
+  //     throw new NotFoundException(AUTH_USER_NOT_FOUND);
+  //   }
 
-    const userEntity = new UserEntity(existUser);
-    if (! await userEntity.comparePassword(password)) {
-      throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
-    }
+  //   const userEntity = new UserEntity(existUser);
+  //   if (! await userEntity.comparePassword(password)) {
+  //     throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
+  //   }
 
-    return userEntity.toObject();
-  }
+  //   return userEntity.toObject();
+  // }
 }
