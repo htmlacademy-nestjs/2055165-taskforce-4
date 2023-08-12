@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "name": "God",
-  "email": "user7@god.com",
+  "email": "user6@god.com",
   "birthDate": "1991-05-14",
   "password": "123456",
   "role": "Executor",

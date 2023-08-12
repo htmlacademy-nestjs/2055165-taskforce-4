@@ -24,6 +24,25 @@
           "codeCoverage": true
         }
       }
+    },
+    "db-mongo:format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma format --schema ./schema.prisma",
+        "cwd": "libs/models/src/lib/mongo-models/prisma"
+      }
+    },
+    "db-mongo:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma generate --schema=./libs/models/src/lib/mongo-models/prisma/schema.prisma"
+      }
+    },
+    "db-mongo:update": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma db push --schema=./libs/models/src/lib/mongo-models/prisma/schema.prisma"
+      }
     }
   },
   "tags": []

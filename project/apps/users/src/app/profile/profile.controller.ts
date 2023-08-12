@@ -18,7 +18,7 @@ export class ProfileController {
   @Patch(':id')
   public async updateUserInfo(@Body() dto: UpdateUserDTO, @Param('id') userId: string) {
 
-    const updatedUser = await this.profileService.UpdateUserProfile(userId, dto);
+    const updatedUser = await this.profileService.updateUserProfile(userId, dto);
     if (updatedUser.role === UserRole.Employer) {
       return fillRDO(EmployerFullRDO, updatedUser);
     }

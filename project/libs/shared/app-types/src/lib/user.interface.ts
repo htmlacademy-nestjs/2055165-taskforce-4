@@ -5,8 +5,8 @@ export interface User {
   readonly id?: string,
   name: string,
   email: string,
-  aboutInfo?: string | null,
-  avatar?: string | null,
+  aboutInfo?: string,
+  avatar?: string,
   hashPassword: string,
   birthDate: Date,
   city: City

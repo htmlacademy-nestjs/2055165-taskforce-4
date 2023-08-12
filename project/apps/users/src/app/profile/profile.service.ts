@@ -33,7 +33,7 @@ export class ProfileService {
     return existUser;
   }
 
-  public async UpdateUserProfile(id: string, dto: UpdateUserDTO) {
+  public async updateUserProfile(id: string, dto: UpdateUserDTO) {
     const {name, password, newPassword, birthDate, avatar, city, specialization, aboutInfo} = dto;
 
     const existUser = await this.userRepository.findById(id);
