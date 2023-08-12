@@ -56,7 +56,7 @@ export class ProfileService {
     } else {
       updateData = {
         name: name ?? existUser.name,
-        birthDate: dayjs(birthDate).toDate() ?? existUser.birthDate,
+        birthDate: birthDate ? dayjs(birthDate).toDate() : existUser.birthDate,
         avatar: avatar ?? existUser.avatar,
         city: city ?? existUser.city,
         aboutInfo: aboutInfo ?? existUser.aboutInfo,

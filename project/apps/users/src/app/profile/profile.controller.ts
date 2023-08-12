@@ -14,18 +14,6 @@ export class ProfileController {
     private readonly profileService: ProfileService
   ) {}
 
-  //полноценная реализация после добавления JWT токенов
-  @Patch(':id')
-  public async updateUserInfo(@Body() dto: UpdateUserDTO, @Param('id') userId: string) {
-
-    const updatedUser = await this.profileService.updateUserProfile(userId, dto);
-    if (updatedUser.role === UserRole.Employer) {
-      return fillRDO(EmployerFullRDO, updatedUser);
-    }
-
-    const userAge = dayjs().diff(dayjs(updatedUser.birthDate), 'years');
-    return fillRDO(ExecutorFullRDO, {...updatedUser, userAge});
-  }
 
   @Get(':id')
   public async getUserInfo(@Param('id') userId: string) {
@@ -38,4 +26,18 @@ export class ProfileController {
     const userAge = dayjs().diff(dayjs(user.birthDate), 'years');
     return fillRDO(ExecutorFullRDO, {...user, userAge});
   }
+
+
+    //полноценная реализация после добавления JWT токенов
+    @Patch(':id')
+    public async updateUserInfo(@Body() dto: UpdateUserDTO, @Param('id') userId: string) {
+
+      const updatedUser = await this.profileService.updateUserProfile(userId, dto);
+      if (updatedUser.role === UserRole.Employer) {
+        return fillRDO(EmployerFullRDO, updatedUser);
+      }
+
+      const userAge = dayjs().diff(dayjs(updatedUser.birthDate), 'years');
+      return fillRDO(ExecutorFullRDO, {...updatedUser, userAge});
+    }
 }
