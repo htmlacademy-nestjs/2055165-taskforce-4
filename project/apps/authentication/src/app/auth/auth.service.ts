@@ -1,37 +1,39 @@
 import dayjs from 'dayjs';
-import * as nanoid from 'nanoid';
 
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
-import { UserMemoryRepository, UserEntity } from '@project/database-service';
+import { UserRepository, EmployerEntity, ExecutorEntity, UserEntity } from '@project/database-service';
 import CreateUserDTO from './dto/create-user.dto';
-import { Employer, Executor, User, UserRole } from '@project/shared/app-types';
+import { User, UserRole } from '@project/shared/app-types';
 import AuthUserDTO from './dto/auth-user.dto';
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './auth.constants';
 
-const userIdGenerator = nanoid.customAlphabet('1234567890', 10);
 
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserMemoryRepository
+    private readonly userRepository: UserRepository
   ) {}
 
 
-  private generateEmployerAdditionalFields = (user: User): Employer => Object.assign(user, {
-    publishedTasksCount: 0,
-    newTasksCount: 0
-  });
+  private generateEmployerAdditionalFields = (user: User): EmployerEntity =>
+    new EmployerEntity(Object.assign(user, {
+      publishedTasksCount: 0,
+      newTasksCount: 0
+    })
+  );
 
 
-  private generateExecutorAdditionalFields = (user: User): Executor => Object.assign(user, {
-    specialization: [],
-    completedTasksCount: 0,
-    failedTasksCount: 0,
-    rating: 0,
-    ratingPosition: 0
-  });
+  private generateExecutorAdditionalFields = (user: User): ExecutorEntity =>
+    new ExecutorEntity(Object.assign(user, {
+      specialization: [],
+      completedTasksCount: 0,
+      failedTasksCount: 0,
+      rating: 0,
+      ratingPosition: 0
+    })
+  );
 
 
   private readonly additionalFields = {
@@ -50,23 +52,18 @@ export class AuthService {
     }
 
     const newData: User = {
-      id: Number.parseInt(userIdGenerator(), 10),
       name,
       email,
       avatar,
       role,
       city,
       birthDate: dayjs(birthDate).toDate(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
       hashPassword: ''
     };
 
-    const newUser = this.additionalFields[newData.role](newData);
+    const newUser = await this.additionalFields[newData.role](newData).setPassword(password);
 
-    const userEntity = await new UserEntity(newUser).setPassword(password);
-
-    return this.userRepository.create(userEntity);
+    return this.userRepository.create(newUser);
   }
 
 
@@ -83,6 +80,6 @@ export class AuthService {
       throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
     }
 
-    return userEntity.toObject();
+    return existUser;
   }
 }

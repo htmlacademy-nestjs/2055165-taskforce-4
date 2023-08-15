@@ -7,6 +7,5 @@ export type UpdateUserData = {
   city?: City,
   aboutInfo?: string,
   specialization?: string[],
-  hashPassword?: string,
-  updatedAt: Date
+  hashPassword?: string
 }

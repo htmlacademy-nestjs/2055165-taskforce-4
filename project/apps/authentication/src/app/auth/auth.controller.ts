@@ -26,7 +26,7 @@ export class AuthController {
 
   @Get()
   public async checkUserAuth() {
-    throw new Error('Will be implemented after JWT tokens realisation')
+    throw new Error('Will be implemented after JWT tokens realization')
   }
 }
 

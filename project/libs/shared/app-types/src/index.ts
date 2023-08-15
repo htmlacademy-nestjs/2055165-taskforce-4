@@ -1,3 +1,4 @@
+export * from './lib/app-config.interface'
 export * from './lib/user.interface';
 export * from './lib/employer.interface';
 export * from './lib/executor.interface';
@@ -10,5 +11,4 @@ export * from './lib/comment.interface';
 export * from './lib/task-status.enum';
 export * from './lib/category.interface';
 export * from './lib/update-task-data.type';
-export * from './lib/update-feedback-data.type'
 export * from './lib/reply.interface';

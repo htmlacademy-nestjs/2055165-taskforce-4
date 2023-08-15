@@ -6,7 +6,7 @@ import { UpdateUserData, User } from '@project/shared/app-types';
 
 @Injectable()
 export class UserMemoryRepository implements CRUDRepository<UserEntity, UpdateUserData, User> {
-  private repository: Record<number, User> = {};
+  private repository: Record<string, User> = {};
 
 
   public async create(item: UserEntity) {
@@ -17,12 +17,12 @@ export class UserMemoryRepository implements CRUDRepository<UserEntity, UpdateUs
   }
 
 
-  public async findById(taskId: number) {
-    if (! this.repository[taskId]) {
+  public async findById(userId: string) {
+    if (! this.repository[userId]) {
       return null
     }
 
-    return {...this.repository[taskId]};
+    return {...this.repository[userId]};
   }
 
 
