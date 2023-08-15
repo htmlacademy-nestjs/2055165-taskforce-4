@@ -1,5 +1,6 @@
-import { Employer } from "@project/shared/app-types";
 import { genSalt, hash } from "bcrypt";
+
+import { Employer } from "@project/shared/app-types";
 import { UserEntity } from "./user.entity";
 
 export class EmployerEntity extends UserEntity implements Employer {

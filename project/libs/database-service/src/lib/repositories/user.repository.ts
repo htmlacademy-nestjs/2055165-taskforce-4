@@ -30,10 +30,11 @@ export class UserRepository implements CRUDRepository<UserEntity, UpdateUserData
     })
   }
 
+
   public async update(userId: string, item: UpdateUserData): Promise<User> {
     return this.prisma.user.update({
       where: {id: userId},
-      data: {...item}
+      data: item
     })
   }
 

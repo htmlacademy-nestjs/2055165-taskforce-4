@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 
 import { ProfileService } from './profile.service';
@@ -6,7 +8,6 @@ import { UserRole } from '@project/shared/app-types';
 import { fillRDO } from '@project/util/util-core';
 import EmployerFullRDO from './rdo/employer-full.rdo';
 import ExecutorFullRDO from './rdo/executor-full.rdo';
-import dayjs from 'dayjs';
 
 @Controller('users')
 export class ProfileController {

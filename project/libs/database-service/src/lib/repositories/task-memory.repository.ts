@@ -33,8 +33,8 @@ export class TaskMemoryRepository implements CRUDRepository<TaskEntity, UpdateTa
     return entry;
   }
 
-  public async findByCategoryName(name: string): Promise<Category | null> {
-    const existCategory = Object.values(this.categoryRepository).find((item) => item.name === name);
+  public async findByCategoryName(title: string): Promise<Category | null> {
+    const existCategory = Object.values(this.categoryRepository).find((item) => item.title === title);
 
     if (!existCategory) {
       return null;

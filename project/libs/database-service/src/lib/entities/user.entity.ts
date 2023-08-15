@@ -1,6 +1,7 @@
 import { compare, genSalt, hash } from 'bcrypt';
 
-import { UserRole, City, User } from '@project/shared/app-types';
+import { City, User, UserRole } from '@project/shared/app-types';
+
 
 const SALT_ROUNDS = 10;
 
@@ -33,7 +34,7 @@ export class UserEntity implements User {
   }
 
 
-  public toObject() {
+  public toObject(): User {
     return {
       id: this.id,
       name: this.name,

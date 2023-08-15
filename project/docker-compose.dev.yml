@@ -1,14 +1,14 @@
-version: "1.0"
+version: "3.8"
 services:
   mongo_db:
     build: ./mongodb-replica
     restart: always
     container_name: taskforce.mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: pass
-      MONGO_REPLICA_HOST: localhost
-      MONGO_REPLICA_PORT: 27017
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_REPLICA_HOST: ${MONGO_DB_HOST}
+      MONGO_REPLICA_PORT: ${MONGO_DB_PORT}
     ports:
       - 27017:27017
     volumes:
@@ -27,9 +27,9 @@ services:
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
-      ME_CONFIG_MONGODB_URL: mongodb://admin:pass@mongo_db:27017/
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongo_db:${MONGO_DB_PORT}/
 
 volumes:
   taskforce_data:

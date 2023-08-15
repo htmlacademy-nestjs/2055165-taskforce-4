@@ -1,4 +1,5 @@
-import { City, Task, TaskStatus } from "@project/shared/app-types";
+import { Task, TaskStatus } from "@project/shared/app-types";
+import { City } from "../../../../../node_modules/@internal/prisma/postgres-schema/index";
 
 export class TaskEntity implements Task {
   id!: string;
@@ -38,7 +39,7 @@ export class TaskEntity implements Task {
     this.employerId = task.employerId;
   }
 
-  public toObject() {
+  public toObject(): Task {
     return {
       id: this.id,
       title: this.title,

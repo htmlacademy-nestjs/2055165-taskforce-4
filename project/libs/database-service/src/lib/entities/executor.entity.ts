@@ -1,6 +1,7 @@
+import { genSalt, hash } from "bcrypt";
+
 import { Executor } from "@project/shared/app-types";
 import { UserEntity } from "./user.entity";
-import { genSalt, hash } from "bcrypt";
 
 export class ExecutorEntity extends UserEntity implements Executor {
   specialization!: string[];
