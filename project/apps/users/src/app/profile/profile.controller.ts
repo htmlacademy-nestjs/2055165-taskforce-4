@@ -16,7 +16,7 @@ export class ProfileController {
   ) {}
 
 
-  @Get(':id')
+  @Get('/:id')
   public async getUserInfo(@Param('id') userId: string) {
     const user = await this.profileService.getUserProfile(userId);
 
@@ -30,7 +30,7 @@ export class ProfileController {
 
 
     //полноценная реализация после добавления JWT токенов
-    @Patch(':id')
+    @Patch('/:id')
     public async updateUserInfo(@Body() dto: UpdateUserDTO, @Param('id') userId: string) {
 
       const updatedUser = await this.profileService.updateUserProfile(userId, dto);

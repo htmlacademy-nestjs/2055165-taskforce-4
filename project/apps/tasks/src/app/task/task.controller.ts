@@ -17,12 +17,12 @@ export class TaskController {
   ) {}
 
   //добавить реализацию с параметрами и пагинацией
-  @Get()
-  public async getTasks() {
-    const tasks = await this.taskService.getTasks();
-    return fillRDO(TaskBasicRDO, tasks);
+  // @Get()
+  // public async getTasks() {
+  //   const tasks = await this.taskService.getTasks();
+  //   return fillRDO(TaskBasicRDO, tasks);
 
-  }
+  // }
 
   @Post('/create')
   public async createTask(@Body() dto: CreateTaskDTO) {
@@ -30,34 +30,34 @@ export class TaskController {
     return fillRDO(TaskFullRDO, newTask);
   }
 
-  @Get(':id')
+  @Get('/:id')
   public async getTask(@Param('id') taskId: string) {
-    const existTask = await this.taskService.getTaskDetails(taskId);
+    const existTask = await this.taskService.getTaskDetails(parseInt(taskId, 10));
     return fillRDO(TaskFullRDO, existTask);
   }
 
-  @Delete(':id')
+  @Delete('/:id')
   public async deleteTask(@Param('id') taskId: string) {
-    await this.taskService.deleteTask(taskId);
+    await this.taskService.deleteTask(parseInt(taskId, 10));
     //дополнительно удалять все отклики и комментарии к таску
     return 'OK';
   }
 
-  @Patch(':id')
+  @Patch('/:id')
   public async updateTask(@Param('id') taskId: string, @Body() dto: UpdateTaskDTO) {
     const updatedTask = await this.taskService.updateTask(taskId, dto);
     return fillRDO(TaskFullRDO, updatedTask);
   }
 
-  @Post(':id/replies/create')
-  public async createReply(@Param('id') taskId: string, @Body() dto: CreateReplyDTO) {
-    const replies = await this.taskService.createTaskReply(taskId, dto);
-    return fillRDO(ReplyRDO, replies);
-  }
+  // @Post('/:id/replies/create')
+  // public async createReply(@Param('id') taskId: string, @Body() dto: CreateReplyDTO) {
+  //   const replies = await this.taskService.createTaskReply(taskId, dto);
+  //   return fillRDO(ReplyRDO, replies);
+  // }
 
-  @Delete(':id/replies/delete')
-  public async deleteReply(@Param('id') taskId: string, @Body('replyId') replyId: string) {
-    const restReplies = await this.taskService.deleteTaskReply(taskId, replyId);
-    return fillRDO(ReplyRDO, restReplies);
-  }
+  // @Delete('/:id/replies/delete')
+  // public async deleteReply(@Param('id') taskId: string, @Body('replyId') replyId: string) {
+  //   const restReplies = await this.taskService.deleteTaskReply(taskId, replyId);
+  //   return fillRDO(ReplyRDO, restReplies);
+  // }
 }

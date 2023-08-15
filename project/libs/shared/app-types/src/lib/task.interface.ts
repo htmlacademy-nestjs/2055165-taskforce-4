@@ -1,18 +1,18 @@
-import { City, TaskStatus } from '@project/shared/app-types';
+import { Category, City, TaskStatus } from '@project/shared/app-types';
 
 export interface Task {
-  readonly id: string;
+  taskId: number;
   title: string;
   description: string;
-  categoryId: number;
+  category: Category;
   price: number;
-  expirationDate?: Date;
-  image?: string;
-  address?: string;
+  expirationDate?: Date | null;
+  image?: string | null;
+  address?: string | null;
   tags?: string[];
   city: City;
   status: TaskStatus;
   commentsCount: number;
   repliesCount: number;
-  employerId: string;
+  employerId: string | null;
 }

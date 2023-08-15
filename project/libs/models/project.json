@@ -64,6 +64,12 @@
         "command": "npx prisma migrate reset --schema ./schema.prisma --force --skip-generate --skip-seed",
         "cwd": "libs/models/src/lib/postgres-models/prisma"
       }
+    },
+    "db-postgres:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma generate --schema=./libs/models/src/lib/postgres-models/prisma/schema.prisma"
+      }
     }
   },
   "tags": []

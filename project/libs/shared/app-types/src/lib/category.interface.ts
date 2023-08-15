@@ -1,4 +1,4 @@
 export interface Category {
-  readonly id: number;
+  readonly categoryId: number;
   title: string;
 }

@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 
 import { TaskModule } from './task/task.module';
 import { RepliesModule } from './replies/replies.module';
-import { CategoriesModule } from './categories/categories.module';
+import { CategoryModule } from './category/category.module';
+import { PrismaPostgresModule } from '@project/database-service';
 
 @Module({
-  imports: [TaskModule, RepliesModule, CategoriesModule],
+  imports: [CategoryModule, TaskModule, RepliesModule, PrismaPostgresModule],
   controllers: [],
   providers: [],
 })

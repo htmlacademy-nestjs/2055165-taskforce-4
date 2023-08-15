@@ -38,6 +38,7 @@ export class UserRepository implements CRUDRepository<UserEntity, UpdateUserData
     })
   }
 
+
   public async delete(userId: string): Promise<void> {
     await this.prisma.user.delete({
       where: {id: userId}
