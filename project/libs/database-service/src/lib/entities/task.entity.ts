@@ -12,9 +12,10 @@ export class TaskEntity implements Task {
   tags?: string[];
   city!: City;
   status!: TaskStatus;
+  commentsCount!: number;
+  repliesCount!: number;
   employerId!: string;
-  createdAt!: Date;
-  updatedAt!: Date
+
 
   constructor(task: Task) {
     this.fillEntity(task);
@@ -32,9 +33,9 @@ export class TaskEntity implements Task {
     this.tags = task.tags;
     this.city = task.city;
     this.status = task.status;
+    this.commentsCount = task.commentsCount;
+    this.repliesCount = task.repliesCount;
     this.employerId = task.employerId;
-    this.createdAt = task.createdAt;
-    this.updatedAt = task.updatedAt;
   }
 
   public toObject() {
@@ -50,9 +51,9 @@ export class TaskEntity implements Task {
       tags: this.tags,
       city: this.city,
       status: this.status,
+      commentsCount: this.commentsCount,
+      repliesCount: this.repliesCount,
       employerId: this.employerId,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
     }
   }
 }

@@ -5,7 +5,7 @@ export interface Task {
   readonly id: string;
   title: string;
   description: string;
-  categoryId: number; //Ref?
+  categoryId: number;
   price: number;
   expirationDate?: Date;
   image?: string;
@@ -13,7 +13,7 @@ export interface Task {
   tags?: string[];
   city: City;
   status: TaskStatus;
-  employerId: string; //Ref?
-  readonly createdAt: Date;
-  updatedAt: Date
+  commentsCount: number;
+  repliesCount: number;
+  employerId: string;
 }

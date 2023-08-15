@@ -1,7 +1,9 @@
-export enum TaskStatus {
-  New = 'Новое',
-  Cancelled = 'Отменено',
-  InProgress = 'В работе',
-  Completed = 'Выполнено',
-  Failed = 'Провалено'
+export const TaskStatus: { [x: string]: 'New' | 'Cancelled' | 'InProgress' | 'Completed' | 'Failed' } = {
+  New: 'New',
+  Cancelled: 'Cancelled',
+  InProgress: 'InProgress',
+  Completed: 'Completed',
+  Failed: 'Failed'
 }
+
+export type TaskStatus = typeof TaskStatus[keyof typeof TaskStatus]
