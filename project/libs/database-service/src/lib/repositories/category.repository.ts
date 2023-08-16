@@ -3,12 +3,15 @@ import { Injectable } from "@nestjs/common";
 import { CRUDRepository } from "@project/util/util-types";
 import { CategoryEntity } from "../entities/category.entity";
 import { Category } from "@project/shared/app-types";
+import { DatabaseService } from "../prisma/database.service";
 
-import { PrismaPostgresService } from '../prisma/prisma-postgres.service'
 
 @Injectable()
 export class CategoryRepository implements CRUDRepository<CategoryEntity, string, Category> {
-  constructor (private readonly prisma: PrismaPostgresService) {}
+  private prisma;
+  constructor (private readonly DBService: DatabaseService) {
+    this.prisma = DBService.prismaPostgres;
+  }
 
 
   public async create(item: CategoryEntity): Promise<Category> {

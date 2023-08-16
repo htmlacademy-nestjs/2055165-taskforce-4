@@ -11,5 +11,4 @@ export * from './lib/repositories/category.repository'
 export * from './lib/repositories/task.repository'
 export * from './lib/repositories/comment-memory.repository';
 export * from './lib/repositories/feedback-memory.repository';
-export * from './lib/prisma/prisma-mongo.module';
-export * from './lib/prisma/prisma-postgres.module'
+export * from './lib/prisma/database.module'

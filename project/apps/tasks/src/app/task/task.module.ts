@@ -3,10 +3,10 @@ import { TaskService } from './task.service';
 import { TaskController } from './task.controller';
 import { RepliesModule } from '../replies/replies.module';
 import { CategoryModule } from '../category/category.module';
-import { PrismaPostgresModule, TaskRepository } from '@project/database-service';
+import { DatabaseModule, TaskRepository } from '@project/database-service';
 
 @Module({
-  imports:[PrismaPostgresModule, RepliesModule, CategoryModule],
+  imports:[DatabaseModule, RepliesModule, CategoryModule],
   providers: [TaskService, TaskRepository],
   controllers: [TaskController],
 })

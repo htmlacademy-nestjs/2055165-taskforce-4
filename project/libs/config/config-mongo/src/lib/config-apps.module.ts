@@ -17,4 +17,4 @@ const ENV_FEEDBACKS_FILE_PATH = 'apps/feedbacks/feedbacks.env';
     })
   ]
 })
-export class ConfigMongoModule{}
+export class ConfigAppsModule{}

@@ -3,12 +3,14 @@ import { Injectable } from "@nestjs/common";
 import { CRUDRepository } from "@project/util/util-types";
 import { TaskEntity } from "../entities/task.entity";
 import { Task, UpdateTaskData } from "@project/shared/app-types";
-import { PrismaPostgresService } from "../prisma/prisma-postgres.service";
-
+import { DatabaseService } from "../prisma/database.service";
 
 @Injectable()
 export class TaskRepository implements CRUDRepository<TaskEntity, UpdateTaskData, Task> {
-  constructor(private readonly prisma: PrismaPostgresService) {}
+  private prisma;
+  constructor(private readonly dbService: DatabaseService) {
+    this.prisma = dbService.prismaPostgres;
+  }
 
   findById(taskId: number): Promise<Task | null> {
     return this.prisma.task.findUnique({
