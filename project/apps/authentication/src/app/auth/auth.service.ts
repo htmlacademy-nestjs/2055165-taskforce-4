@@ -17,7 +17,7 @@ export class AuthService {
   ) {}
 
 
-  private generateEmployerAdditionalFields = (user: User): EmployerEntity =>
+  private generateEmployerAdditionalFields = (user: Omit<User, 'id'>): EmployerEntity =>
     new EmployerEntity(Object.assign(user, {
       publishedTasksCount: 0,
       newTasksCount: 0
@@ -25,7 +25,7 @@ export class AuthService {
   );
 
 
-  private generateExecutorAdditionalFields = (user: User): ExecutorEntity =>
+  private generateExecutorAdditionalFields = (user: Omit<User, 'id'>): ExecutorEntity =>
     new ExecutorEntity(Object.assign(user, {
       specialization: [],
       completedTasksCount: 0,
@@ -51,7 +51,7 @@ export class AuthService {
       throw new ConflictException(AUTH_USER_EXISTS);
     }
 
-    const newData: User = {
+    const newData: Omit<User, 'id'> = {
       name,
       email,
       avatar,

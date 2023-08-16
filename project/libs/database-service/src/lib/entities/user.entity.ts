@@ -5,8 +5,7 @@ import { City, User, UserRole } from '@project/shared/app-types';
 
 const SALT_ROUNDS = 10;
 
-export class UserEntity implements User {
-  id?: string;
+export class UserEntity implements Omit<User, "id"> {
   name!: string;
   email!: string;
   aboutInfo?: string;
@@ -17,12 +16,11 @@ export class UserEntity implements User {
   role!: UserRole;
 
 
-  constructor (user: User) {
+  constructor (user: Omit<User, "id">) {
     this.fillEntity(user);
   }
 
-  public fillEntity(user: User) {
-    this.id = user.id;
+  public fillEntity(user: Omit<User, "id">) {
     this.name = user.name;
     this.email = user.email;
     this.aboutInfo = user.aboutInfo;
@@ -34,9 +32,8 @@ export class UserEntity implements User {
   }
 
 
-  public toObject(): User {
+  public toObject() {
     return {
-      id: this.id,
       name: this.name,
       email: this.email,
       aboutInfo: this.aboutInfo,

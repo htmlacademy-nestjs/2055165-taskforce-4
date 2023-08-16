@@ -1,7 +1,7 @@
 import { Category, City, TaskStatus } from '@project/shared/app-types';
 
 export interface Task {
-  taskId: number;
+  readonly taskId: number;
   title: string;
   description: string;
   category: Category;
