@@ -44,6 +44,13 @@
         "command": "prisma db push --schema=./libs/models/src/lib/mongo-models/prisma/schema.prisma"
       }
     },
+    "db-mongo:seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node seed.ts",
+        "cwd": "libs/models/src/lib/mongo-models/prisma"
+      }
+    },
     "db-postgres:format": {
       "executor": "nx:run-commands",
       "options": {
@@ -58,6 +65,12 @@
         "cwd": "libs/models/src/lib/postgres-models/prisma"
       }
     },
+    "db-postgres:update": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma db push --schema=./libs/models/src/lib/postgres-models/prisma/schema.prisma"
+      }
+    },
     "db-postgres:reset": {
       "executor": "nx:run-commands",
       "options": {
@@ -70,7 +83,15 @@
       "options": {
         "command": "npx prisma generate --schema=./libs/models/src/lib/postgres-models/prisma/schema.prisma"
       }
+    },
+    "db-postgres:seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node seed.ts",
+        "cwd": "libs/models/src/lib/postgres-models/prisma"
+      }
     }
+
   },
   "tags": []
 }
