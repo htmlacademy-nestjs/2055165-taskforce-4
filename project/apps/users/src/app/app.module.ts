@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 
 import { ProfileModule } from './profile/profile.module';
-import { ConfigMongoModule } from '@project/config/config-mongo';
-import { PrismaMongoModule } from '@project/database-service';
+import { ConfigAppsModule } from '@project/config/config-mongo';
 
 @Module({
-  imports: [ProfileModule, ConfigMongoModule, PrismaMongoModule],
+  imports: [ProfileModule, ConfigAppsModule],
   controllers: [],
   providers: [],
 })

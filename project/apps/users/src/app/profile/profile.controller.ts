@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 
 import { ProfileService } from './profile.service';
@@ -6,7 +8,6 @@ import { UserRole } from '@project/shared/app-types';
 import { fillRDO } from '@project/util/util-core';
 import EmployerFullRDO from './rdo/employer-full.rdo';
 import ExecutorFullRDO from './rdo/executor-full.rdo';
-import dayjs from 'dayjs';
 
 @Controller('users')
 export class ProfileController {
@@ -15,7 +16,7 @@ export class ProfileController {
   ) {}
 
 
-  @Get(':id')
+  @Get('/:id')
   public async getUserInfo(@Param('id') userId: string) {
     const user = await this.profileService.getUserProfile(userId);
 
@@ -29,7 +30,7 @@ export class ProfileController {
 
 
     //полноценная реализация после добавления JWT токенов
-    @Patch(':id')
+    @Patch('/:id')
     public async updateUserInfo(@Body() dto: UpdateUserDTO, @Param('id') userId: string) {
 
       const updatedUser = await this.profileService.updateUserProfile(userId, dto);

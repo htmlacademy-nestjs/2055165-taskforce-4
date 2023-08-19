@@ -1,30 +1,31 @@
-import { City, Task, TaskStatus } from "@project/shared/app-types";
+import { Category, Task, TaskStatus } from "@project/shared/app-types";
+import { City } from "../../../../../node_modules/@internal/prisma/postgres-schema/index";
 
-export class TaskEntity implements Task {
-  id!: string;
+export class TaskEntity implements Omit<Task, 'taskId'> {
+  // taskId!: number;
   title!: string;
   description!: string;
-  categoryId!: number;
+  category!: Category;
   price!: number;
-  expirationDate?: Date;
-  image?: string;
-  address?: string;
+  expirationDate?: Date | null;
+  image?: string | null;
+  address?: string | null;
   tags?: string[];
   city!: City;
   status!: TaskStatus;
-  employerId!: string;
-  createdAt!: Date;
-  updatedAt!: Date
+  commentsCount!: number;
+  repliesCount!: number;
+  employerId!: string | null;
 
-  constructor(task: Task) {
+
+  constructor(task: Omit<Task, 'taskId'>) {
     this.fillEntity(task);
   }
 
-  public fillEntity(task: Task) {
-    this.id = task.id;
+  public fillEntity(task: Omit<Task, 'taskId'>) {
     this.title = task.title;
     this.description = task.description;
-    this.categoryId = task.categoryId;
+    this.category = task.category;
     this.price = task.price;
     this.expirationDate = task.expirationDate;
     this.image = task.image;
@@ -32,17 +33,17 @@ export class TaskEntity implements Task {
     this.tags = task.tags;
     this.city = task.city;
     this.status = task.status;
+    this.commentsCount = task.commentsCount;
+    this.repliesCount = task.repliesCount;
     this.employerId = task.employerId;
-    this.createdAt = task.createdAt;
-    this.updatedAt = task.updatedAt;
   }
 
-  public toObject() {
+  public toObject(): Omit<Task, 'taskId'> {
     return {
-      id: this.id,
+      // taskId: this.taskId,
       title: this.title,
       description: this.description,
-      categoryId: this.categoryId,
+      category: this.category,
       price: this.price,
       expirationDate: this.expirationDate,
       image: this.image,
@@ -50,9 +51,9 @@ export class TaskEntity implements Task {
       tags: this.tags,
       city: this.city,
       status: this.status,
+      commentsCount: this.commentsCount,
+      repliesCount: this.repliesCount,
       employerId: this.employerId,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
     }
   }
 }

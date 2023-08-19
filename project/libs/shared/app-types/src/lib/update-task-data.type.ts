@@ -1,5 +1,5 @@
-import { City } from "./city.enum";
-import { TaskStatus } from "./task-status.enum";
+import { City, TaskStatus } from '@project/shared/app-types';
+
 
 export type UpdateTaskData = {
   title?: string;

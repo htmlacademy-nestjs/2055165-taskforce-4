@@ -3,12 +3,15 @@ import { Injectable } from '@nestjs/common';
 import { CRUDRepository } from '@project/util/util-types';
 import { UserEntity } from '../entities/user.entity';
 import { UpdateUserData, User } from '@project/shared/app-types';
-
-import { PrismaMongoService } from '../prisma/prisma-mongo.service'
+import { DatabaseService } from '../prisma/database.service';
 
 @Injectable()
 export class UserRepository implements CRUDRepository<UserEntity, UpdateUserData, User> {
-  constructor(private readonly prisma: PrismaMongoService) {}
+  private prisma;
+
+  constructor(private readonly dbService: DatabaseService) {
+    this.prisma = dbService.prismaMongo;
+  }
 
 
   public async create(item: UserEntity): Promise<User> {
@@ -30,12 +33,14 @@ export class UserRepository implements CRUDRepository<UserEntity, UpdateUserData
     })
   }
 
+
   public async update(userId: string, item: UpdateUserData): Promise<User> {
     return this.prisma.user.update({
       where: {id: userId},
-      data: {...item}
+      data: item
     })
   }
+
 
   public async delete(userId: string): Promise<void> {
     await this.prisma.user.delete({

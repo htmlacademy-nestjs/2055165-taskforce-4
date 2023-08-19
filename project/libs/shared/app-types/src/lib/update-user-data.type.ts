@@ -1,4 +1,4 @@
-import { City } from "./city.enum"
+import { City } from '@project/shared/app-types'
 
 export type UpdateUserData = {
   name?: string,

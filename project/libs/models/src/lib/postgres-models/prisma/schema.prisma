@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../../../node_modules/@internal/prisma/postgres-schema"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  taskId         Int          @id @default(autoincrement()) @map("task_id")
+  title          String
+  description    String
+  category       Category     @relation(fields: [categoryId], references: [categoryId])
+  categoryId     Int          @map("category_id")
+  price          Int
+  expirationDate DateTime?    @map("expiration_date")
+  image          String?
+  address        String?
+  tags           String[]
+  city           City
+  status         TaskStatus
+  commentsCount  Int          @map("comments_count")
+  repliesCount   Int          @map("replies_count")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("published_at")
+  employerId     String?      @map("employer_id")
+  replies        Reply[]
+  pinned         PinnedTask[]
+
+  @@map("tasks")
+}
+
+model Category {
+  categoryId Int    @id @default(autoincrement()) @map("category_id")
+  title      String @unique
+  tasks      Task[]
+
+  @@map("categories")
+}
+
+model Reply {
+  replyId    Int      @id @default(autoincrement()) @map("reply_id")
+  text       String
+  executorId Int      @map("executor_id")
+  taskId     Int      @map("task_id")
+  task       Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade, onUpdate: Cascade)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("published_at")
+
+  @@map("replies")
+}
+
+model PinnedTask {
+  id        Int      @id @default(autoincrement()) @map("favorite_id")
+  task      Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade)
+  taskId    Int      @map("task_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("pinned_tasks")
+}
+
+enum City {
+  Moscow
+  SaintPetersburg
+  Vladivostok
+}
+
+enum TaskStatus {
+  New
+  Cancelled
+  InProgress
+  Completed
+  Failed
+}

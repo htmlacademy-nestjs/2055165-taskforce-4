@@ -1,8 +1,8 @@
-import { City } from "./city.enum";
-import { UserRole } from "./user-role.enum";
+import { City, UserRole } from '@project/shared/app-types';
+
 
 export interface User {
-  readonly id?: string,
+  readonly id: string,
   name: string,
   email: string,
   aboutInfo?: string,

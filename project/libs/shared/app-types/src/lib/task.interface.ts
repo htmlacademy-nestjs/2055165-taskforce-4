@@ -1,19 +1,18 @@
-import { City } from "./city.enum";
-import { TaskStatus } from "./task-status.enum";
+import { Category, City, TaskStatus } from '@project/shared/app-types';
 
 export interface Task {
-  readonly id: string;
+  readonly taskId: number;
   title: string;
   description: string;
-  categoryId: number; //Ref?
+  category: Category;
   price: number;
-  expirationDate?: Date;
-  image?: string;
-  address?: string;
+  expirationDate?: Date | null;
+  image?: string | null;
+  address?: string | null;
   tags?: string[];
   city: City;
   status: TaskStatus;
-  employerId: string; //Ref?
-  readonly createdAt: Date;
-  updatedAt: Date
+  commentsCount: number;
+  repliesCount: number;
+  employerId: string | null;
 }

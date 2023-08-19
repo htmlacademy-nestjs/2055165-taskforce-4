@@ -1,30 +1,22 @@
 import { Category } from "@project/shared/app-types";
 
-export class CategoryEntity implements Category {
-  id!: number;
-  name!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
+export class CategoryEntity implements Omit<Category, 'categoryId'> {
+  title!: string;
 
-  constructor (categpry: Category) {
-    this.fillEntity(categpry);
+
+  constructor (category: Omit<Category, 'categoryId'>) {
+    this.fillEntity(category);
   }
 
 
-  public fillEntity(category: Category) {
-    this.id = category.id;
-    this.name = category.name;
-    this.createdAt = category.createdAt;
-    this.updatedAt = category.updatedAt;
+  public fillEntity(category: Omit<Category, 'categoryId'>) {
+    this.title = category.title;
   }
 
 
   public toObject() {
     return {
-      id: this.id,
-      name: this.name,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
+      title: this.title,
     }
   }
 }
