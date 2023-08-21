@@ -9,7 +9,7 @@ import { DatabaseService } from "../prisma/database.service";
 export class TaskRepository implements CRUDRepository<TaskEntity, UpdateTaskData, Task> {
   private prisma;
   constructor(private readonly dbService: DatabaseService) {
-    this.prisma = dbService.prismaPostgres;
+    this.prisma = dbService.prismaPostgresConnector;
   }
 
   findById(taskId: number): Promise<Task | null> {

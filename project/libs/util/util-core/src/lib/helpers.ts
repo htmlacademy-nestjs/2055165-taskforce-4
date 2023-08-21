@@ -1,6 +1,6 @@
 import { ClassConstructor, plainToInstance } from "class-transformer";
 
-import {DbConfig} from "@project/config/config-mongo"
+import {DbConfig} from "@project/config-service"
 
 export function fillRDO<T, V>(someRDO: ClassConstructor<T>, plainObject: V, groups?: string[]) {
   return plainToInstance(someRDO, plainObject, { excludeExtraneousValues: true, groups });

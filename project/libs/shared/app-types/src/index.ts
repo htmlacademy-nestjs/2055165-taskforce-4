@@ -9,6 +9,7 @@ export * from './lib/comment.interface';
 export * from './lib/category.interface';
 export * from './lib/update-task-data.type';
 export * from './lib/reply.interface';
+export * from './lib/file-data.interface'
 export {Role as UserRole, City} from '../../../../node_modules/@internal/prisma/mongo-schema/index'
 export { TaskStatus } from '../../../../node_modules/@internal/prisma/postgres-schema/index'
 

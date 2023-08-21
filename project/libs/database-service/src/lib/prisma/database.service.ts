@@ -1,6 +1,7 @@
 import { ConfigService } from "@nestjs/config";
-import {PrismaClient as PrismaMongoClient} from "@internal/prisma/mongo-schema"
+import {PrismaClient as PrismaBaseMongoClient} from "@internal/prisma/mongo-schema"
 import {PrismaClient as PrismaPostgresClient} from "@internal/prisma/postgres-schema"
+import {PrismaClient as PrismaFsClient } from "@internal/prisma/file-schema"
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { getMongoConnectionString, getPostgresConnectionString } from "@project/util/util-core"
 
@@ -8,7 +9,8 @@ import { getMongoConnectionString, getPostgresConnectionString } from "@project/
 @Injectable()
 export class DatabaseService implements OnModuleInit {
 
-  private mongoConnector: PrismaMongoClient;
+  private mongoBaseConnector: PrismaBaseMongoClient;
+  private mongoFsConnector: PrismaFsClient;
   private PSQLConnector: PrismaPostgresClient;
 
   constructor(private configService: ConfigService) {
@@ -16,17 +18,30 @@ export class DatabaseService implements OnModuleInit {
     const mongoConfig = configService.get('mongo-db');
     const mongoURL = getMongoConnectionString(mongoConfig)
 
+    const mongoFsConfig = configService.get('mongo-db-fs');
+    const mongoFsURL = getMongoConnectionString(mongoFsConfig);
+
     const postgresConfig = configService.get('postgres-db');
     const postgresURL = getPostgresConnectionString(postgresConfig)
 
 
-    this.mongoConnector = new PrismaMongoClient({
+    this.mongoBaseConnector = new PrismaBaseMongoClient({
       datasources: {
         db: {
           url: mongoURL
         }
       }
     })
+
+
+    this.mongoFsConnector = new PrismaFsClient({
+      datasources: {
+        db: {
+          url: mongoFsURL
+        }
+      }
+    })
+
 
     this.PSQLConnector = new PrismaPostgresClient({
       datasources: {
@@ -38,16 +53,21 @@ export class DatabaseService implements OnModuleInit {
   }
 
   async onModuleInit() {
-     await this.mongoConnector.$connect();
+     await this.mongoBaseConnector.$connect();
+     await this.mongoFsConnector.$connect();
      await this.PSQLConnector.$connect();
    }
 
-   get prismaMongo(): PrismaMongoClient {
-    return this.mongoConnector;
+   get prismaBaseMongoConnector(): PrismaBaseMongoClient {
+    return this.mongoBaseConnector;
    }
 
-   get prismaPostgres() : PrismaPostgresClient {
+   get prismaPostgresConnector() : PrismaPostgresClient {
     return this.PSQLConnector;
+   }
+
+   get prismaFsMongoConnector(): PrismaFsClient {
+    return this.mongoFsConnector;
    }
 
 }

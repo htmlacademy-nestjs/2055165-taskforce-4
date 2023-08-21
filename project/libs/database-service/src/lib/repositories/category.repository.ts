@@ -10,7 +10,7 @@ import { DatabaseService } from "../prisma/database.service";
 export class CategoryRepository implements CRUDRepository<CategoryEntity, string, Category> {
   private prisma;
   constructor (private readonly DBService: DatabaseService) {
-    this.prisma = DBService.prismaPostgres;
+    this.prisma = DBService.prismaPostgresConnector;
   }
 
 

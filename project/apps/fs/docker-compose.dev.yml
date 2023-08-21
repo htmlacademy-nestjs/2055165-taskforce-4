@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  mongo_uploads_db:
+    build: ./mongodb-uploads-replica
+    restart: always
+    container_name: taskforce.uploads.mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${FS_MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${FS_MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${FS_MONGO_DB_NAME}
+      MONGO_REPLICA_HOST: ${FS_MONGO_HOST}
+      MONGO_REPLICA_PORT: ${FS_MONGO_PORT}
+    ports:
+      - 27020:27017
+    volumes:
+      - taskforce_uploads_data:/data/db
+
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27020/${FS_MONGO_DB_NAME} --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  mongo_ui:
+    image: mongo-express:latest
+    restart: always
+    container_name: taskforce.uploads.mongo-express
+    ports:
+      - 8083:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${FS_MONGO_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${FS_MONGO_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${FS_MONGO_USERNAME}:${FS_MONGO_PASSWORD}@mongo_uploads_db:${FS_MONGO_PORT}/
+
+volumes:
+  taskforce_uploads_data:

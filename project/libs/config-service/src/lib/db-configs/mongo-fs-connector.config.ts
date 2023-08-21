@@ -5,27 +5,27 @@ import { registerAs } from '@nestjs/config';
 import { DbConfig } from './db-config.interface';
 
 
-export default registerAs('mongo-db', (): DbConfig => {
+export default registerAs('mongo-db-fs', (): DbConfig => {
   if (
-    !process.env.MONGO_DB_HOST ||
-    !process.env.MONGO_DB_PORT ||
-    !process.env.MONGO_DB_NAME ||
-    !process.env.MONGO_ROOT_USERNAME ||
-    !process.env.MONGO_ROOT_PASSWORD ||
-    !process.env.MONGO_AUTH_DB
+    !process.env.FS_MONGO_HOST ||
+    !process.env.FS_MONGO_PORT ||
+    !process.env.FS_MONGO_DB_NAME ||
+    !process.env.FS_MONGO_USERNAME ||
+    !process.env.FS_MONGO_PASSWORD ||
+    !process.env.FS_MONGO_AUTH_DB
   ) {
     throw new Error(
-      '[MongoDB Config]: Some Environments didn\'t configure. Please check .env file.'
+      '[MongoDB FS Config]: Some Environments didn\'t configure. Please check .env file.'
     );
   }
 
   const config: DbConfig = {
-    host: process.env.MONGO_DB_HOST,
-    port: parseInt(process.env.MONGO_DB_PORT, 10),
-    name: process.env.MONGO_DB_NAME,
-    user: process.env.MONGO_ROOT_USERNAME,
-    password: process.env.MONGO_ROOT_PASSWORD,
-    authBase: process.env.MONGO_AUTH_DB,
+    host: process.env.FS_MONGO_HOST,
+    port: parseInt(process.env.FS_MONGO_PORT, 10),
+    name: process.env.FS_MONGO_DB_NAME,
+    user: process.env.FS_MONGO_USERNAME,
+    password: process.env.FS_MONGO_PASSWORD,
+    authBase: process.env.FS_MONGO_AUTH_DB,
   };
 
   const validationSchema = Joi.object<DbConfig>({
@@ -41,7 +41,7 @@ export default registerAs('mongo-db', (): DbConfig => {
 
   if (error) {
     throw new Error(
-      `[MongoDB Config]: Environments validation failed. Please check .env file.
+      `[MongoDB FS Config]: Environments validation failed. Please check .env file.
       Error message: ${error.message}`,
     );
   }

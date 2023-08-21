@@ -38,6 +38,19 @@
         "command": "npx prisma generate --schema=./libs/models/src/lib/mongo-models/prisma/schema.prisma"
       }
     },
+    "db-mongo-fs:format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma format --schema ./schema.prisma",
+        "cwd": "libs/models/src/lib/file-models/prisma"
+      }
+    },
+    "db-mongo-fs:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma generate --schema=./libs/models/src/lib/file-models/prisma/schema.prisma"
+      }
+    },
     "db-mongo:update": {
       "executor": "nx:run-commands",
       "options": {
@@ -49,6 +62,13 @@
       "options": {
         "command": "npx ts-node seed.ts",
         "cwd": "libs/models/src/lib/mongo-models/prisma"
+      }
+    },
+    "db-mongo-fs:seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node seed.ts",
+        "cwd": "libs/models/src/lib/file-models/prisma"
       }
     },
     "db-postgres:format": {

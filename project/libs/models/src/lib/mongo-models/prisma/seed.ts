@@ -1,5 +1,6 @@
 import { PrismaClient } from '../../../../../../node_modules/@internal/prisma/mongo-schema'
 
+
 const prisma = new PrismaClient();
 
 async function fillDB() {

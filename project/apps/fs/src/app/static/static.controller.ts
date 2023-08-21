@@ -1,22 +1,34 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
+import 'multer';
 import { StaticService } from './static.service';
+import UploadedFileRDO from './rdo/uploaded-file.rdo';
+import { fillRDO } from '@project/util/util-core'
+import { ConfigService } from '@nestjs/config';
 
 @Controller('files')
 export class StaticController {
   constructor
-    (private readonly staticService: StaticService) {}
+    (
+      private readonly staticService: StaticService,
+      private readonly configService: ConfigService
+    ) {}
+
 
   @Post('/upload')
-  public async uploadFile(@Body() file: string) {
-    const fileId = await this.staticService.uploadFile(file);
-    return fileId;
+  @UseInterceptors(FileInterceptor('image'))
+  public async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    const newFile = await this.staticService.uploadFile(file);
+    const path = `${this.configService.get('fs-application.serveRoot')}${newFile.path}`;
+    return fillRDO(UploadedFileRDO, Object.assign(newFile, { path }));
   }
 
   @Get(':id')
   public async getFile(@Param('id') fileId: string) {
-    const file = await this.staticService.getFile(fileId);
-    return file;
+    const existFile = await this.staticService.getFile(fileId);
+    const path = `${this.configService.get('fs-application.serveRoot')}${existFile.path}`;
+    return fillRDO(UploadedFileRDO, Object.assign(existFile, { path }));
   }
 
 }
