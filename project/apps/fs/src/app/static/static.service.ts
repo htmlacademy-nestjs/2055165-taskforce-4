@@ -1,8 +1,9 @@
 import { writeFile } from 'node:fs/promises';
+import * as crypto from 'node:crypto';
 
 import { ensureDir } from 'fs-extra';
 import dayjs from 'dayjs';
-import { extension } from 'mime';
+import { extension } from 'mime-types';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -28,7 +29,7 @@ export class StaticService {
     const uploadDirectory = this.configService.get('fs-application.uploadDirectory');
 
     const filename = crypto.randomUUID();
-    const fileExtension = extension(file.mimetype);
+    const fileExtension = extension(file.mimetype) as string;
     const hashName = `${filename}.${fileExtension}`;
 
     const [ currentYear, currentMonth ] = dayjs().format('YYYY MM').split(' ');

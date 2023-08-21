@@ -11,3 +11,10 @@ Content-Type: image/jpeg
 --boundary--
 
 ###
+
+##Get File
+GET http://localhost:3333/files/64e3c30d093ca7ac8521d508 HTTP/1.1
+Content-Type: application/json
+
+
+###

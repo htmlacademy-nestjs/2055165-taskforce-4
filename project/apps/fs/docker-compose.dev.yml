@@ -11,17 +11,17 @@ services:
       MONGO_REPLICA_HOST: ${FS_MONGO_HOST}
       MONGO_REPLICA_PORT: ${FS_MONGO_PORT}
     ports:
-      - 27020:27017
+      - 27018:27018
     volumes:
       - taskforce_uploads_data:/data/db
 
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27020/${FS_MONGO_DB_NAME} --quiet
+      test: echo 'db.runCommand("ping").ok' | mongosh ${FS_MONGO_HOST}:${FS_MONGO_PORT}/${FS_MONGO_DB_NAME} --quiet
       interval: 10s
       timeout: 10s
       retries: 5
 
-  mongo_ui:
+  mongo_uploads_ui:
     image: mongo-express:latest
     restart: always
     container_name: taskforce.uploads.mongo-express
