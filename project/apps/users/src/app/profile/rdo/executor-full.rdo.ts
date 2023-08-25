@@ -1,5 +1,6 @@
 import { City, UserRole } from "@project/shared/app-types";
-import { Expose } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
+import dayjs from "dayjs";
 
 export default class ExecutorFullRDO {
     @Expose()
@@ -11,7 +12,10 @@ export default class ExecutorFullRDO {
     @Expose()
     public email!: string;
 
-    @Expose()
+    @Expose({name: 'birthDate'})
+    @Transform(({value}) => {
+      return dayjs().diff(dayjs(value), 'years');
+    })
     public userAge!: string;
 
     @Expose()

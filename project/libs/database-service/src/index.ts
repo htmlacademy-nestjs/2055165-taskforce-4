@@ -11,6 +11,8 @@ export * from './lib/repositories/user.repository';
 export * from './lib/repositories/category.repository';
 export * from './lib/repositories/task.repository';
 export * from './lib/repositories/file-data.repository';
+export * from './lib/repositories/reply.repository';
 export * from './lib/repositories/comment-memory.repository';
 export * from './lib/repositories/feedback-memory.repository';
 export * from './lib/prisma/database.module';
+export * from './lib/dto/user/update-user.dto';

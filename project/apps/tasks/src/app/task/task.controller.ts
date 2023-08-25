@@ -31,14 +31,14 @@ export class TaskController {
   }
 
   @Get('/:id')
-  public async getTask(@Param('id') taskId: string) {
-    const existTask = await this.taskService.getTaskDetails(parseInt(taskId, 10));
+  public async getTask(@Param('id') taskId: number) {
+    const existTask = await this.taskService.getTaskDetails(taskId);
     return fillRDO(TaskFullRDO, existTask);
   }
 
   @Delete('/:id')
-  public async deleteTask(@Param('id') taskId: string) {
-    await this.taskService.deleteTask(parseInt(taskId, 10));
+  public async deleteTask(@Param('id') taskId: number) {
+    await this.taskService.deleteTask(taskId);
     //дополнительно удалять все отклики и комментарии к таску
     return 'OK';
   }
@@ -48,16 +48,4 @@ export class TaskController {
     const updatedTask = await this.taskService.updateTask(taskId, dto);
     return fillRDO(TaskFullRDO, updatedTask);
   }
-
-  // @Post('/:id/replies/create')
-  // public async createReply(@Param('id') taskId: string, @Body() dto: CreateReplyDTO) {
-  //   const replies = await this.taskService.createTaskReply(taskId, dto);
-  //   return fillRDO(ReplyRDO, replies);
-  // }
-
-  // @Delete('/:id/replies/delete')
-  // public async deleteReply(@Param('id') taskId: string, @Body('replyId') replyId: string) {
-  //   const restReplies = await this.taskService.deleteTaskReply(taskId, replyId);
-  //   return fillRDO(ReplyRDO, restReplies);
-  // }
 }

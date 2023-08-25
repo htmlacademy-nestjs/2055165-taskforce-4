@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 import { UserRepository, EmployerEntity, ExecutorEntity, UserEntity } from '@project/database-service';
@@ -43,24 +41,15 @@ export class AuthService {
 
 
   public async register(dto: CreateUserDTO): Promise<User> {
-    const {name, email, password, avatar, birthDate, role, city} = dto;
+    const {password, ...profileData} = dto;
 
-    const existUser = await this.userRepository.findByEmail(email);
+    const existUser = await this.userRepository.findByEmail(profileData.email);
 
     if (existUser) {
       throw new ConflictException(AUTH_USER_EXISTS);
     }
 
-    const newData: Omit<User, 'id'> = {
-      name,
-      email,
-      avatar,
-      role,
-      city,
-      birthDate: dayjs(birthDate).toDate(),
-      hashPassword: ''
-    };
-
+    const newData: Omit<User, 'id'> = {...profileData, hashPassword: ''};
     const newUser = await this.additionalFields[newData.role](newData).setPassword(password);
 
     return this.userRepository.create(newUser);

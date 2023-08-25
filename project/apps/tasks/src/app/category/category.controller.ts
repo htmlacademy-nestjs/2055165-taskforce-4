@@ -17,18 +17,15 @@ export class CategoryController {
 
 
   @Get('/:id')
-  public async getCategory(@Param('id') categoryId: string) {
-    const category = await this.categoryService.getByCategoryId(parseInt(categoryId, 10));
+  public async getCategory(@Param('id') categoryId: number) {
+    const category = await this.categoryService.getByCategoryId(categoryId);
     return fillRDO(CategoryRDO, category);
   }
 
 
   @Patch('/:id')
-  public async updateCategory(@Param('id') categoryId: string, @Body() dto: UpdateCategoryDTO) {
-    const category = await this.categoryService.updateCategory(parseInt(categoryId, 10), dto);
+  public async updateCategory(@Param('id') categoryId: number, @Body() dto: UpdateCategoryDTO) {
+    const category = await this.categoryService.updateCategory(categoryId, dto);
     return fillRDO(CategoryRDO, category);
   }
-
-  /* Нужно ли давать возможность удалять категории фронту,
-  если к ней могут быть привязаны таски разных заказчиков?*/
 }

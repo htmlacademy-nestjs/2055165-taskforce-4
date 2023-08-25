@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 
 import { TaskModule } from './task/task.module';
-import { RepliesModule } from './replies/replies.module';
+import { ReplyModule } from './replies/reply.module';
 import { CategoryModule } from './category/category.module';
 import { DatabaseModule } from '@project/database-service';
 
 @Module({
-  imports: [CategoryModule, TaskModule, RepliesModule, DatabaseModule],
+  imports: [CategoryModule, TaskModule, ReplyModule, DatabaseModule],
   controllers: [],
   providers: [],
 })

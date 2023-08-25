@@ -1,8 +1,8 @@
+import { Task } from "./task.interface";
+
 export interface Reply {
-  readonly id: string;
-  text: string;
-  taskId: string;
+  readonly replyId: number;
+  text?: string | null;
+  task: Task;
   executorId: string;
-  readonly createdAt: Date;
-  updatedAt: Date;
 }

@@ -36,18 +36,19 @@ model Category {
   categoryId Int    @id @default(autoincrement()) @map("category_id")
   title      String @unique
   tasks      Task[]
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("categories")
 }
 
 model Reply {
   replyId    Int      @id @default(autoincrement()) @map("reply_id")
-  text       String
-  executorId Int      @map("executor_id")
+  text       String?
+  executorId String?  @map("executor_id")
   taskId     Int      @map("task_id")
   task       Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade, onUpdate: Cascade)
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("published_at")
+  createdAt  DateTime @default(now()) @map("published_at")
 
   @@map("replies")
 }

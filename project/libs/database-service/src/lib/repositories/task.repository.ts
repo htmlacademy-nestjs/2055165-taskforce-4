@@ -12,23 +12,27 @@ export class TaskRepository implements CRUDRepository<TaskEntity, UpdateTaskData
     this.prisma = dbService.prismaPostgresConnector;
   }
 
-  findById(taskId: number): Promise<Task | null> {
+  public async findById(taskId: number): Promise<Task | null> {
     return this.prisma.task.findUnique({
       where: {taskId},
       include: {
-        category: true
+        category: true,
+        replies: true
       }
     })
   }
 
 
-  create(item: TaskEntity): Promise<Task> {
+  public async create(item: TaskEntity): Promise<Task> {
     const newData = item.toObject();
     return this.prisma.task.create({
       data: {
         ...newData,
         category: {
           connect: {categoryId: newData.category.categoryId}
+        },
+        replies: {
+          connect: []
         }
       },
       include: {
