@@ -2,13 +2,13 @@ import { IsInt, IsMongoId, IsNotEmpty, IsOptional, IsPositive, IsString } from "
 
 export default class CreateReplyDTO {
 
-  @IsOptional()
-  @IsString()
   @IsNotEmpty()
+  @IsString()
+  @IsOptional()
   public text?: string;
 
-  @IsInt()
   @IsPositive()
+  @IsInt()
   public taskId!: number;
 
   @IsMongoId()

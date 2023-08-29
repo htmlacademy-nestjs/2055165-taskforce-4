@@ -1,13 +1,14 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { CategoriesService } from './category.service';
+import { Body, Controller, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { CategoryService } from './category.service';
 import { CreateCategoryDTO } from './dto/create-category.dto';
 import { fillRDO } from '@project/util/util-core';
 import { CategoryRDO } from './rdo/category.rdo';
 import { UpdateCategoryDTO } from './dto/update-category.dto';
 
 @Controller('categories')
+@UsePipes(new ValidationPipe({whitelist: true, transform: true}))
 export class CategoryController {
-  constructor (private readonly categoryService: CategoriesService) {}
+  constructor (private readonly categoryService: CategoryService) {}
 
   @Post('/create')
   public async createOrGetExist(@Body() dto: CreateCategoryDTO) {

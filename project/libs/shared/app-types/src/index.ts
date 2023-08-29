@@ -7,9 +7,11 @@ export * from './lib/feedback.interface';
 export * from './lib/task.interface';
 export * from './lib/comment.interface';
 export * from './lib/category.interface';
+export * from './lib/create-task-data.type';
 export * from './lib/update-task-data.type';
 export * from './lib/reply.interface';
-export * from './lib/file-data.interface'
-export {Role as UserRole, City} from '../../../../node_modules/@internal/prisma/mongo-schema/index'
-export { TaskStatus } from '../../../../node_modules/@internal/prisma/postgres-schema/index'
+export * from './lib/file-data.interface';
+export * from './lib/pin-task.interface';
+export {Role as UserRole, City} from '.prisma/mongo-schema/index'
+export { TaskStatus } from '.prisma/postgres-schema/index'
 

@@ -1,10 +1,10 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 import { UserRepository, EmployerEntity, ExecutorEntity, UserEntity } from '@project/database-service';
-import CreateUserDTO from './dto/create-user.dto';
 import { User, UserRole } from '@project/shared/app-types';
 import AuthUserDTO from './dto/auth-user.dto';
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './auth.constants';
+import CreateUserDTO from './dto/create-user.dto';
 
 
 
@@ -40,8 +40,8 @@ export class AuthService {
   }
 
 
-  public async register(dto: CreateUserDTO): Promise<User> {
-    const {password, ...profileData} = dto;
+  public async register(data: CreateUserDTO): Promise<User> {
+    const {password, ...profileData} = data;
 
     const existUser = await this.userRepository.findByEmail(profileData.email);
 

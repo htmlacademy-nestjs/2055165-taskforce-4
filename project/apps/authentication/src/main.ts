@@ -10,9 +10,7 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
 
   const configService = app.get(ConfigService)
-  app.useGlobalPipes(new ValidationPipe(
-    {whitelist: true}
-  ))
+  app.useGlobalPipes(new ValidationPipe({whitelist: true, transform: true}))
 
   const port = configService.get('auth-application.port');
   await app.listen(port);

@@ -1,3 +1,5 @@
+export const MIN_USER_AGE = 18;
+
 export enum NAME_LENGTH {
   MIN = 3,
   MAX = 50

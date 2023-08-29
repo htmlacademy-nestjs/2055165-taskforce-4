@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { fillRDO } from '@project/util/util-core';
 import { ReplyService } from './reply.service';
 import CreateReplyDTO from './dto/create-reply.dto';
@@ -6,6 +6,7 @@ import ReplyRDO from './rdo/reply.rdo';
 import DeleteReplyDTO from './dto/delete-reply.dto';
 
 @Controller('replies')
+@UsePipes(new ValidationPipe({whitelist: true, transform: true}))
 export class ReplyController {
   constructor(
     private readonly replyService: ReplyService

@@ -1,9 +1,10 @@
-import { IsDate, IsEmail, IsEnum, IsMongoId, IsOptional, MaxLength, MinLength } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
-import dayjs from 'dayjs';
+import { IsDate, IsEmail, IsEnum, IsMongoId, IsOptional, MaxLength, MinLength, isDateString, maxLength } from 'class-validator';
 
+import {IsAdult} from '@project/shared/validate-decorators'
 import { City, UserRole } from "@project/shared/app-types";
-import { NAME_LENGTH, PASSWORD_LENGTH } from "../auth.constants";
+import { MIN_USER_AGE, NAME_LENGTH, PASSWORD_LENGTH } from "../auth.constants";
+import dayjs from 'dayjs';
+import { Transform } from 'class-transformer';
 
 
 export default class CreateUserDTO {
@@ -12,24 +13,33 @@ export default class CreateUserDTO {
   @MaxLength(NAME_LENGTH.MAX)
   public name!: string;
 
+
   @IsEmail()
   public email!: string;
+
 
   @MinLength(PASSWORD_LENGTH.MIN)
   @MaxLength(PASSWORD_LENGTH.MAX)
   public password!: string;
 
-  @IsDate()
-  @Type(() => Date)
-  @Transform(({value}) => dayjs(value).toDate())
+
+  @IsAdult(MIN_USER_AGE)
+  @IsDate({message: 'The Birth date must have "YYYY-MM-DD" format'})
+  @Transform(({value}) =>
+    isDateString(value, {strictSeparator: true}) && maxLength(value, 10)
+      ? dayjs(value).toDate()
+      : value)
   public birthDate!: Date;
 
-  @IsOptional()
+
   @IsMongoId()
+  @IsOptional()
   public avatar?: string;
+
 
   @IsEnum(City)
   public city!: City;
+
 
   @IsEnum(UserRole)
   public role!: UserRole;

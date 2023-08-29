@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 
 import { UserRepository, UserEntity } from '@project/database-service';
 import { UserRole, UpdateUserData } from '@project/shared/app-types';
+import UpdateUserDTO from './dto/update-user.dto';
 
 
 @Injectable()
@@ -30,8 +31,9 @@ export class ProfileService {
     return existUser;
   }
 
-  public async updateUserProfile(id: string, dto: UpdateUserData) {
-    const {password, newPassword, ...profileNewData} = dto;
+
+  public async updateUserProfile(id: string, dto: UpdateUserDTO) {
+    const {password, newPassword, ...profileData} = dto;
 
     const existUser = await this.userRepository.findById(id);
 
@@ -42,6 +44,7 @@ export class ProfileService {
     let userEntity = new UserEntity(existUser);
 
     let updateData: UpdateUserData;
+
     if (password && ! await userEntity.comparePassword(password)) {
       throw new BadRequestException('User\'s current password is wrong');
     }
@@ -49,10 +52,11 @@ export class ProfileService {
       userEntity = await userEntity.setPassword(newPassword);
       updateData = { hashPassword: userEntity.hashPassword }
     } else {
-      if (existUser.role === UserRole.Employer && profileNewData.specialization) {
+      if (existUser.role === UserRole.Employer && dto.specialization) {
         throw new BadRequestException('"specialization" data is restricted for this user');
       }
-      updateData = profileNewData;
+
+      updateData = profileData
     }
 
     return this.userRepository.update(id, updateData);

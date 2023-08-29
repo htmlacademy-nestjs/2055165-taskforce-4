@@ -1,10 +1,10 @@
-import { City, TaskStatus } from '@project/shared/app-types';
+import { Category, City, TaskStatus } from '@project/shared/app-types';
 
 
 export type UpdateTaskData = {
   title?: string;
   description?: string;
-  categoryId?: number; //Ref?
+  category?: Category;
   price?: number;
   expirationDate?: Date;
   image?: string;
@@ -12,5 +12,6 @@ export type UpdateTaskData = {
   tags?: string[];
   city?: City;
   status?: TaskStatus;
-  updatedAt: Date
+  repliesCount?: number;
+  commentsCount?: number;
 }

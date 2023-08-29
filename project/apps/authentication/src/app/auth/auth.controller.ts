@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { UserAgeValidationPipe } from '@project/shared/shared-pipes'
 import { fillRDO } from '@project/util/util-core';
 import { AuthService } from './auth.service';
 import CreateUserDTO from './dto/create-user.dto';
@@ -12,8 +11,8 @@ export class AuthController {
   constructor (private readonly authService: AuthService) {}
 
   @Post('/register')
-  public async createUser(@Body(UserAgeValidationPipe) dto: CreateUserDTO) {
-    const newUser = await this.authService.register(dto);
+  public async createUser(@Body() data: CreateUserDTO) {
+    const newUser = await this.authService.register(data);
     return fillRDO(UserBasicRDO, newUser);
   }
 

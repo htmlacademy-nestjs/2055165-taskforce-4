@@ -107,8 +107,8 @@
     "db-postgres:seed": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx ts-node seed.ts",
-        "cwd": "libs/models/src/lib/postgres-models/prisma"
+        "command": "npx ts-node --project tsconfig.lib.json src/main.ts",
+        "cwd": "libs/models"
       }
     }
 

@@ -1,3 +1,5 @@
+export const PRICE_MAX_DECIMAL_DIGITS = 2;
+
 export enum TITLE_LENGTH {
   MIN = 20,
   MAX = 50

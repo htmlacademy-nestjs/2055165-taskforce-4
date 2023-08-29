@@ -1,13 +1,11 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ReplyService } from './reply.service';
 import { ReplyController } from './reply.controller';
-import { DatabaseModule, ReplyRepository } from '@project/database-service';
-import { TaskModule } from '../task/task.module';
+import { DatabaseModule, ReplyRepository, TaskRepository } from '@project/database-service';
 
 @Module({
-  imports: [DatabaseModule, forwardRef(() => TaskModule)],
-  providers: [ReplyService, ReplyRepository],
+  imports: [DatabaseModule],
+  providers: [ReplyService, ReplyRepository, TaskRepository],
   controllers: [ReplyController],
-  exports: [ReplyService],
 })
 export class ReplyModule {}

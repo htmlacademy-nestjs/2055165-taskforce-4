@@ -1,8 +1,7 @@
 import { Category, Task, TaskStatus } from "@project/shared/app-types";
-import { City } from "../../../../../node_modules/@internal/prisma/postgres-schema/index";
+import { City } from ".prisma/postgres-schema/index";
 
 export class TaskEntity implements Omit<Task, 'taskId'> {
-  // taskId!: number;
   title!: string;
   description!: string;
   category!: Category;
@@ -40,7 +39,6 @@ export class TaskEntity implements Omit<Task, 'taskId'> {
 
   public toObject(): Omit<Task, 'taskId'> {
     return {
-      // taskId: this.taskId,
       title: this.title,
       description: this.description,
       category: this.category,

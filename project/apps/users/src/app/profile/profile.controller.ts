@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
-import { MongoidValidationPipe, UpdateUserDataValidationPipe } from '@project/shared/shared-pipes';
+import { Body, Controller, Get, Param, Patch, ValidationPipe } from '@nestjs/common';
+import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 
 import { ProfileService } from './profile.service';
-import { UpdateUserData, UserRole } from '@project/shared/app-types';
+import { UserRole } from '@project/shared/app-types';
 import { fillRDO } from '@project/util/util-core';
 import EmployerFullRDO from './rdo/employer-full.rdo';
 import ExecutorFullRDO from './rdo/executor-full.rdo';
+import UpdateUserDTO from './dto/update-user.dto';
 
 @Controller('users')
 export class ProfileController {
@@ -27,18 +28,18 @@ export class ProfileController {
 
 
     //полноценная реализация после добавления JWT токенов
-    @Patch('/:id')
-    public async updateUserInfo
-      (
-        @Body(new UpdateUserDataValidationPipe()) dto: UpdateUserData,
-        @Param('id', MongoidValidationPipe) userId: string
-      ) {
+  @Patch('/:id')
+  public async updateUserInfo
+    (
+      @Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateUserDTO,
+      @Param('id', MongoidValidationPipe) userId: string
+    ) {
 
-      const updatedUser = await this.profileService.updateUserProfile(userId, dto); //dto as updateData
-      if (updatedUser.role === UserRole.Employer) {
-        return fillRDO(EmployerFullRDO, updatedUser);
-      }
-
-      return fillRDO(ExecutorFullRDO, updatedUser);
+    const updatedUser = await this.profileService.updateUserProfile(userId, data);
+    if (updatedUser.role === UserRole.Employer) {
+      return fillRDO(EmployerFullRDO, updatedUser);
     }
+
+    return fillRDO(ExecutorFullRDO, updatedUser);
+  }
 }

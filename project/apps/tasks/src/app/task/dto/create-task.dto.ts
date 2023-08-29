@@ -1,8 +1,8 @@
 import { City } from "@project/shared/app-types";
-import { ADRESS_LENGTH, DESCRIPTION_LENGTH, PRICE_VALUE, TAGS_COUNT, TAG_LENGTH, TITLE_LENGTH } from "../task-constants";
-import { ArrayMaxSize, ArrayMinSize, IsDate, IsEnum, IsInt, IsMongoId, IsOptional, IsPositive, MaxLength, Min, MinLength } from "class-validator";
+import { ADRESS_LENGTH, DESCRIPTION_LENGTH, PRICE_MAX_DECIMAL_DIGITS, PRICE_VALUE, TAGS_COUNT, TAG_LENGTH, TITLE_LENGTH } from "../task.constants";
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsEnum, IsInt, IsMongoId, IsNumber, IsOptional, IsPositive, MaxLength, Min, MinDate, MinLength, arrayMaxSize, isArray, isNumber } from "class-validator";
 import { Transform, Type } from "class-transformer";
-import dayjs from "dayjs";
+
 
 export default class CreateTaskDTO {
 
@@ -18,29 +18,42 @@ export default class CreateTaskDTO {
   @IsPositive()
   public categoryId!: number;
 
+
   @Min(PRICE_VALUE.MIN)
+  @IsNumber({}, {message: 'Price must be a number'})
+  @Transform(({value}) => isNumber(value) ? parseFloat(value.toFixed(PRICE_MAX_DECIMAL_DIGITS)) : value)
   public price!: number;
 
-  @IsOptional()
+
+  @MinDate(new Date(), {message: 'Task expiration date should be later than current date.'})
   @IsDate()
+  @IsOptional()
   @Type(() => Date)
-  @Transform(({value}) => value ? dayjs(value).toDate() : value)
   public expirationDate?: Date;
 
-  @IsOptional()
+
   @IsMongoId()
+  @IsOptional()
   public image?: string;
+
 
   @IsOptional()
   @MinLength(ADRESS_LENGTH.MIN)
   @MaxLength(ADRESS_LENGTH.MAX)
   public address?: string;
 
-  @IsOptional()
-  @ArrayMinSize(TAGS_COUNT.MIN)
-  @ArrayMaxSize(TAGS_COUNT.MAX)
+
   @MinLength(TAG_LENGTH.MIN, {each: true})
   @MaxLength(TAG_LENGTH.MAX, {each: true})
+  @ArrayMinSize(TAGS_COUNT.MIN)
+  @ArrayMaxSize(TAGS_COUNT.MAX)
+  @IsArray()
+  @IsOptional()
+  @Transform(({value}) =>
+    isArray<string>(value) && arrayMaxSize(value, TAGS_COUNT.MAX)
+      ? Array.from(new Set(value))
+      : value
+  )
   public tags?: string[];
 
   @IsEnum(City)

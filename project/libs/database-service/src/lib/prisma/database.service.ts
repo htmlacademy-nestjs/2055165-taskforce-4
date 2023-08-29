@@ -1,8 +1,9 @@
-import { ConfigService } from "@nestjs/config";
-import {PrismaClient as PrismaBaseMongoClient} from "@internal/prisma/mongo-schema"
-import {PrismaClient as PrismaPostgresClient} from "@internal/prisma/postgres-schema"
-import {PrismaClient as PrismaFsClient } from "@internal/prisma/file-schema"
 import { Injectable, OnModuleInit } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+
+import {PrismaClient as PrismaBaseMongoClient} from ".prisma/mongo-schema"
+import {PrismaClient as PrismaPostgresClient} from ".prisma/postgres-schema"
+import {PrismaClient as PrismaFsClient } from ".prisma/file-schema"
 import { getMongoConnectionString, getPostgresConnectionString } from "@project/util/util-core"
 
 

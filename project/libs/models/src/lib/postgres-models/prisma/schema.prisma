@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../../../../../../node_modules/@internal/prisma/postgres-schema"
+  output   = "../../../../../../node_modules/.prisma/postgres-schema"
 }
 
 datasource db {
@@ -27,7 +27,7 @@ model Task {
   updatedAt      DateTime     @updatedAt @map("published_at")
   employerId     String?      @map("employer_id")
   replies        Reply[]
-  pinned         PinnedTask[]
+  pinned         PinnedTask?
 
   @@map("tasks")
 }
@@ -54,12 +54,12 @@ model Reply {
 }
 
 model PinnedTask {
-  id        Int      @id @default(autoincrement()) @map("favorite_id")
-  task      Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade)
-  taskId    Int      @map("task_id")
-  userId    String   @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  id         Int      @id @default(autoincrement()) @map("pin_id")
+  task       Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade)
+  taskId     Int      @unique @map("task_id")
+  executorId String   @map("executor_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("pinned_tasks")
 }
