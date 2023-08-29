@@ -1,36 +1,38 @@
-import { randomUUID } from 'node:crypto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { Injectable } from '@nestjs/common';
-
-import {Comment} from '@project/shared/app-types';
-import {CommentMemoryRepository, CommentEntity} from '@project/database-service';
+import {CommentRepository, CommentEntity, UserRepository, FeedbackQuery} from '@project/database-service';
 import CreateCommentDTO from './dto/create-comment.dto';
 
 @Injectable()
 export class CommentService {
   constructor(
-    private readonly commentRepository: CommentMemoryRepository
+    private readonly commentRepository: CommentRepository,
+    private readonly userRepository: UserRepository
   ) {}
 
   public async createComment(dto: CreateCommentDTO) {
-    const {text, taskId, authorId} = dto;
+    const {taskId, authorId, text} = dto;
 
-    const newComment: Comment = {
-      id: randomUUID(),
-      text,
-      taskId,
-      authorId,
-      createdAt: new Date(),
-      updatedAt: new Date()
+    //проверка таска на существование через брокер
+    const existUser = await this.userRepository.findById(authorId);
+    if (!existUser) {
+      throw new BadRequestException('Author with such id not found');
     }
 
-    return this.commentRepository.create(new CommentEntity(newComment));
+    const commentData = {
+      text,
+      taskId,
+      author: existUser
+    }
+
+    return this.commentRepository.create(new CommentEntity(commentData));
   }
 
 
-  public async getTaskComments(taskId: string) {
-    return this.commentRepository.getCommentsByTaskId(taskId);
+  public async getTaskComments(taskId: number, query: FeedbackQuery) {
+    return this.commentRepository.getCommentsByTaskId(taskId, query);
   }
+
 
   public async deleteComment(commentId: string) {
     return this.commentRepository.delete(commentId);

@@ -14,11 +14,12 @@ export * from './lib/repositories/category.repository';
 export * from './lib/repositories/task.repository';
 export * from './lib/repositories/file-data.repository';
 export * from './lib/repositories/reply.repository';
-export * from './lib/repositories/comment-memory.repository';
-export * from './lib/repositories/feedback-memory.repository';
+export * from './lib/repositories/comment.repository';
+export * from './lib/repositories/feedback.repository';
 
 export * from './lib/prisma/database.module';
 export * from './lib/prisma/database.service'
 export * from './lib/seed'
 
 export * from './lib/queries/task/task.query';
+export * from './lib/queries/feedback/feedback.query'

@@ -1,8 +1,8 @@
+import { User } from "./user.interface";
+
 export interface Comment {
-  readonly id: string;
+  readonly commentId: string;
   text: string;
-  taskId: string;
-  authorId: string;
-  readonly createdAt: Date;
-  updatedAt: Date;
+  taskId: number;
+  author: User;
 }

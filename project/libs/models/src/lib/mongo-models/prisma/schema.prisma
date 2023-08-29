@@ -9,11 +9,11 @@ datasource db {
 }
 
 model User {
-  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                  String     @id @default(auto()) @map("_id") @db.ObjectId
   name                String
-  email               String   @unique
-  aboutInfo           String   @default("")
-  avatar              String   @default("")
+  email               String     @unique
+  aboutInfo           String     @default("")
+  avatar              String     @default("")
   hashPassword        String
   birthDate           DateTime
   city                City
@@ -25,10 +25,34 @@ model User {
   ratingPosition      Int?
   publishedTasksCount Int?
   newTasksCount       Int?
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  comments            Comment[]
+  feedbacks           FeedBack[]
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
 
   @@map("users")
+}
+
+model Comment {
+  commentId String @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  taskId    Int
+  author    User   @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  authorId  String @db.ObjectId
+
+  @@map("comments")
+}
+
+model FeedBack {
+  feedbackId String @id @default(auto()) @map("_id") @db.ObjectId
+  text       String
+  rating     Int
+  taskId     Int
+  executorId String @db.ObjectId
+  employer   User   @relation(fields: [employerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  employerId String @db.ObjectId
+
+  @@map("feedbacks")
 }
 
 enum City {

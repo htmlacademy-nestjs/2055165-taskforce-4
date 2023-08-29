@@ -1,5 +1,5 @@
 import { ArrayMaxSize, IsArray, IsDate, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, arrayMaxSize, isArray, isDateString, maxLength } from "class-validator";
-import {IsAdult, IsRedundantField} from '@project/shared/validate-decorators'
+import {IsAdult, IsRedundantUserField} from '@project/shared/validate-decorators'
 
 import { City } from "@project/shared/app-types";
 import { ABOUT_INFO_LENGTH, MIN_USER_AGE, NAME_LENGTH, PASSWORD_LENGTH, SPECIALIZATION_COUNT } from "../profile.constants";
@@ -16,14 +16,14 @@ export default class UpdateUserDTO {
 
   @MinLength(PASSWORD_LENGTH.MIN)
   @MaxLength(PASSWORD_LENGTH.MAX)
-  @IsRedundantField('password')
+  @IsRedundantUserField('password')
   @IsOptional()
   public password?: string;
 
 
   @MinLength(PASSWORD_LENGTH.MIN)
   @MaxLength(PASSWORD_LENGTH.MAX)
-  @IsRedundantField('newPassword')
+  @IsRedundantUserField('newPassword')
   @IsOptional()
   public newPassword?: string;
 

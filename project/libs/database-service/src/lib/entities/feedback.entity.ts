@@ -1,40 +1,31 @@
-import { Feedback } from "@project/shared/app-types";
+import { Employer, Feedback } from "@project/shared/app-types";
 
-export class FeedbackEntity implements Feedback {
-  id!: string;
+export class FeedbackEntity implements Omit<Feedback, 'feedbackId'> {
   text!: string;
-  taskId!: string;
-  employerId!: string;
+  taskId!: number;
+  employer!: Employer;
   executorId!: string;
   rating!: number;
-  createdAt!: Date;
-  updatedAt!: Date;
 
-  constructor (feedBack: Feedback) {
+  constructor (feedBack: Omit<Feedback, 'feedbackId'>) {
     this.fillEntity(feedBack);
   }
 
-  public fillEntity(feedback: Feedback) {
-    this.id = feedback.id;
+  public fillEntity(feedback: Omit<Feedback, 'feedbackId'>) {
     this.text = feedback.text;
     this.taskId = feedback.taskId;
     this.executorId = feedback.executorId;
-    this.employerId = feedback.employerId;
+    this.employer = feedback.employer;
     this.rating = feedback.rating;
-    this.createdAt = feedback.createdAt;
-    this.updatedAt = feedback.updatedAt;
   }
 
   public toObject() {
     return {
-      id: this.id,
       text: this.text,
       taskId: this.taskId,
       executorId: this.executorId,
-      employerId: this.employerId,
+      employer: this.employer,
       rating: this.rating,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
     }
   }
 }

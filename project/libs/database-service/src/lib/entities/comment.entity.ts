@@ -1,34 +1,27 @@
-import {Comment} from '@project/shared/app-types'
+import {Comment, User} from '@project/shared/app-types'
 
-export class CommentEntity implements Comment {
-  id!: string;
+export class CommentEntity implements Omit<Comment,'commentId'> {
   text!: string;
-  taskId!: string;
-  authorId!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
+  taskId!: number;
+  author!: User;
 
-  constructor (comment: Comment) {
+  constructor (comment: Omit<Comment,'commentId'>) {
     this.fillEntity(comment);
   }
 
-  public fillEntity(comment: Comment) {
-    this.id = comment.id;
+
+  public fillEntity(comment: Omit<Comment,'commentId'>) {
     this.text = comment.text;
     this.taskId = comment.taskId;
-    this.authorId = comment.authorId;
-    this.createdAt = comment.createdAt;
-    this.updatedAt = comment.updatedAt;
+    this.author = comment.author;
   }
+
 
   public toObject() {
     return {
-      id: this.id,
       text: this.text,
       taskId: this.taskId,
-      authorId: this.authorId,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
+      author: this.author,
     }
   }
 

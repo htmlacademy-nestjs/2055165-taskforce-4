@@ -100,13 +100,13 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
 
 
   public async create(item: TaskEntity): Promise<Task> {
-    const newData = item.toObject();
+    const taskData = item.toObject();
 
     return this.prisma.task.create({
       data: {
-        ...newData,
+        ...taskData,
         category: {
-          connect: {categoryId: newData.category.categoryId}
+          connect: {categoryId: taskData.category.categoryId}
         },
         replies: {
           connect: []

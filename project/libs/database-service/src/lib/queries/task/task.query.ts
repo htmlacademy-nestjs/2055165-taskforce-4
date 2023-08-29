@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, DEFAULT_TASKS_COUNT_LIMIT, DEFAULT_TASKS_STATUS } from './query-task.constants';
+import { DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, DEFAULT_TASKS_COUNT_LIMIT, DEFAULT_TASKS_STATUS } from './task-query.constants';
 import { IsIn, IsInt, IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 
