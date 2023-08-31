@@ -5,6 +5,13 @@ import { PinTask, Task, UpdateTaskData, UserRole } from "@project/shared/app-typ
 import { DatabaseService } from "../prisma/database.service";
 import { TaskQuery } from '../queries/task/task.query';
 import { PinTaskEntity } from "../entities/pin-task.entity";
+import { UserTasksQuery } from "../queries/task/user-tasks.query";
+
+const SortType = {
+  'date': 'updatedAt',
+  'discussed': 'commentsCount',
+  'popular': 'repliesCount'
+} as const;
 
 @Injectable()
 export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<Task, 'taskId'>>, Task> {
@@ -14,75 +21,56 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
   }
 
 
-  public async find({limit, category, page, userId, status, tag, city, sort, sortDirection}: TaskQuery) {
+  public async find({limit, category, page, status, tag, city, sortType, sortDirection}: TaskQuery) {
 
-
-    // Список "Мои задания" для Role = Employer
-    // await this.prisma.task.findMany({
-    //   where: {
-    //     status: status,
-    //     employerId: userId
-    //   }
-    // })
-
-    // Список "Мои задания" для Role = Executor ()
     return this.prisma.task.findMany({
       where: {
+        city: city,
         status: status,
-        pinned: {
-            executorId: userId
-        }
-      }
+        category: {
+          categoryId: category
+        },
+        tags: tag ? {has: tag} : undefined
+      },
+      take: limit,
+      include: {
+        category: true
+      },
+      orderBy: {
+        [SortType[sortType]]: sortDirection
+      },
+      skip: page && page > 0 ? limit * (page - 1) : undefined,
     })
-
-
-    // return this.prisma.task.findMany({
-    //   where: {
-    //     city: city,
-    //     status: status,
-    //     category: {
-    //       categoryId: category
-    //     },
-    //     tags: tag ? {has: tag} : undefined
-    //   },
-    //   take: limit,
-    //   include: {
-    //     category: true
-    //   },
-    //   orderBy: [
-    //     {'updatedAt': sortDirection}
-    //   ],
-    //   skip: page && page > 0 ? limit * (page - 1) : undefined,
-    // })
-
   }
 
 
-  public async findUserTasks({userId, status}: Pick<TaskQuery, 'userId' | 'status'>, role: UserRole) {
+  public async findUserTasks({userId, status, limit, page}: UserTasksQuery, role: UserRole) {
     if (role === UserRole.Employer) {
-
       return this.prisma.task.findMany({
         where: {
           status: status,
           employerId: userId
         },
+        take: limit,
         include: {
           category: true
         },
+        skip: page && page > 0 ? limit * (page - 1) : undefined
       });
-
     }
 
-    return this.prisma.pinnedTask.findMany({
+    return this.prisma.task.findMany({
       where: {
-        executorId: userId,
-        task: {
-          status
+        status: status,
+        pinnedTo: {
+          executorId: userId
         }
       },
+      take: limit,
       include: {
-        task: true
-      }
+        category: true
+      },
+      skip: page && page > 0 ? limit * (page - 1) : undefined
     });
 
 
@@ -93,7 +81,12 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
       where: {taskId},
       include: {
         category: true,
-        replies: true
+        replies: true,
+        pinnedTo: {
+          select: {
+            executorId: true
+          }
+        }
       }
     })
   }
@@ -144,7 +137,14 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
   }
 
 
-  public async pin(item: PinTaskEntity): Promise<PinTask> {
+  public async findPinByTaskId(taskId: number) {
+    return this.prisma.pinnedTask.findUnique({
+      where: {taskId}
+    });
+  }
+
+
+  public async pin(item: PinTaskEntity) {
     const {taskId, executorId} = item.toObject();
 
     return this.prisma.pinnedTask.create({
@@ -158,16 +158,9 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
   }
 
 
-  public async findByPinId(pinId: number) {
-    return this.prisma.pinnedTask.findUnique({
-      where: {id: pinId}
-    });
-  }
-
-
-  public async unpin(pinId: number): Promise<PinTask> {
+  public async unpin(taskId: number): Promise<PinTask> {
     return this.prisma.pinnedTask.delete({
-      where: {id: pinId}
+      where: {taskId}
     });
   }
 

@@ -1,5 +1,5 @@
 export interface PinTask {
-  id: number;
+  pinId: number;
   taskId: number;
   executorId: string;
 }

@@ -8,7 +8,7 @@ import { Employer } from '@project/shared/app-types';
 export class FeedbackService {
   constructor(
     private readonly feedbackRepository: FeedbackRepository,
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository // отключить
   ){}
 
   public async createFeedBack(dto: CreateFeedbackDTO) {
@@ -17,6 +17,8 @@ export class FeedbackService {
     //проверка таска на существование через брокер
     //проверка таска на статус и привязанного к нему executorId через брокер
 
+    //проверка заказчика на существование через брокер => сервис юзеров
+    //проверка исполнителя на существование через брокер => сервис юзеров
     const existEmployer = await this.userRepository.findById(employerId) as Employer;
     if (!existEmployer) {
       throw new BadRequestException('Employer with such id not found');
@@ -39,6 +41,7 @@ export class FeedbackService {
   }
 
   public async getExecutorFeedbacks(executorId: string, query: FeedbackQuery) {
+    //проверка исполнителя на существование через брокер => сервис юзеров
     return this.feedbackRepository.findByExecutorId(executorId, query);
   }
 

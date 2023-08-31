@@ -5,8 +5,8 @@ import mongoBaseConnectorConfig from "./mongo-base-connector.config";
 import postgresConnectorConfig from "./postgres-connector.config";
 import mongoFsConnectorConfig from "./mongo-fs-connector.config";
 
-const ENV_MONGO_DB_PATH = 'mongo.env';
-const ENV_POSTGRES_DB_PATH = 'apps/tasks/postgres.env';
+const ENV_MONGO_DB_PATH = 'mongo-base.env';
+const ENV_POSTGRES_DB_PATH = 'apps/tasks/tasks.env';
 const ENV_MONGO_FS_DB_PATH = 'apps/fs/fs.env'
 
 @Module({

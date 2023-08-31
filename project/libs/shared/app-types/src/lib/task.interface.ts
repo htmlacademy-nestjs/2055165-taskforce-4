@@ -15,4 +15,5 @@ export interface Task {
   commentsCount: number;
   repliesCount: number;
   employerId: string | null;
+  pinnedId?: number | null
 }

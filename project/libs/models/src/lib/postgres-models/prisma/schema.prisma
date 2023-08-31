@@ -27,14 +27,15 @@ model Task {
   updatedAt      DateTime     @updatedAt @map("published_at")
   employerId     String?      @map("employer_id")
   replies        Reply[]
-  pinned         PinnedTask?
+  pinId          Int?
+  pinnedTo       PinnedTask?
 
   @@map("tasks")
 }
 
 model Category {
-  categoryId Int    @id @default(autoincrement()) @map("category_id")
-  title      String @unique
+  categoryId Int      @id @default(autoincrement()) @map("category_id")
+  title      String   @unique
   tasks      Task[]
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
@@ -54,8 +55,8 @@ model Reply {
 }
 
 model PinnedTask {
-  id         Int      @id @default(autoincrement()) @map("pin_id")
-  task       Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade)
+  pinId      Int      @id @default(autoincrement()) @map("pin_id")
+  task       Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade, onUpdate: Cascade)
   taskId     Int      @unique @map("task_id")
   executorId String   @map("executor_id")
   createdAt  DateTime @default(now()) @map("created_at")

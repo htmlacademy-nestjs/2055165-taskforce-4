@@ -1,6 +1,8 @@
 import { Transform } from "class-transformer";
+import { IsRedundantFields } from '@project/shared/validate-decorators'
 import { DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, DEFAULT_TASKS_COUNT_LIMIT, DEFAULT_TASKS_STATUS } from './task-query.constants';
-import { IsIn, IsInt, IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsIn, IsInt, IsMongoId, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
+import { City, TaskStatus } from "@project/shared/app-types";
 
 
 // enum CityParser {
@@ -13,42 +15,41 @@ export class TaskQuery {
   @Transform(({ value } ) => +value || DEFAULT_TASKS_COUNT_LIMIT)
   @IsInt()
   @IsOptional()
-  public limit = DEFAULT_TASKS_COUNT_LIMIT;
+  public limit: number = DEFAULT_TASKS_COUNT_LIMIT
 
-  @Transform(({ value }) => (+value))
+
   @IsInt()
   @IsOptional()
   public category?: number;
 
 
+  @Transform(({ value } ) => value || DEFAULT_SORT_TYPE)
   @IsIn(['date', 'popular', 'discussed'])
   @IsOptional()
-  public sort: 'date' | 'popular' | 'discussed' = DEFAULT_SORT_TYPE
+  public sortType: 'date' | 'popular' | 'discussed' = DEFAULT_SORT_TYPE
 
 
-  @IsIn(['Moscow', 'SaintPetersburg', 'Vladivostok'])
+  @IsIn(Object.values(City))
   @IsOptional()
-  public city?: 'Moscow' | 'SaintPetersburg' | 'Vladivostok'
+  public city?: City
 
 
+  @Transform(({ value } ) => value || DEFAULT_SORT_DIRECTION)
   @IsIn(['asc', 'desc'])
   @IsOptional()
-  public sortDirection: 'desc' | 'asc' = DEFAULT_SORT_DIRECTION;
+  public sortDirection: 'desc' | 'asc' = DEFAULT_SORT_DIRECTION
 
 
-  @Transform(({ value }) => +value)
+  @IsPositive()
   @IsInt()
   @IsOptional()
   public page?: number;
 
-  @IsMongoId()
-  @IsOptional()
-  public userId?: string;
 
-
-  @IsIn(['New', 'Cancelled', 'InProgress', 'Completed', 'Failed'])
+  @Transform(({ value } ) => value || DEFAULT_TASKS_STATUS)
+  @IsIn(Object.values(TaskStatus))
   @IsOptional()
-  public status?: 'New' | 'Cancelled' | 'InProgress' | 'Completed' | 'Failed'
+  public status: TaskStatus = DEFAULT_TASKS_STATUS
 
 
   @IsString()

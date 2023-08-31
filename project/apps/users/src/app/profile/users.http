@@ -1,14 +1,17 @@
-#Get user info
+#Get Employer info
 GET  http://localhost:3000/api/users/64ebc8ae9b9f8e5d31b778d7 HTTP/1.1
+###
 
+#Get Executor info
+GET  http://localhost:3000/api/users/64ebc8ae9b9f8e5d31b778dc HTTP/1.1
 ###
 
 #Update user info
-Patch  http://localhost:3000/api/users/64ebc8ae9b9f8e5d31b778da HTTP/1.1
+Patch  http://localhost:3000/api/users/64ebc8ae9b9f8e5d31b778dc HTTP/1.1
 Content-Type: application/json
 
 {
-  "birthDate": "2004-08-30"
+  "birthDate": "1994-08-30"
 }
 ###
 

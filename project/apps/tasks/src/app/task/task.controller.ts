@@ -5,10 +5,8 @@ import { fillRDO } from '@project/util/util-core';
 import TaskFullRDO from './rdo/task-full.rdo';
 import UpdateTaskDTO from './dto/update-task.dto';
 import TaskBasicRDO from './rdo/task-basic.rdo';
-import { TaskQuery } from '@project/database-service';
+import { TaskQuery, UserTasksQuery } from '@project/database-service';
 import PinTaskDTO from './dto/pin-task.dto';
-import UnpinTaskDTO from './dto/unpin-task.dto';
-
 
 @Controller('tasks')
 export class TaskController {
@@ -22,6 +20,13 @@ export class TaskController {
     const tasks = await this.taskService.getTasks(query);
     return fillRDO(TaskBasicRDO, tasks);
   }
+
+  @Get('/mytasks')
+  public async getUserTasks(@Query(new ValidationPipe({whitelist: true, transform: true})) query: UserTasksQuery) {
+    const tasks = await this.taskService.getUserTasks(query);
+    return fillRDO(TaskBasicRDO, tasks)
+  }
+
 
   @Post('/create')
   public async createTask(@Body(new ValidationPipe({whitelist: true, transform: true})) data: CreateTaskDTO) {
@@ -51,16 +56,16 @@ export class TaskController {
     return fillRDO(TaskFullRDO, updatedTask);
   }
 
-  @Post('/:id/pin-task')
-  public async pinTask(@Param('id', ParseIntPipe) taskId: number, @Body(ValidationPipe) data: PinTaskDTO) {
+  @Post('/:taskId/pin-task')
+  public async pinTask(@Param('taskId', ParseIntPipe) taskId: number, @Body(ValidationPipe) data: PinTaskDTO) {
     const pin = await this.taskService.pinTask(taskId, data);
     return `Task ${taskId} has been pinned to Executor ${pin.executorId} successfully`;
   }
 
 
-  @Delete('/:id/pin-task/')
-  public async unpinTask(@Param('id', ParseIntPipe) taskId: number, @Body(ValidationPipe) {pinId}: UnpinTaskDTO) {
-    const pin = await this.taskService.unpinTask(pinId);
+  @Delete('/:taskId/pin-task/')
+  public async unpinTask(@Param('taskId', ParseIntPipe) taskId: number) {
+    const pin = await this.taskService.unpinTask(taskId);
     return `Task ${taskId} has been unpinned from Executor ${pin.executorId} successfully`;
   }
 }

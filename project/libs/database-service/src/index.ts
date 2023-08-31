@@ -22,4 +22,5 @@ export * from './lib/prisma/database.service'
 export * from './lib/seed'
 
 export * from './lib/queries/task/task.query';
+export * from './lib/queries/task/user-tasks.query'
 export * from './lib/queries/feedback/feedback.query'

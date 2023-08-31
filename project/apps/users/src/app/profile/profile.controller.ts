@@ -2,11 +2,9 @@ import { Body, Controller, Get, Param, Patch, ValidationPipe } from '@nestjs/com
 import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 
 import { ProfileService } from './profile.service';
-import { UserRole } from '@project/shared/app-types';
 import { fillRDO } from '@project/util/util-core';
-import EmployerFullRDO from './rdo/employer-full.rdo';
-import ExecutorFullRDO from './rdo/executor-full.rdo';
 import UpdateUserDTO from './dto/update-user.dto';
+import UserFullRDO from './rdo/user-full.rdo';
 
 @Controller('users')
 export class ProfileController {
@@ -18,12 +16,7 @@ export class ProfileController {
   @Get('/:id')
   public async getUserInfo(@Param('id', MongoidValidationPipe) userId: string) {
     const user = await this.profileService.getUserProfile(userId);
-
-    if (user.role === UserRole.Employer) {
-      return fillRDO(EmployerFullRDO, user);
-    }
-
-    return fillRDO(ExecutorFullRDO, user);
+    return fillRDO(UserFullRDO, user, [user.role]);
   }
 
 
@@ -36,10 +29,6 @@ export class ProfileController {
     ) {
 
     const updatedUser = await this.profileService.updateUserProfile(userId, data);
-    if (updatedUser.role === UserRole.Employer) {
-      return fillRDO(EmployerFullRDO, updatedUser);
-    }
-
-    return fillRDO(ExecutorFullRDO, updatedUser);
+    return fillRDO(UserFullRDO, updatedUser, [updatedUser.role]);
   }
 }
