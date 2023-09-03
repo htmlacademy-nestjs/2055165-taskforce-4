@@ -16,7 +16,7 @@ export class TaskController {
 
 
   @Get('/')
-  public async getTasks(@Query(new ValidationPipe({transform: true})) query: TaskQuery) {
+  public async getTasks(@Query(new ValidationPipe({whitelist: true, transform: true})) query: TaskQuery) {
     const tasks = await this.taskService.getTasks(query);
     return fillRDO(TaskBasicRDO, tasks);
   }
