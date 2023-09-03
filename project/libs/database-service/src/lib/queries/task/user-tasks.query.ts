@@ -13,7 +13,7 @@ export class UserTasksQuery {
   @Transform(({ value } ) => value || DEFAULT_TASKS_STATUS)
   @IsIn(Object.values(TaskStatus))
   @IsOptional()
-  public status?: TaskStatus = DEFAULT_TASKS_STATUS
+  public status: TaskStatus = DEFAULT_TASKS_STATUS
 
 
   @IsMongoId()

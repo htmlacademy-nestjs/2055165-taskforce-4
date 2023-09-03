@@ -27,7 +27,6 @@ model Task {
   updatedAt      DateTime     @updatedAt @map("published_at")
   employerId     String?      @map("employer_id")
   replies        Reply[]
-  pinId          Int?
   pinnedTo       PinnedTask?
 
   @@map("tasks")

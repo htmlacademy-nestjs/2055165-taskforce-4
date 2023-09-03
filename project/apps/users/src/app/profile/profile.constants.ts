@@ -1,4 +1,5 @@
 export const MIN_USER_AGE = 18;
+export const BIRTHDATE_FORMAT_LENGTH = 10
 
 export enum NAME_LENGTH {
   MIN = 3,

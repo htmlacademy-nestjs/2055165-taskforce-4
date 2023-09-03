@@ -1,8 +1,8 @@
-import { ArrayMaxSize, IsArray, IsDate, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, arrayMaxSize, isArray, isDateString, maxLength } from "class-validator";
-import {IsAdult, IsRedundantUserField} from '@project/shared/validate-decorators'
+import { ArrayMaxSize, IsArray, IsDate, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, arrayMaxSize, isArray, isDateString, maxLength, minLength } from "class-validator";
+import {IsAdult, IsRedundantFields} from '@project/shared/validate-decorators'
 
 import { City } from "@project/shared/app-types";
-import { ABOUT_INFO_LENGTH, MIN_USER_AGE, NAME_LENGTH, PASSWORD_LENGTH, SPECIALIZATION_COUNT } from "../profile.constants";
+import { ABOUT_INFO_LENGTH, BIRTHDATE_FORMAT_LENGTH, MIN_USER_AGE, NAME_LENGTH, PASSWORD_LENGTH, SPECIALIZATION_COUNT } from "../profile.constants";
 import { Transform } from "class-transformer";
 import dayjs from "dayjs";
 
@@ -16,14 +16,14 @@ export default class UpdateUserDTO {
 
   @MinLength(PASSWORD_LENGTH.MIN)
   @MaxLength(PASSWORD_LENGTH.MAX)
-  @IsRedundantUserField('password')
+  @IsRedundantFields(['password', 'newPassword'])
   @IsOptional()
   public password?: string;
 
 
   @MinLength(PASSWORD_LENGTH.MIN)
   @MaxLength(PASSWORD_LENGTH.MAX)
-  @IsRedundantUserField('newPassword')
+  @IsRedundantFields(['password', 'newPassword'])
   @IsOptional()
   public newPassword?: string;
 
@@ -34,10 +34,10 @@ export default class UpdateUserDTO {
 
 
   @IsAdult(MIN_USER_AGE)
-  @IsDate({message: 'The Birth date must have "YYYY-MM-DD" format'})
+  @IsDate({message: 'Birth date must have "YYYY-MM-DD" format'})
   @IsOptional()
   @Transform(({value}) =>
-    isDateString(value, {strictSeparator: true}) && maxLength(value, 10)
+    isDateString(value, {strictSeparator: true}) && maxLength(value, BIRTHDATE_FORMAT_LENGTH) && minLength(value, BIRTHDATE_FORMAT_LENGTH)
       ? dayjs(value).toDate()
       : value)
   public birthDate?: Date;

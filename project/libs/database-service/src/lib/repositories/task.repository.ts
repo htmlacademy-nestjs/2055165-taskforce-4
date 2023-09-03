@@ -1,16 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { CRUDRepository } from "@project/util/util-types";
 import { TaskEntity } from "../entities/task.entity";
-import { PinTask, Task, UpdateTaskData, UserRole } from "@project/shared/app-types";
+import { PinTask, QuerySortType, Task, TaskStatus, UpdateTaskData, UserRole } from "@project/shared/app-types";
 import { DatabaseService } from "../prisma/database.service";
 import { TaskQuery } from '../queries/task/task.query';
 import { PinTaskEntity } from "../entities/pin-task.entity";
 import { UserTasksQuery } from "../queries/task/user-tasks.query";
+import { DEFAULT_SORT_DIRECTION } from "../queries/task/task-query.constants";
 
 const SortType = {
-  'date': 'updatedAt',
-  'discussed': 'commentsCount',
-  'popular': 'repliesCount'
+  [QuerySortType.Date]: 'createdAt',
+  [QuerySortType.Discussed]: 'commentsCount',
+  [QuerySortType.Popular]: 'repliesCount',
 } as const;
 
 @Injectable()
@@ -21,12 +22,12 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
   }
 
 
-  public async find({limit, category, page, status, tag, city, sortType, sortDirection}: TaskQuery) {
+  public async findNewTasks({limit, category, page, tag, city, sortType, sortDirection}: TaskQuery) {
 
     return this.prisma.task.findMany({
       where: {
         city: city,
-        status: status,
+        status: TaskStatus.New,
         category: {
           categoryId: category
         },
@@ -48,12 +49,20 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
     if (role === UserRole.Employer) {
       return this.prisma.task.findMany({
         where: {
-          status: status,
-          employerId: userId
+          employerId: userId,
+          status: status
         },
         take: limit,
         include: {
-          category: true
+          category: true,
+          pinnedTo: {
+            select: {
+              executorId: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: DEFAULT_SORT_DIRECTION
         },
         skip: page && page > 0 ? limit * (page - 1) : undefined
       });
@@ -61,7 +70,7 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
 
     return this.prisma.task.findMany({
       where: {
-        status: status,
+        status: status !== TaskStatus.New ? status : undefined,
         pinnedTo: {
           executorId: userId
         }
@@ -69,6 +78,9 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
       take: limit,
       include: {
         category: true
+      },
+      orderBy: {
+        status: DEFAULT_SORT_DIRECTION
       },
       skip: page && page > 0 ? limit * (page - 1) : undefined
     });

@@ -33,8 +33,8 @@ export class TaskService {
   }
 
 
-  public async getTasks(query: TaskQuery) {
-    return this.taskRepository.find(query);
+  public async getNewTasks(query: TaskQuery) {
+    return this.taskRepository.findNewTasks(query);
   }
 
   public async getUserTasks(query: UserTasksQuery) {
