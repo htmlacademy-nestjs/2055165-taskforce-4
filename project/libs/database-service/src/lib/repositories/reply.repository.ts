@@ -21,8 +21,19 @@ export class ReplyRepository {
     })
   }
 
+  public async find(taskId: number, executorId: string) {
+    return this.prisma.reply.findUnique({
+      where: {
+        taskId_executorId: {
+          taskId: taskId,
+          executorId: executorId
+        }
+      }
+    })
+  }
 
-  public async getByTaskId(taskId: number) {
+
+  public async findAllByTaskId(taskId: number) {
     return this.prisma.reply.findMany({
       where: {
         task: {
@@ -33,10 +44,25 @@ export class ReplyRepository {
   }
 
 
-  public async delete(replyId: number) {
+  public async delete(taskId: number, executorId: string) {
     return this.prisma.reply.delete({
       where: {
-        replyId
+        taskId_executorId: {
+          taskId: taskId,
+          executorId: executorId
+        }
+      }
+    })
+  }
+
+
+  public async pinTask(taskId: number, executorId: string) {
+    return this.prisma.reply.deleteMany({
+      where: {
+        taskId,
+        executorId: {
+          not: executorId
+        }
       }
     })
   }

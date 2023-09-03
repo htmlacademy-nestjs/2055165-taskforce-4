@@ -19,7 +19,8 @@ export class AuthController {
   @Post('/login')
   public async loginUser(@Body() dto: AuthUserDTO) {
     const verifiedUser = await this.authService.authorize(dto);
-    return fillRDO(AuthUserRDO, verifiedUser);
+    const accessToken = await this.authService.createUserToken(verifiedUser);
+    return fillRDO(AuthUserRDO, Object.assign(verifiedUser, accessToken));
   }
 
   @Get('/')

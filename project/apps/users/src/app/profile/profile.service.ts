@@ -22,6 +22,7 @@ export class ProfileService {
   // }
 
 
+
   public async getUserProfile(id: string) {
     const existUser = await this.userRepository.findById(id);
 

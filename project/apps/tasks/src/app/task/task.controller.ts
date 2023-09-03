@@ -57,15 +57,9 @@ export class TaskController {
   }
 
   @Post('/:taskId/pin-task')
-  public async pinTask(@Param('taskId', ParseIntPipe) taskId: number, @Body(ValidationPipe) data: PinTaskDTO) {
-    const pin = await this.taskService.pinTask(taskId, data);
-    return `Task ${taskId} has been pinned to Executor ${pin.executorId} successfully`;
+  public async pinTask(@Param('taskId', ParseIntPipe) taskId: number, @Body(ValidationPipe) {executorId}: PinTaskDTO) {
+    await this.taskService.pinTask(taskId, executorId);
+    return `Task ${taskId} has been pinned to Executor ${executorId} successfully`;
   }
 
-
-  @Delete('/:taskId/pin-task/')
-  public async unpinTask(@Param('taskId', ParseIntPipe) taskId: number) {
-    const pin = await this.taskService.unpinTask(taskId);
-    return `Task ${taskId} has been unpinned from Executor ${pin.executorId} successfully`;
-  }
 }

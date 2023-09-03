@@ -1,17 +1,18 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 import { UserRepository, EmployerEntity, ExecutorEntity, UserEntity } from '@project/database-service';
-import { User, UserRole } from '@project/shared/app-types';
+import { TokenPayload, User, UserRole } from '@project/shared/app-types';
 import AuthUserDTO from './dto/auth-user.dto';
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './auth.constants';
 import CreateUserDTO from './dto/create-user.dto';
 
 
-
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
+    private readonly jwtService: JwtService
   ) {}
 
 
@@ -70,5 +71,19 @@ export class AuthService {
     }
 
     return existUser;
+  }
+
+
+  public async createUserToken(user: User) {
+    const payload: TokenPayload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+
+    return {
+      accessToken: await this.jwtService.signAsync(payload),
+    }
   }
 }

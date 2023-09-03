@@ -1,10 +1,9 @@
-import { IsInt, IsPositive } from "class-validator";
+import { IsInt, IsMongoId, IsPositive } from "class-validator";
 
 export default class DeleteReplyDTO {
 
-  @IsInt()
-  @IsPositive()
-  public replyId!: number;
+  @IsMongoId()
+  public executorId!: string; //будет браться из токена
 
   @IsInt()
   @IsPositive()

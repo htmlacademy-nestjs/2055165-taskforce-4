@@ -7,7 +7,6 @@ export * from './lib/entities/reply.entity';
 export * from './lib/entities/comment.entity';
 export * from './lib/entities/feedback.entity';
 export * from './lib/entities/file-data.entity';
-export * from './lib/entities/pin-task.entity';
 
 export * from './lib/repositories/user.repository';
 export * from './lib/repositories/category.repository';
@@ -24,3 +23,7 @@ export * from './lib/seed'
 export * from './lib/queries/task/task.query';
 export * from './lib/queries/task/user-tasks.query'
 export * from './lib/queries/feedback/feedback.query'
+
+export * from './lib/strategies/jwt-access.strategy'
+
+export * from './lib/guards/jwt-auth.guard'

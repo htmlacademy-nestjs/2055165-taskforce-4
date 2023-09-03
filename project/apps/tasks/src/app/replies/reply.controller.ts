@@ -26,7 +26,7 @@ export class ReplyController {
 
   @Delete('/delete')
   public async deleteReply(@Body() dto: DeleteReplyDTO) {
-    const remainingTaskReplies = await this.replyService.deleteReply(dto);
-    return fillRDO(ReplyRDO, remainingTaskReplies);
+    await this.replyService.deleteReply(dto);
+    return 'OK';
   }
 }

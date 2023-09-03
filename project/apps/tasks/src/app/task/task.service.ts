@@ -1,9 +1,8 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { TaskRepository, TaskEntity, PinTaskEntity, CategoryRepository, UserTasksQuery } from '@project/database-service'
+import { TaskRepository, TaskEntity, CategoryRepository, UserTasksQuery, ReplyRepository } from '@project/database-service'
 import { Task, TaskStatus, UserRole } from '@project/shared/app-types';
 import { TaskQuery } from '@project/database-service';
-import PinTaskDTO from './dto/pin-task.dto';
 import CreateTaskDTO from './dto/create-task.dto';
 import UpdateTaskDTO from './dto/update-task.dto';
 
@@ -12,6 +11,7 @@ export class TaskService {
   constructor(
     private readonly taskRepository: TaskRepository,
     private readonly categoryRepository: CategoryRepository,
+    private readonly replyRepository: ReplyRepository
   ){}
 
   public async createTask(data: CreateTaskDTO) {
@@ -39,7 +39,9 @@ export class TaskService {
 
   public async getUserTasks(query: UserTasksQuery) {
     //получение роли из токена
-    return this.taskRepository.findUserTasks(query, UserRole.Executor);
+    const tasks = await this.taskRepository.findUserTasks(query, UserRole.Executor);
+    console.log(tasks);
+    return tasks;
   }
 
 
@@ -48,7 +50,6 @@ export class TaskService {
     if (! existTask) {
       throw new NotFoundException('Task not found');
     }
-    console.log(existTask);
     return existTask;
   }
 
@@ -83,34 +84,26 @@ export class TaskService {
   }
 
 
-  public async pinTask(taskId: number, {executorId}: PinTaskDTO) {
+  public async pinTask(taskId: number, executorId: string) {
     const existTask = await this.taskRepository.findById(taskId);
     if (! existTask) {
       throw new NotFoundException('Task not found');
     }
 
+    const existReply = await this.replyRepository.find(taskId, executorId);
+    if (!existReply) {
+      throw new NotFoundException('The executor didn\'t reply on this task')
+    }
 
-    if (existTask.pinnedId) {
+
+    if (existTask.status !== TaskStatus.New) {
       throw new ConflictException('Task has already been pinned to another executor');
     }
     //проверка исполнителя через брокер
     //обновление исполнителя через брокер
 
-    const pin = await this.taskRepository.pin(new PinTaskEntity({taskId, executorId}));
+    await this.replyRepository.pinTask(taskId, executorId);
+
     await this.taskRepository.update(taskId, {status: TaskStatus.InProgress});
-    return pin;
-  }
-
-
-  public async unpinTask(taskId: number) {
-    const pin = await this.taskRepository.findPinByTaskId(taskId);
-
-    if (! pin) {
-      throw new NotFoundException('Task is not pinned');
-    }
-
-    await this.taskRepository.unpin(taskId);
-    await this.taskRepository.update(pin.taskId, {status: TaskStatus.New});
-    return pin;
   }
 }

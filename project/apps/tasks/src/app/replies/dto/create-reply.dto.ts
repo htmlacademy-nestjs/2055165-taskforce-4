@@ -12,5 +12,5 @@ export default class CreateReplyDTO {
   public taskId!: number;
 
   @IsMongoId()
-  public executorId!: string;
+  public executorId!: string; //будет браться из токена
 }

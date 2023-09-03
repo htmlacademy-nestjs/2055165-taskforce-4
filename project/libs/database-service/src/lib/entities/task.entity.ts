@@ -14,8 +14,7 @@ export class TaskEntity implements Omit<Task, 'taskId'> {
   status!: TaskStatus;
   commentsCount!: number;
   repliesCount!: number;
-  employerId!: string | null;
-  pinnedId?: number | null;
+  employerId!: string;
 
   constructor(task: Omit<Task, 'taskId'>) {
     this.fillEntity(task);
@@ -35,7 +34,6 @@ export class TaskEntity implements Omit<Task, 'taskId'> {
     this.commentsCount = task.commentsCount;
     this.repliesCount = task.repliesCount;
     this.employerId = task.employerId;
-    this.pinnedId = task.pinnedId
   }
 
   public toObject(): Omit<Task, 'taskId'> {
@@ -53,7 +51,6 @@ export class TaskEntity implements Omit<Task, 'taskId'> {
       commentsCount: this.commentsCount,
       repliesCount: this.repliesCount,
       employerId: this.employerId,
-      pinnedId: this.pinnedId
     }
   }
 }

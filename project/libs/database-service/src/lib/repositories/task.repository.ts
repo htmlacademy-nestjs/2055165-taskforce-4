@@ -1,10 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { CRUDRepository } from "@project/util/util-types";
 import { TaskEntity } from "../entities/task.entity";
-import { PinTask, QuerySortType, Task, TaskStatus, UpdateTaskData, UserRole } from "@project/shared/app-types";
+import { QuerySortType, Task, TaskStatus, UpdateTaskData, UserRole } from "@project/shared/app-types";
 import { DatabaseService } from "../prisma/database.service";
 import { TaskQuery } from '../queries/task/task.query';
-import { PinTaskEntity } from "../entities/pin-task.entity";
 import { UserTasksQuery } from "../queries/task/user-tasks.query";
 import { DEFAULT_SORT_DIRECTION } from "../queries/task/task-query.constants";
 
@@ -35,7 +34,8 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
       },
       take: limit,
       include: {
-        category: true
+        category: true,
+        replies: true
       },
       orderBy: {
         [SortType[sortType]]: sortDirection
@@ -55,11 +55,7 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
         take: limit,
         include: {
           category: true,
-          pinnedTo: {
-            select: {
-              executorId: true
-            }
-          }
+          replies: true
         },
         orderBy: {
           createdAt: DEFAULT_SORT_DIRECTION
@@ -70,17 +66,20 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
 
     return this.prisma.task.findMany({
       where: {
-        status: status !== TaskStatus.New ? status : undefined,
-        pinnedTo: {
-          executorId: userId
+        status: status,
+        replies: {
+          some: {
+            executorId: userId
+          }
         }
       },
       take: limit,
-      include: {
-        category: true
-      },
+      select: {status: true, createdAt: true, updatedAt: true},
+      // include: {
+      //   category: true
+      // },
       orderBy: {
-        status: DEFAULT_SORT_DIRECTION
+        status: 'asc'
       },
       skip: page && page > 0 ? limit * (page - 1) : undefined
     });
@@ -93,12 +92,13 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
       where: {taskId},
       include: {
         category: true,
-        replies: true,
-        pinnedTo: {
+        replies: {
           select: {
-            executorId: true
+            executorId: true,
+            text: true,
+            createdAt: true
           }
-        }
+        },
       }
     })
   }
@@ -147,33 +147,4 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
       where: {taskId}
     })
   }
-
-
-  public async findPinByTaskId(taskId: number) {
-    return this.prisma.pinnedTask.findUnique({
-      where: {taskId}
-    });
-  }
-
-
-  public async pin(item: PinTaskEntity) {
-    const {taskId, executorId} = item.toObject();
-
-    return this.prisma.pinnedTask.create({
-      data: {
-        executorId,
-        task: {
-          connect: {taskId}
-        }
-      }
-    })
-  }
-
-
-  public async unpin(taskId: number): Promise<PinTask> {
-    return this.prisma.pinnedTask.delete({
-      where: {taskId}
-    });
-  }
-
 }

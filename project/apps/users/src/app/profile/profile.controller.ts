@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, Patch, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, UseGuards, ValidationPipe } from '@nestjs/common';
 import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 
 import { ProfileService } from './profile.service';
 import { fillRDO } from '@project/util/util-core';
 import UpdateUserDTO from './dto/update-user.dto';
 import UserFullRDO from './rdo/user-full.rdo';
+import { JwtAuthGuard } from '@project/database-service';
 
 @Controller('users')
 export class ProfileController {
@@ -13,6 +14,7 @@ export class ProfileController {
   ) {}
 
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   public async getUserInfo(@Param('id', MongoidValidationPipe) userId: string) {
     const user = await this.profileService.getUserProfile(userId);
