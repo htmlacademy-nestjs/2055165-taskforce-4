@@ -16,10 +16,10 @@ export function IsRedundantFields(props: string[], validationOptions?: Validatio
             || (!isPropsInclude.includes(true))
 
         },
-        defaultMessage({object}: ValidationArguments) {
-          return props.length > Object.keys(object).length
-            ? `${props} is redundant, check your request for irrelevant fields`
-            : 'Requiered query fields are missing, check your request'
+        defaultMessage({object, property}: ValidationArguments) {
+          return props.length <= Object.keys(object).length
+            ? `Field ${property} are redundant, check your request for irrelevant fields`
+            : 'Some requiered fields are missing, check your request'
         }
       },
     });

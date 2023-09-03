@@ -1,14 +1,8 @@
-import { Transform } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, DEFAULT_TASKS_COUNT_LIMIT, DEFAULT_TASKS_STATUS } from './task-query.constants';
 import { IsIn, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
-import { City, TaskStatus } from "@project/shared/app-types";
+import { City, QuerySortType } from "@project/shared/app-types";
 
-
-// enum CityParser {
-//   'moscow' = 'Moscow',
-//   'saint-petersburg' = 'SaintPetersburg',
-//   'vladivostok'='Vladivostok'
-// }
 
 export class TaskQuery {
   @Transform(({ value } ) => +value || DEFAULT_TASKS_COUNT_LIMIT)
@@ -19,13 +13,14 @@ export class TaskQuery {
 
   @IsInt()
   @IsOptional()
+  @Type(() => Number)
   public category?: number;
 
 
   @Transform(({ value } ) => value || DEFAULT_SORT_TYPE)
-  @IsIn(['date', 'popular', 'discussed'])
+  @IsIn(Object.values(QuerySortType))
   @IsOptional()
-  public sortType: 'date' | 'popular' | 'discussed' = DEFAULT_SORT_TYPE
+  public sortType: QuerySortType = DEFAULT_SORT_TYPE
 
 
   @IsIn(Object.values(City))
@@ -42,18 +37,12 @@ export class TaskQuery {
   @IsPositive()
   @IsInt()
   @IsOptional()
+  @Type(() => Number)
   public page?: number;
-
-
-  @Transform(({ value } ) => value || DEFAULT_TASKS_STATUS)
-  @IsIn(Object.values(TaskStatus))
-  @IsOptional()
-  public status: TaskStatus = DEFAULT_TASKS_STATUS
 
 
   @IsString()
   @IsNotEmpty()
   @IsOptional()
   public tag?: string
-
 }

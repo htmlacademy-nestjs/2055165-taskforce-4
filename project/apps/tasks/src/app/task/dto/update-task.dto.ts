@@ -1,7 +1,7 @@
 import { MinLength, MaxLength, IsOptional, IsInt, IsPositive, Min, IsDate, IsMongoId, ArrayMaxSize, ArrayMinSize, IsEnum, isNumber, IsNumber, MinDate, IsArray, arrayMaxSize, isArray } from "class-validator";
 import { Type, Transform } from "class-transformer";
 
-import {IsRedundantTaskField} from '@project/shared/validate-decorators'
+import {IsRedundantFields} from '@project/shared/validate-decorators'
 import { City, TaskStatus } from "@project/shared/app-types";
 import { ADRESS_LENGTH, DESCRIPTION_LENGTH, PRICE_MAX_DECIMAL_DIGITS, PRICE_VALUE, TAGS_COUNT, TAG_LENGTH, TITLE_LENGTH } from "../task.constants";
 
@@ -67,7 +67,7 @@ export default class UpdateTaskDTO {
   @IsEnum(City)
   public city?: City;
 
-  @IsRedundantTaskField('status')
+  @IsRedundantFields(['status'])
   @IsEnum(TaskStatus)
   @IsOptional()
   public status?: TaskStatus;
