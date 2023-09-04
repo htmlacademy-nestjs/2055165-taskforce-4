@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-
 import { fillRDO } from '@project/util/util-core';
 import { AuthService } from './auth.service';
 import CreateUserDTO from './dto/create-user.dto';
@@ -12,15 +11,16 @@ export class AuthController {
   constructor (private readonly authService: AuthService) {}
 
   @Post('/register')
-  public async createUser(@Body() dto: CreateUserDTO) {
-    const newUser = await this.authService.register(dto);
+  public async createUser(@Body() data: CreateUserDTO) {
+    const newUser = await this.authService.register(data);
     return fillRDO(UserBasicRDO, newUser);
   }
 
   @Post('/login')
   public async loginUser(@Body() dto: AuthUserDTO) {
     const verifiedUser = await this.authService.authorize(dto);
-    return fillRDO(AuthUserRDO, verifiedUser);
+    const accessToken = await this.authService.createUserToken(verifiedUser);
+    return fillRDO(AuthUserRDO, Object.assign(verifiedUser, accessToken));
   }
 
   @Get('/')

@@ -1,19 +1,18 @@
-import dayjs from 'dayjs';
-
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 import { UserRepository, EmployerEntity, ExecutorEntity, UserEntity } from '@project/database-service';
-import CreateUserDTO from './dto/create-user.dto';
-import { User, UserRole } from '@project/shared/app-types';
+import { TokenPayload, User, UserRole } from '@project/shared/app-types';
 import AuthUserDTO from './dto/auth-user.dto';
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './auth.constants';
-
+import CreateUserDTO from './dto/create-user.dto';
 
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
+    private readonly jwtService: JwtService
   ) {}
 
 
@@ -42,25 +41,16 @@ export class AuthService {
   }
 
 
-  public async register(dto: CreateUserDTO): Promise<User> {
-    const {name, email, password, avatar, birthDate, role, city} = dto;
+  public async register(data: CreateUserDTO): Promise<User> {
+    const {password, ...profileData} = data;
 
-    const existUser = await this.userRepository.findByEmail(email);
+    const existUser = await this.userRepository.findByEmail(profileData.email);
 
     if (existUser) {
       throw new ConflictException(AUTH_USER_EXISTS);
     }
 
-    const newData: Omit<User, 'id'> = {
-      name,
-      email,
-      avatar,
-      role,
-      city,
-      birthDate: dayjs(birthDate).toDate(),
-      hashPassword: ''
-    };
-
+    const newData: Omit<User, 'id'> = {...profileData, hashPassword: ''};
     const newUser = await this.additionalFields[newData.role](newData).setPassword(password);
 
     return this.userRepository.create(newUser);
@@ -81,5 +71,19 @@ export class AuthService {
     }
 
     return existUser;
+  }
+
+
+  public async createUserToken(user: User) {
+    const payload: TokenPayload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+
+    return {
+      accessToken: await this.jwtService.signAsync(payload),
+    }
   }
 }

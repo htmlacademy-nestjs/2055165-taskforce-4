@@ -1,0 +1,30 @@
+# 64ebc8ae9b9f8e5d31b778db
+# 64ebc8ae9b9f8e5d31b778dc
+
+# Create new reply
+POST http://localhost:4000/api/replies/create HTTP/1.1
+Content-Type: application/json
+
+{
+  "text": "Новый Отклик",
+  "taskId": 27,
+  "executorId": "64ebc8ae9b9f8e5d31b778db"
+
+}
+
+###
+
+#Get replies by taskId
+GET http://localhost:4000/api/replies/17 HTTP/1.1
+
+###
+
+#Delete reply by id
+DELETE http://localhost:4000/api/replies/delete HTTP/1.1
+Content-Type: application/json
+
+{
+  "executorId": "64ebc8ae9b9f8e5d31b778db",
+  "taskId": 5
+}
+###

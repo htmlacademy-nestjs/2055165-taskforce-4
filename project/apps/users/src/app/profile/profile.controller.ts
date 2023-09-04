@@ -1,13 +1,11 @@
-import dayjs from 'dayjs';
-
-import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, UseGuards, ValidationPipe } from '@nestjs/common';
+import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 
 import { ProfileService } from './profile.service';
-import UpdateUserDTO from './dto/update-user.dto';
-import { UserRole } from '@project/shared/app-types';
 import { fillRDO } from '@project/util/util-core';
-import EmployerFullRDO from './rdo/employer-full.rdo';
-import ExecutorFullRDO from './rdo/executor-full.rdo';
+import UpdateUserDTO from './dto/update-user.dto';
+import UserFullRDO from './rdo/user-full.rdo';
+import { JwtAuthGuard } from '@project/database-service';
 
 @Controller('users')
 export class ProfileController {
@@ -16,29 +14,23 @@ export class ProfileController {
   ) {}
 
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
-  public async getUserInfo(@Param('id') userId: string) {
+  public async getUserInfo(@Param('id', MongoidValidationPipe) userId: string) {
     const user = await this.profileService.getUserProfile(userId);
-
-    if (user.role === UserRole.Employer) {
-      return fillRDO(EmployerFullRDO, user);
-    }
-
-    const userAge = dayjs().diff(dayjs(user.birthDate), 'years');
-    return fillRDO(ExecutorFullRDO, {...user, userAge});
+    return fillRDO(UserFullRDO, user, [user.role]);
   }
 
 
     //полноценная реализация после добавления JWT токенов
-    @Patch('/:id')
-    public async updateUserInfo(@Body() dto: UpdateUserDTO, @Param('id') userId: string) {
+  @Patch('/:id')
+  public async updateUserInfo
+    (
+      @Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateUserDTO,
+      @Param('id', MongoidValidationPipe) userId: string
+    ) {
 
-      const updatedUser = await this.profileService.updateUserProfile(userId, dto);
-      if (updatedUser.role === UserRole.Employer) {
-        return fillRDO(EmployerFullRDO, updatedUser);
-      }
-
-      const userAge = dayjs().diff(dayjs(updatedUser.birthDate), 'years');
-      return fillRDO(ExecutorFullRDO, {...updatedUser, userAge});
-    }
+    const updatedUser = await this.profileService.updateUserProfile(userId, data);
+    return fillRDO(UserFullRDO, updatedUser, [updatedUser.role]);
+  }
 }

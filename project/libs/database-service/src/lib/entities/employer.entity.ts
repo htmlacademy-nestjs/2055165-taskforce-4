@@ -4,8 +4,8 @@ import { Employer } from "@project/shared/app-types";
 import { UserEntity } from "./user.entity";
 
 export class EmployerEntity extends UserEntity implements Omit<Employer, 'id'> {
-  publishedTasksCount!: number;
-  newTasksCount!: number;
+  publishedTasksCount!: number | null;
+  newTasksCount!: number | null;
 
   constructor(user: Omit<Employer, 'id'>) {
     super(user);

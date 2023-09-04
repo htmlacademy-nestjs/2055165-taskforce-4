@@ -1,9 +1,10 @@
 import { City, TaskStatus } from "@project/shared/app-types";
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
+import { CategoryRDO } from "../../category/rdo/category.rdo";
 
 export default class TaskBasicRDO {
   @Expose()
-  public id!: string;
+  public taskId!: number;
 
   @Expose()
   public title!: string;
@@ -12,7 +13,8 @@ export default class TaskBasicRDO {
   public description!: string;
 
   @Expose()
-  public category!: string;
+  @Type(() => CategoryRDO)
+  public category!: CategoryRDO;
 
   @Expose()
   public price!: number;
@@ -36,11 +38,9 @@ export default class TaskBasicRDO {
   public employerId!: string;
 
   @Expose()
-  //добавить в сущность Task
   public repliesCount!: number;
 
   @Expose()
-  //добавить в сущность Task
   public commentsCount!: number;
 
   @Expose({name: 'createdAt'})

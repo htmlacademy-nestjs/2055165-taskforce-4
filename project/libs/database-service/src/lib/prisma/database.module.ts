@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { ConfigDbModule } from "@project/config/config-mongo";
+import { ConfigDbModule } from "@project/config-service"
 import { DatabaseService } from "./database.service";
 
 @Module({

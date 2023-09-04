@@ -14,5 +14,5 @@ export interface Task {
   status: TaskStatus;
   commentsCount: number;
   repliesCount: number;
-  employerId: string | null;
+  employerId: string;
 }

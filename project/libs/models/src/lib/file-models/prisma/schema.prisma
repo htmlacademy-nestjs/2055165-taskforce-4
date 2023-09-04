@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../../../node_modules/.prisma/file-schema"
+}
+
+//output   = "../../../../../../node_modules/@internal/prisma/file-schema"
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model FileData {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  originalName String
+  size         Int
+  mimetype     String
+  hashName     String
+  path         String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@map("files")
+}

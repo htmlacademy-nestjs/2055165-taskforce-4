@@ -1,9 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 
 import { UserRepository, UserEntity } from '@project/database-service';
+import { UserRole, UpdateUserData } from '@project/shared/app-types';
 import UpdateUserDTO from './dto/update-user.dto';
-import dayjs from 'dayjs';
-import { UserRole, UpdateUserData, User, Executor } from '@project/shared/app-types';
 
 
 @Injectable()
@@ -12,16 +11,16 @@ export class ProfileService {
     private readonly userRepository: UserRepository
   ) {}
 
-  private _isExecutor(user: User): asserts user is Executor {
-    if (! (user.role === UserRole.Executor) )
-      throw new Error('Not an Executor');
-  }
-
+  // private _isExecutor(user: User): asserts user is Executor {
+  //   if (! (user.role === UserRole.Executor) )
+  //     throw new Error('Not an Executor');
+  // }
 
   // private _isEmployer(user: User): asserts user is Employer {
   //   if (! (user.role === UserRole.Employer) )
   //     throw new Error('Not an Employer');
   // }
+
 
 
   public async getUserProfile(id: string) {
@@ -33,8 +32,9 @@ export class ProfileService {
     return existUser;
   }
 
+
   public async updateUserProfile(id: string, dto: UpdateUserDTO) {
-    const {name, password, newPassword, birthDate, avatar, city, specialization, aboutInfo} = dto;
+    const {password, newPassword, ...profileData} = dto;
 
     const existUser = await this.userRepository.findById(id);
 
@@ -43,29 +43,21 @@ export class ProfileService {
     }
 
     let userEntity = new UserEntity(existUser);
-        //Валидация будет реализована позже
+
     let updateData: UpdateUserData;
+
     if (password && ! await userEntity.comparePassword(password)) {
-      throw new UnauthorizedException('User\'s password is wrong');
+      throw new BadRequestException('User\'s current password is wrong');
     }
     if (newPassword) {
       userEntity = await userEntity.setPassword(newPassword);
-      updateData = {
-        hashPassword: userEntity.hashPassword,
-      }
+      updateData = { hashPassword: userEntity.hashPassword }
     } else {
-      updateData = {
-        name: name ?? existUser.name,
-        birthDate: birthDate ? dayjs(birthDate).toDate() : existUser.birthDate,
-        avatar: avatar ?? existUser.avatar,
-        city: city ?? existUser.city,
-        aboutInfo: aboutInfo ?? existUser.aboutInfo,
+      if (existUser.role === UserRole.Employer && dto.specialization) {
+        throw new BadRequestException('"specialization" data is restricted for this user');
       }
 
-      if (existUser.role === UserRole.Executor) {
-        this._isExecutor(existUser);
-        updateData.specialization = specialization ?? existUser.specialization;
-      }
+      updateData = profileData
     }
 
     return this.userRepository.update(id, updateData);

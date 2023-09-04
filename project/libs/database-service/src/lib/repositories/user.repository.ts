@@ -10,7 +10,7 @@ export class UserRepository implements CRUDRepository<UserEntity, UpdateUserData
   private prisma;
 
   constructor(private readonly dbService: DatabaseService) {
-    this.prisma = dbService.prismaMongo;
+    this.prisma = dbService.prismaBaseMongoConnector;
   }
 
 

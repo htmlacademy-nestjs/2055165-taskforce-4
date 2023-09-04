@@ -1,9 +1,12 @@
 import { City, TaskStatus } from "@project/shared/app-types";
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
+import { CategoryRDO } from "../../category/rdo/category.rdo";
+import ReplyRDO from "../../replies/rdo/reply.rdo";
+
 
 export default class TaskFullRDO {
   @Expose()
-  public id!: string;
+  public taskId!: number;
 
   @Expose()
   public title!: string;
@@ -12,7 +15,8 @@ export default class TaskFullRDO {
   public description!: string;
 
   @Expose()
-  public category!: string;
+  @Type(() => CategoryRDO)
+  public category!: CategoryRDO;
 
   @Expose()
   public price!: number;
@@ -37,4 +41,8 @@ export default class TaskFullRDO {
 
   @Expose()
   public employerId!: string;
+
+  @Expose()
+  @Type(() => ReplyRDO)
+  public replies!: ReplyRDO[]
 }

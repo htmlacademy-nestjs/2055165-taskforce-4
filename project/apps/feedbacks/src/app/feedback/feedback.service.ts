@@ -1,37 +1,48 @@
-import { randomUUID } from 'node:crypto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
-
-import { Injectable } from '@nestjs/common';
-
-import { FeedbackEntity, FeedbackMemoryRepository } from '@project/database-service';
+import { FeedbackEntity, FeedbackQuery, FeedbackRepository, UserRepository } from '@project/database-service';
 import CreateFeedbackDTO from './dto/create-feedback.dto';
-import { Feedback } from '@project/shared/app-types';
+import { Employer } from '@project/shared/app-types';
 
 @Injectable()
 export class FeedbackService {
   constructor(
-    private readonly feedbackRepository: FeedbackMemoryRepository
+    private readonly feedbackRepository: FeedbackRepository,
+    private readonly userRepository: UserRepository // отключить
   ){}
 
   public async createFeedBack(dto: CreateFeedbackDTO) {
     const {text, taskId, employerId, executorId, rating} = dto;
 
-    const newFeedback: Feedback = {
-      id: randomUUID(),
+    //проверка таска на существование через брокер
+    //проверка таска на статус и привязанного к нему executorId через брокер
+
+    //проверка заказчика на существование через брокер => сервис юзеров
+    //проверка исполнителя на существование через брокер => сервис юзеров
+    const existEmployer = await this.userRepository.findById(employerId) as Employer;
+    if (!existEmployer) {
+      throw new BadRequestException('Employer with such id not found');
+    }
+
+    const existExecutor = await this.userRepository.findById(executorId);
+    if (!existExecutor) {
+      throw new BadRequestException('Executor with such id not found');
+    }
+
+    const newFeedback = {
       text,
       taskId,
-      employerId,
+      employer: existEmployer,
       executorId,
       rating,
-      createdAt: new Date(),
-      updatedAt: new Date()
     }
 
     return this.feedbackRepository.create(new FeedbackEntity(newFeedback));
   }
 
-  public async getExecutorFeedbacks(executorId: string) {
-    return this.feedbackRepository.findByExecutorId(executorId);
+  public async getExecutorFeedbacks(executorId: string, query: FeedbackQuery) {
+    //проверка исполнителя на существование через брокер => сервис юзеров
+    return this.feedbackRepository.findByExecutorId(executorId, query);
   }
 
 

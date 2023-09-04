@@ -1,34 +1,26 @@
-import { Reply } from "@project/shared/app-types";
+import { Reply, Task } from "@project/shared/app-types";
 
-export class ReplyEntity implements Reply {
-  id!: string;
-  text!: string;
-  taskId!: string;
+export class ReplyEntity implements Omit<Reply, 'replyId'> {
+  text?: string | null;
+  task!: Task;
   executorId!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
 
-  constructor (reply: Reply) {
+
+  constructor (reply: Omit<Reply, 'replyId'>) {
     this.fillEntity(reply);
   }
 
-  public fillEntity(reply: Reply) {
-    this.id = reply.id;
+  public fillEntity(reply: Omit<Reply, 'replyId'>) {
     this.text = reply.text;
-    this.taskId = reply.taskId;
+    this.task = reply.task;
     this.executorId = reply.executorId;
-    this.createdAt = reply.createdAt;
-    this.updatedAt = reply.updatedAt;
   }
 
   public toObject() {
     return {
-      id: this.id,
       text: this.text,
-      taskId: this.taskId,
+      task: this.task,
       executorId: this.executorId,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
     }
   }
 }

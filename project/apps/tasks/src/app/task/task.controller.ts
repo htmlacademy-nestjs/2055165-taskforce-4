@@ -1,14 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, ValidationPipe } from '@nestjs/common';
 import { TaskService } from './task.service';
 import CreateTaskDTO from './dto/create-task.dto';
 import { fillRDO } from '@project/util/util-core';
 import TaskFullRDO from './rdo/task-full.rdo';
 import UpdateTaskDTO from './dto/update-task.dto';
-import CreateReplyDTO from '../replies/dto/create-reply.dto';
-import ReplyRDO from '../replies/rdo/reply.rdo';
 import TaskBasicRDO from './rdo/task-basic.rdo';
-
+import { TaskQuery, UserTasksQuery } from '@project/database-service';
+import PinTaskDTO from './dto/pin-task.dto';
 
 @Controller('tasks')
 export class TaskController {
@@ -16,48 +14,52 @@ export class TaskController {
     private readonly taskService: TaskService
   ) {}
 
-  //добавить реализацию с параметрами и пагинацией
-  // @Get()
-  // public async getTasks() {
-  //   const tasks = await this.taskService.getTasks();
-  //   return fillRDO(TaskBasicRDO, tasks);
 
-  // }
+  @Get('/')
+  public async getNewTasks(@Query(new ValidationPipe({whitelist: true, transform: true})) query: TaskQuery) {
+    const tasks = await this.taskService.getNewTasks(query);
+    return fillRDO(TaskBasicRDO, tasks);
+  }
+
+  @Get('/mytasks')
+  public async getUserTasks(@Query(new ValidationPipe({whitelist: true, transform: true})) query: UserTasksQuery) {
+    const tasks = await this.taskService.getUserTasks(query);
+    return fillRDO(TaskBasicRDO, tasks)
+  }
+
 
   @Post('/create')
-  public async createTask(@Body() dto: CreateTaskDTO) {
-    const newTask = await this.taskService.createTask(dto);
+  public async createTask(@Body(new ValidationPipe({whitelist: true, transform: true})) data: CreateTaskDTO) {
+    const newTask = await this.taskService.createTask(data);
     return fillRDO(TaskFullRDO, newTask);
   }
 
+
   @Get('/:id')
-  public async getTask(@Param('id') taskId: string) {
-    const existTask = await this.taskService.getTaskDetails(parseInt(taskId, 10));
+  public async getTask(@Param('id', ParseIntPipe) taskId: number) {
+    const existTask = await this.taskService.getTaskDetails(taskId);
     return fillRDO(TaskFullRDO, existTask);
   }
 
+
   @Delete('/:id')
-  public async deleteTask(@Param('id') taskId: string) {
-    await this.taskService.deleteTask(parseInt(taskId, 10));
+  public async deleteTask(@Param('id', ParseIntPipe) taskId: number) {
+    await this.taskService.deleteTask(taskId);
     //дополнительно удалять все отклики и комментарии к таску
     return 'OK';
   }
 
+
   @Patch('/:id')
-  public async updateTask(@Param('id') taskId: string, @Body() dto: UpdateTaskDTO) {
-    const updatedTask = await this.taskService.updateTask(taskId, dto);
+  public async updateTask(@Param('id', ParseIntPipe) taskId: number, @Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateTaskDTO) {
+    const updatedTask = await this.taskService.updateTask(taskId, data);
     return fillRDO(TaskFullRDO, updatedTask);
   }
 
-  // @Post('/:id/replies/create')
-  // public async createReply(@Param('id') taskId: string, @Body() dto: CreateReplyDTO) {
-  //   const replies = await this.taskService.createTaskReply(taskId, dto);
-  //   return fillRDO(ReplyRDO, replies);
-  // }
+  @Post('/:taskId/pin-task')
+  public async pinTask(@Param('taskId', ParseIntPipe) taskId: number, @Body(ValidationPipe) {executorId}: PinTaskDTO) {
+    await this.taskService.pinTask(taskId, executorId);
+    return `Task ${taskId} has been pinned to Executor ${executorId} successfully`;
+  }
 
-  // @Delete('/:id/replies/delete')
-  // public async deleteReply(@Param('id') taskId: string, @Body('replyId') replyId: string) {
-  //   const restReplies = await this.taskService.deleteTaskReply(taskId, replyId);
-  //   return fillRDO(ReplyRDO, restReplies);
-  // }
 }

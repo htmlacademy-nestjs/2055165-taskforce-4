@@ -1,5 +1,7 @@
 import { Expose } from "class-transformer";
 
+
+
 export default class CommentRDO {
 
   @Expose()
@@ -12,5 +14,5 @@ export default class CommentRDO {
   public taskId!: string;
 
   @Expose()
-  public authorId!: string;
+  public author!: string;
 }

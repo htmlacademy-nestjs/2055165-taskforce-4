@@ -1,5 +1,16 @@
+import { IsInt, IsMongoId, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
+
 export default class CreateReplyDTO {
-  public text!: string;
-  public taskId!: string; //Нужно ли? Если taskId передается в Url params
-  public executorId!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @IsOptional()
+  public text?: string;
+
+  @IsPositive()
+  @IsInt()
+  public taskId!: number;
+
+  @IsMongoId()
+  public executorId!: string; //будет браться из токена
 }

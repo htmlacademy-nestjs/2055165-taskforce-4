@@ -1,10 +1,10 @@
+import { Employer } from "./employer.interface";
+
 export interface Feedback {
-  readonly id: string;
+  readonly feedbackId: string;
   text: string;
-  taskId: string;
-  employerId: string;
-  executorId: string; //как лучше сделать?
+  taskId: number;
+  employer: Employer;
+  executorId: string;
   rating: number;
-  readonly createdAt: Date;
-  updatedAt: Date;
 }
