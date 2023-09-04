@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, ValidationPipe } from '@nestjs/common';
 import { TaskService } from './task.service';
 import CreateTaskDTO from './dto/create-task.dto';
 import { fillRDO } from '@project/util/util-core';
 import TaskFullRDO from './rdo/task-full.rdo';
 import UpdateTaskDTO from './dto/update-task.dto';
 import TaskBasicRDO from './rdo/task-basic.rdo';
-import { TaskQuery, UserTasksQuery } from '@project/database-service';
+import { ModifyGuard, TaskQuery, UserTasksQuery } from '@project/database-service';
 import PinTaskDTO from './dto/pin-task.dto';
 
 @Controller('tasks')
@@ -36,6 +36,7 @@ export class TaskController {
 
 
   @Get('/:id')
+  @UseGuards(ModifyGuard)
   public async getTask(@Param('id', ParseIntPipe) taskId: number) {
     const existTask = await this.taskService.getTaskDetails(taskId);
     return fillRDO(TaskFullRDO, existTask);

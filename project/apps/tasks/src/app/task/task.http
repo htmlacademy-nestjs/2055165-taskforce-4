@@ -1,5 +1,8 @@
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjVjZTdiMzI2NWQyZGZhYWIxZDVkMyIsIm5hbWUiOiJFeGVjdXRvcjQiLCJlbWFpbCI6IkV4ZWN1dG9yNEBleGVjdXRvcnMubG9jYWwiLCJyb2xlIjoiRXhlY3V0b3IiLCJpYXQiOjE2OTM4MzA3ODMsImV4cCI6MTY5MzgzMDc4M30.jts03wJFo1936SobIduZi7NJ_fhGAMQVpg48dTUY-pI
+
 #Get task by id
 GET http://localhost:4000/api/tasks/5 HTTP/1.1
+Authorization: {{token}}
 ###
 
 #Create task

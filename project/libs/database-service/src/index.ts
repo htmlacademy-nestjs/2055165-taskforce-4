@@ -27,3 +27,4 @@ export * from './lib/queries/feedback/feedback.query'
 export * from './lib/strategies/jwt-access.strategy'
 
 export * from './lib/guards/jwt-auth.guard'
+export * from './lib/guards/modify.guard'
