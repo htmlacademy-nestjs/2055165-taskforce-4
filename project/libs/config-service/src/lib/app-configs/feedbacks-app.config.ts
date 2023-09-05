@@ -16,7 +16,7 @@ export default registerAs('feedbacks-application', (): AppConfig => {
 
   const config: AppConfig = {
     environment: process.env.NODE_ENV,
-    port: parseInt(process.env.FEEDBACKS_APP_PORT, 10),
+    port: process.env.FEEDBACKS_APP_PORT,
   };
 
   const validationSchema = Joi.object<AppConfig>({

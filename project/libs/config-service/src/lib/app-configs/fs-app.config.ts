@@ -22,7 +22,7 @@ export default registerAs('fs-application', (): FsUploaderConfig => {
 
   const config: FsUploaderConfig = {
     environment: process.env.NODE_ENV,
-    port: parseInt(process.env.FS_APP_PORT, 10),
+    port: process.env.FS_APP_PORT,
     uploadDirectory: process.env.UPLOAD_DIRECTORY,
     serveRoot: process.env.SERVE_ROOT
   };

@@ -20,7 +20,7 @@ export default registerAs('postgres-db', (): DbConfig => {
 
   const config: DbConfig = {
     host: process.env.POSTGRES_DB_HOST,
-    port: parseInt(process.env.POSTGRES_DB_PORT, 10),
+    port: process.env.POSTGRES_DB_PORT,
     name: process.env.POSTGRES_DB_NAME,
     user: process.env.POSTGRES_ROOT_USERNAME,
     password: process.env.POSTGRES_ROOT_PASSWORD,
