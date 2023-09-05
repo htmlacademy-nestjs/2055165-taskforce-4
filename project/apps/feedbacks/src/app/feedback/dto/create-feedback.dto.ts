@@ -12,9 +12,6 @@ export default class CreateFeedbackDTO {
   public taskId!: number;
 
   @IsMongoId()
-  public employerId!: string; //убрать после добавления JWT
-
-  @IsMongoId()
   public executorId!: string;
 
   @Min(FEEDBACK_RATING.MIN)

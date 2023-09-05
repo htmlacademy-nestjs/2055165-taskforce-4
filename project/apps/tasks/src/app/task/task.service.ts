@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { TaskRepository, TaskEntity, CategoryRepository, UserTasksQuery, ReplyRepository } from '@project/database-service'
 import { Task, TaskStatus, UserRole } from '@project/shared/app-types';
@@ -14,7 +14,7 @@ export class TaskService {
     private readonly replyRepository: ReplyRepository
   ){}
 
-  public async createTask(data: CreateTaskDTO) {
+  public async createTask(data: CreateTaskDTO, employerId: string) {
     const category = await this.categoryRepository.findById(data.categoryId);
 
     if (!category) {
@@ -25,6 +25,7 @@ export class TaskService {
       ...data,
       category,
       status: TaskStatus.New,
+      employerId,
       commentsCount: 0,
       repliesCount: 0
     }
@@ -37,10 +38,8 @@ export class TaskService {
     return this.taskRepository.findNewTasks(query);
   }
 
-  public async getUserTasks(query: UserTasksQuery) {
-    //получение роли из токена
-    const tasks = await this.taskRepository.findUserTasks(query, UserRole.Executor);
-    console.log(tasks);
+  public async getUserTasks(query: UserTasksQuery, userId: string, role: UserRole) {
+    const tasks = await this.taskRepository.findUserTasks(query, userId, role);
     return tasks;
   }
 
@@ -62,11 +61,6 @@ export class TaskService {
   public async updateTask(taskId: number, data: UpdateTaskDTO) {
     const {categoryId,  ...restData} = data;
 
-    const existTask = await this.taskRepository.findById(taskId);
-    if (! existTask) {
-      throw new NotFoundException('Task not found');
-    }
-
     let category
     if (categoryId) {
       category = await this.categoryRepository.findById(categoryId);
@@ -85,25 +79,9 @@ export class TaskService {
 
 
   public async pinTask(taskId: number, executorId: string) {
-    const existTask = await this.taskRepository.findById(taskId);
-    if (! existTask) {
-      throw new NotFoundException('Task not found');
-    }
-
-    const existReply = await this.replyRepository.find(taskId, executorId);
-    if (!existReply) {
-      throw new NotFoundException('The executor didn\'t reply on this task')
-    }
-
-
-    if (existTask.status !== TaskStatus.New) {
-      throw new ConflictException('Task has already been pinned to another executor');
-    }
-    //проверка исполнителя через брокер
-    //обновление исполнителя через брокер
 
     await this.replyRepository.pinTask(taskId, executorId);
-
+    //обновление исполнителя через брокер
     await this.taskRepository.update(taskId, {status: TaskStatus.InProgress});
   }
 }

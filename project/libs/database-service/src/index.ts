@@ -27,4 +27,12 @@ export * from './lib/queries/feedback/feedback.query'
 export * from './lib/strategies/jwt-access.strategy'
 
 export * from './lib/guards/jwt-auth.guard'
-export * from './lib/guards/modify.guard'
+export * from './lib/guards/modify-task.guard'
+export * from './lib/guards/role.guard'
+export * from './lib/guards/pin-task.guard'
+export * from './lib/guards/create-reply.guard'
+export * from './lib/guards/delete-comment.guard'
+export * from './lib/guards/create-feedback.guard'
+
+export * from './lib/decorators/auth-user.decorator'
+export * from './lib/decorators/roles.decorator'

@@ -1,22 +1,32 @@
-import { Body, Controller, Delete, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { fillRDO } from '@project/util/util-core';
 import { ReplyService } from './reply.service';
 import CreateReplyDTO from './dto/create-reply.dto';
 import ReplyRDO from './rdo/reply.rdo';
 import DeleteReplyDTO from './dto/delete-reply.dto';
+import { AuthUser, CreateReplyGuard, JwtAuthGuard, RoleGuard, Roles } from '@project/database-service';
+import { UserRole } from '@project/shared/app-types';
 
 @Controller('replies')
 @UsePipes(new ValidationPipe({whitelist: true, transform: true}))
+@UseGuards(JwtAuthGuard)
 export class ReplyController {
   constructor(
     private readonly replyService: ReplyService
   ) {}
 
   @Post('/create')
-  public async createReply(@Body() dto: CreateReplyDTO) {
-    const newReply = await this.replyService.createReply(dto);
+  @Roles(UserRole.Executor)
+  @UseGuards(RoleGuard, CreateReplyGuard)
+  public async createReply(
+    @AuthUser('id') executorId: string,
+    @Body() dto: CreateReplyDTO
+    ) {
+
+    const newReply = await this.replyService.createReply(dto, executorId);
     return fillRDO(ReplyRDO, newReply);
   }
+
 
   @Get('/:taskId')
   public async getTaskReplies(@Param('taskId') taskId: number) {
@@ -24,9 +34,16 @@ export class ReplyController {
     return fillRDO(ReplyRDO, taskReplies);
   }
 
+
   @Delete('/delete')
-  public async deleteReply(@Body() dto: DeleteReplyDTO) {
-    await this.replyService.deleteReply(dto);
+  @Roles(UserRole.Executor)
+  @UseGuards(RoleGuard)
+  public async deleteReply(
+    @AuthUser('id') executorId: string,
+    @Body() {taskId}: DeleteReplyDTO
+    ) {
+
+    await this.replyService.deleteReply(taskId, executorId);
     return 'OK';
   }
 }

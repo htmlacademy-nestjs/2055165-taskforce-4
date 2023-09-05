@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import {CommentRepository, CommentEntity, UserRepository, FeedbackQuery} from '@project/database-service';
 import CreateCommentDTO from './dto/create-comment.dto';
@@ -10,8 +10,8 @@ export class CommentService {
     private readonly userRepository: UserRepository
   ) {}
 
-  public async createComment(dto: CreateCommentDTO) {
-    const {taskId, authorId, text} = dto;
+  public async createComment(dto: CreateCommentDTO, authorId: string) {
+    const {taskId, text} = dto;
 
     //проверка таска на существование через брокер => сервис тасков
     //проверка юзера на существование через брокер => сервис юзеров
@@ -37,6 +37,7 @@ export class CommentService {
 
 
   public async deleteComment(commentId: string) {
-    return this.commentRepository.delete(commentId);
+    return this.commentRepository.delete(commentId)
+      .catch(() => {throw new NotFoundException('Comment not found');});
   }
 }
