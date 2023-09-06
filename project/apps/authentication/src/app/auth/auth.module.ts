@@ -7,7 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import {ConfigAppsModule, getJwtOptions} from '@project/config-service'
-import { NotifyModule } from '../notify/notify.module';
+import { NotifyModule } from '@project/shared/notify';
 
 @Module({
   imports: [

@@ -18,6 +18,7 @@ export interface NotifyConfig {
     user: string;
     password: string;
     from: string;
+    broadcastInterval: string;
   }
 }
 
@@ -35,7 +36,8 @@ export default registerAs('notify-app', (): NotifyConfig => {
     !process.env.MAIL_SMTP_PORT ||
     !process.env.MAIL_USERNAME ||
     !process.env.MAIL_PASSWORD ||
-    !process.env.MAIL_FROM
+    !process.env.MAIL_FROM ||
+    !process.env.BROADCAST_TASKS_INTERVAL
   ){
     throw new Error(
       '[Notify Config]: Some Environments didn\'t configure. Please check .env file.'
@@ -60,7 +62,8 @@ export default registerAs('notify-app', (): NotifyConfig => {
       port: process.env.MAIL_SMTP_PORT,
       user: process.env.MAIL_USERNAME,
       password: process.env.MAIL_PASSWORD,
-      from: process.env.MAIL_FROM
+      from: process.env.MAIL_FROM,
+      broadcastInterval: process.env.BROADCAST_TASKS_INTERVAL
     }
   };
 
@@ -81,6 +84,7 @@ export default registerAs('notify-app', (): NotifyConfig => {
       user: Joi.string().required(),
       password: Joi.string().required(),
       from: Joi.string().required(),
+      broadcastInterval: Joi.string().required()
     })
   });
 

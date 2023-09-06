@@ -11,17 +11,6 @@ export class ProfileService {
     private readonly userRepository: UserRepository
   ) {}
 
-  // private _isExecutor(user: User): asserts user is Executor {
-  //   if (! (user.role === UserRole.Executor) )
-  //     throw new Error('Not an Executor');
-  // }
-
-  // private _isEmployer(user: User): asserts user is Employer {
-  //   if (! (user.role === UserRole.Employer) )
-  //     throw new Error('Not an Employer');
-  // }
-
-
 
   public async getUserProfile(id: string) {
     const existUser = await this.userRepository.findById(id);

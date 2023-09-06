@@ -1,17 +1,20 @@
-import { Body, Controller, Get, Param, Patch, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards, ValidationPipe } from '@nestjs/common';
 import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 
 import { ProfileService } from './profile.service';
 import { fillRDO } from '@project/util/util-core';
 import UpdateUserDTO from './dto/update-user.dto';
 import UserFullRDO from './rdo/user-full.rdo';
-import { AuthUser, JwtAuthGuard } from '@project/database-service';
+import { AuthUser, JwtAuthGuard, RoleGuard, Roles } from '@project/database-service';
+import { NotifyService } from '@project/shared/notify';
+import { RabbitRouting, UserRole } from '@project/shared/app-types';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class ProfileController {
   constructor(
-    private readonly profileService: ProfileService
+    private readonly profileService: ProfileService,
+    private readonly notifyService: NotifyService
   ) {}
 
 
@@ -22,7 +25,6 @@ export class ProfileController {
   }
 
 
-  // test with JWT
   @Patch('/profile/edit')
   public async updateUserInfo
     (
@@ -32,5 +34,14 @@ export class ProfileController {
 
     const updatedUser = await this.profileService.updateUserProfile(userId, data);
     return fillRDO(UserFullRDO, updatedUser, [updatedUser.role]);
+  }
+
+
+  @Post('/:id/subscribe')
+  @Roles(UserRole.Executor)
+  @UseGuards(RoleGuard)
+  public async addSubscriber(@Param('id', MongoidValidationPipe) userId: string) {
+    const {email, name} = await this.profileService.getUserProfile(userId);
+    await this.notifyService.sendNotification({email, name}, RabbitRouting.AddSubscriber)
   }
 }
