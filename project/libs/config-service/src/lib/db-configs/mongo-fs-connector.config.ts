@@ -21,7 +21,7 @@ export default registerAs('mongo-db-fs', (): DbConfig => {
 
   const config: DbConfig = {
     host: process.env.FS_MONGO_HOST,
-    port: parseInt(process.env.FS_MONGO_PORT, 10),
+    port: process.env.FS_MONGO_PORT,
     name: process.env.FS_MONGO_DB_NAME,
     user: process.env.FS_MONGO_USERNAME,
     password: process.env.FS_MONGO_PASSWORD,

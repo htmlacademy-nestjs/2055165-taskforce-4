@@ -45,7 +45,7 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
   }
 
 
-  public async findUserTasks({userId, status, limit, page}: UserTasksQuery, role: UserRole) {
+  public async findUserTasks({status, limit, page}: UserTasksQuery, userId: string, role: UserRole) {
     if (role === UserRole.Employer) {
       return this.prisma.task.findMany({
         where: {

@@ -21,7 +21,7 @@ export default registerAs('mongo-db', (): DbConfig => {
 
   const config: DbConfig = {
     host: process.env.MONGO_DB_HOST,
-    port: parseInt(process.env.MONGO_DB_PORT, 10),
+    port:process.env.MONGO_DB_PORT,
     name: process.env.MONGO_DB_NAME,
     user: process.env.MONGO_ROOT_USERNAME,
     password: process.env.MONGO_ROOT_PASSWORD,

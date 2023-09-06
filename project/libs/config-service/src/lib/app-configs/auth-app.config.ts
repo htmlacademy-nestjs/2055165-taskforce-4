@@ -15,7 +15,7 @@ export default registerAs('auth-application', (): AppConfig => {
 
   const config: AppConfig = {
     environment: process.env.NODE_ENV,
-    port: parseInt(process.env.AUTH_APP_PORT, 10),
+    port: process.env.AUTH_APP_PORT,
   };
 
   const validationSchema = Joi.object<AppConfig>({

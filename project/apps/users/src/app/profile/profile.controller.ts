@@ -5,8 +5,9 @@ import { ProfileService } from './profile.service';
 import { fillRDO } from '@project/util/util-core';
 import UpdateUserDTO from './dto/update-user.dto';
 import UserFullRDO from './rdo/user-full.rdo';
-import { JwtAuthGuard } from '@project/database-service';
+import { AuthUser, JwtAuthGuard } from '@project/database-service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class ProfileController {
   constructor(
@@ -14,7 +15,6 @@ export class ProfileController {
   ) {}
 
 
-  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   public async getUserInfo(@Param('id', MongoidValidationPipe) userId: string) {
     const user = await this.profileService.getUserProfile(userId);
@@ -22,12 +22,12 @@ export class ProfileController {
   }
 
 
-    //полноценная реализация после добавления JWT токенов
-  @Patch('/:id')
+  // test with JWT
+  @Patch('/profile/edit')
   public async updateUserInfo
     (
-      @Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateUserDTO,
-      @Param('id', MongoidValidationPipe) userId: string
+      @AuthUser('id') userId: string,
+      @Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateUserDTO
     ) {
 
     const updatedUser = await this.profileService.updateUserProfile(userId, data);

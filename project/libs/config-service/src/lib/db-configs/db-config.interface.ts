@@ -1,7 +1,7 @@
 export interface DbConfig {
   host: string;
   name: string;
-  port: number;
+  port: string;
   user: string;
   password: string;
   authBase?: string;

@@ -7,6 +7,7 @@ import UploadedFileRDO from './rdo/uploaded-file.rdo';
 import { fillRDO } from '@project/util/util-core'
 import { ConfigService } from '@nestjs/config';
 
+
 @Controller('files')
 export class StaticController {
   constructor
@@ -24,7 +25,8 @@ export class StaticController {
     return fillRDO(UploadedFileRDO, Object.assign(newFile, { path }));
   }
 
-  @Get(':id')
+
+  @Get('/:id')
   public async getFile(@Param('id') fileId: string) {
     const existFile = await this.staticService.getFile(fileId);
     const path = `${this.configService.get('fs-application.serveRoot')}${existFile.path}`;

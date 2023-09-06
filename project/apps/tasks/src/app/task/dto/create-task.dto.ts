@@ -58,9 +58,6 @@ export default class CreateTaskDTO {
 
   @IsEnum(City)
   public city!: City;
-
-  @IsMongoId()
-  public employerId!: string;
 }
 
 

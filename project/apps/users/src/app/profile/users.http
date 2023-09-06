@@ -1,3 +1,6 @@
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjYzZWViNDUzOWZkZTZjMmVhZDJiMyIsIm5hbWUiOiJFeGVjdXRvcjQiLCJlbWFpbCI6IkV4ZWN1dG9yNEBleGVjdXRvcnMubG9jYWwiLCJyb2xlIjoiRXhlY3V0b3IiLCJpYXQiOjE2OTM4NTk1NzQsImV4cCI6MTY5Mzk0NTk3NH0.P-LrpIIbY_C3Q0UebrJ2AQT7ZIMrswcu2kkbewlXzx4
+
+
 #Get Employer info
 GET  http://localhost:3000/api/users/64f09949b74ad83ad4f101f3 HTTP/1.1
 ###
@@ -7,14 +10,12 @@ GET  http://localhost:3000/api/users/64f09949b74ad83ad4f101f6 HTTP/1.1
 ###
 
 #Update user info
-Patch  http://localhost:3000/api/users/64f09949b74ad83ad4f101f6 HTTP/1.1
+Patch  http://localhost:3000/api/users/profile/edit HTTP/1.1
+Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "password": "djeide",
-  "name": "jcje"
-
-
+  "name": "update name2"
 }
 ###
 

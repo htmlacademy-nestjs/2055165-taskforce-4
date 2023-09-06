@@ -2,7 +2,7 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import { JwtService } from '@nestjs/jwt';
 
 import { UserRepository, EmployerEntity, ExecutorEntity, UserEntity } from '@project/database-service';
-import { TokenPayload, User, UserRole } from '@project/shared/app-types';
+import { User, UserRole } from '@project/shared/app-types';
 import AuthUserDTO from './dto/auth-user.dto';
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './auth.constants';
 import CreateUserDTO from './dto/create-user.dto';
@@ -50,8 +50,7 @@ export class AuthService {
       throw new ConflictException(AUTH_USER_EXISTS);
     }
 
-    const newData: Omit<User, 'id'> = {...profileData, hashPassword: ''};
-    const newUser = await this.additionalFields[newData.role](newData).setPassword(password);
+    const newUser = await this.additionalFields[profileData.role](profileData).setPassword(password);
 
     return this.userRepository.create(newUser);
   }
@@ -74,16 +73,7 @@ export class AuthService {
   }
 
 
-  public async createUserToken(user: User) {
-    const payload: TokenPayload = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    };
-
-    return {
-      accessToken: await this.jwtService.signAsync(payload),
-    }
-  }
+  public createUserToken = async ({id, name, email, role}: User) => ({
+      accessToken: await this.jwtService.signAsync({ id, name, email, role })
+  })
 }

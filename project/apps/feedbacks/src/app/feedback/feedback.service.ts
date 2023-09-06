@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { FeedbackEntity, FeedbackQuery, FeedbackRepository, UserRepository } from '@project/database-service';
 import CreateFeedbackDTO from './dto/create-feedback.dto';
@@ -11,22 +11,15 @@ export class FeedbackService {
     private readonly userRepository: UserRepository // отключить
   ){}
 
-  public async createFeedBack(dto: CreateFeedbackDTO) {
-    const {text, taskId, employerId, executorId, rating} = dto;
+  public async createFeedBack(dto: CreateFeedbackDTO, employerId: string) {
+    const {text, taskId, executorId, rating} = dto;
 
     //проверка таска на существование через брокер
     //проверка таска на статус и привязанного к нему executorId через брокер
 
-    //проверка заказчика на существование через брокер => сервис юзеров
-    //проверка исполнителя на существование через брокер => сервис юзеров
     const existEmployer = await this.userRepository.findById(employerId) as Employer;
     if (!existEmployer) {
       throw new BadRequestException('Employer with such id not found');
-    }
-
-    const existExecutor = await this.userRepository.findById(executorId);
-    if (!existExecutor) {
-      throw new BadRequestException('Executor with such id not found');
     }
 
     const newFeedback = {
@@ -36,7 +29,7 @@ export class FeedbackService {
       executorId,
       rating,
     }
-
+    //обновление рейтинга исполнителя...
     return this.feedbackRepository.create(new FeedbackEntity(newFeedback));
   }
 
@@ -47,6 +40,7 @@ export class FeedbackService {
 
 
   public async deleteFeedback(feedbackId: string) {
-    await this.feedbackRepository.delete(feedbackId);
+    await this.feedbackRepository.delete(feedbackId)
+      .catch(() => {throw new NotFoundException('Feedback not found')});
   }
 }

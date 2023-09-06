@@ -1,4 +1,4 @@
-import { IsInt, IsMongoId, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
 
 export default class CreateReplyDTO {
 
@@ -11,6 +11,4 @@ export default class CreateReplyDTO {
   @IsInt()
   public taskId!: number;
 
-  @IsMongoId()
-  public executorId!: string; //будет браться из токена
 }

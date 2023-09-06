@@ -7,7 +7,7 @@ export interface User {
   email: string,
   aboutInfo?: string,
   avatar?: string,
-  hashPassword: string,
+  hashPassword?: string,
   birthDate: Date,
   city: City
   role: UserRole,

@@ -13,6 +13,8 @@ export * from './lib/reply.interface';
 export * from './lib/file-data.interface';
 export * from './lib/query-sort-type.type';
 export * from './lib/token-payload.interface'
+export * from './lib/email-subscriber.interface'
+export * from './lib/rabbit-routing.enum'
 export {Role as UserRole, City} from '.prisma/mongo-schema/index'
 export { TaskStatus } from '.prisma/postgres-schema/index'
 
