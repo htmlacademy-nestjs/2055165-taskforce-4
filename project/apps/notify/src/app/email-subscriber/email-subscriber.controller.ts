@@ -1,4 +1,4 @@
-import { CreateSubscriberDTO } from './dto/create-subscriber.dto';
+import { SubscriberDTO } from './dto/subscriber.dto';
 import { EmailSubscriberService } from './email-subscriber.service';
 import { Controller } from '@nestjs/common';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
@@ -14,11 +14,21 @@ export class EmailSubscriberController {
 
   @RabbitSubscribe({
     exchange: process.env.RABBIT_EXCHANGE,
+    routingKey: RabbitRouting.WelcomeMessage,
+    queue: process.env.RABBIT_QUEUE,
+  })
+  public async sendWelcomeMessage(subscriber: SubscriberDTO) {
+    await this.mailService.sendWelcomeMessageNewUser(subscriber);
+  }
+
+
+  @RabbitSubscribe({
+    exchange: process.env.RABBIT_EXCHANGE,
     routingKey: RabbitRouting.AddSubscriber,
     queue: process.env.RABBIT_QUEUE,
   })
-  public async create(subscriber: CreateSubscriberDTO) {
-    const sub = await this.subscriberService.addSubscriber(subscriber);
-    await this.mailService.sendNotifyNewSubscriber(sub);
+  public async addSubscriber(subscriber: SubscriberDTO) {
+    const newSub = await this.subscriberService.addSubscriber(subscriber);
+    await this.mailService.sendSubscribeMessage(newSub);
   }
 }

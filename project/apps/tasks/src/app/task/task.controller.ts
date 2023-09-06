@@ -22,7 +22,7 @@ export class TaskController {
   @UseGuards(RoleGuard)
   public async getNewTasks(@Query(new ValidationPipe({whitelist: true, transform: true})) query: TaskQuery) {
     const tasks = await this.taskService.getNewTasks(query);
-    return fillRDO(TaskBasicRDO, tasks); //получить инфу о создателях
+    return fillRDO(TaskBasicRDO, tasks);
   }
 
   @Get('/mytasks')
@@ -31,7 +31,7 @@ export class TaskController {
     @Query(new ValidationPipe({whitelist: true, transform: true})) query: UserTasksQuery) {
     const {id, role} = userData;
     const tasks = await this.taskService.getUserTasks(query, id, role);
-    return fillRDO(TaskBasicRDO, tasks) //получить инфу о создателях
+    return fillRDO(TaskBasicRDO, tasks);
   }
 
 
@@ -43,14 +43,14 @@ export class TaskController {
     @Body(new ValidationPipe({whitelist: true, transform: true})) data: CreateTaskDTO) {
 
     const newTask = await this.taskService.createTask(data, userId);
-    return fillRDO(TaskFullRDO, newTask); // получать инфу о создателе
+    return fillRDO(TaskFullRDO, newTask);
   }
 
 
   @Get('/:taskId')
   public async getTask(@Param('taskId', ParseIntPipe) taskId: number) {
     const existTask = await this.taskService.getTaskDetails(taskId);
-    return fillRDO(TaskFullRDO, existTask);  // получать инфу о создателе
+    return fillRDO(TaskFullRDO, existTask);
   }
 
 
@@ -59,20 +59,19 @@ export class TaskController {
   @UseGuards(RoleGuard, ModifyTaskGuard)
   public async deleteTask(@Param('taskId', ParseIntPipe) taskId: number) {
     await this.taskService.deleteTask(taskId);
-    //дополнительно удалять все отклики и комментарии к таску
     return 'OK';
   }
 
 
   @Patch('/:taskId')
-  @UseGuards(ModifyTaskGuard) // <-- + проверка модификации статуса
+  @UseGuards(ModifyTaskGuard)
   public async updateTask(
     @Param('taskId', ParseIntPipe) taskId: number,
     @Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateTaskDTO
     ) {
 
     const updatedTask = await this.taskService.updateTask(taskId, data);
-    return fillRDO(TaskFullRDO, updatedTask); // получать инфу о создателе
+    return fillRDO(TaskFullRDO, updatedTask);
   }
 
 

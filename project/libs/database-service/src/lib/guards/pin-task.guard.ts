@@ -44,6 +44,16 @@ export class PinTaskGuard implements CanActivate {
         }
       })
 
+      const otherTaskInProgress = await this.prisma.reply.findFirst({
+        where: {
+          executorId,
+          task: {
+            status: {
+              equals: TaskStatus.InProgress
+            }
+          }},
+      })
+
       await this.prisma.$disconnect();
 
 
@@ -52,6 +62,8 @@ export class PinTaskGuard implements CanActivate {
       if (task.employerId !== id) throw new ForbiddenException('This employer can\'t modify this task.')
 
       if (!reply) throw new NotFoundException('The executor didn\'t reply on this task')
+
+      if (otherTaskInProgress) throw new ConflictException('The executor already has a task in progress.')
 
       if (task.status !== TaskStatus.New) throw new ConflictException('Task has already been pinned to another executor');
 

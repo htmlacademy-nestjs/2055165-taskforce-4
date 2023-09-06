@@ -32,6 +32,15 @@ export class EmailSubscriberRepository {
     })
   }
 
+  public async updateSubscribeStatus(email:string, status: boolean): Promise<EmailSubscriber> {
+    return this.prisma.emailSubScriber.update({
+      where: {email},
+      data: {
+        isSubscribed: status
+      }
+    })
+  }
+
   public async delete(id: string) {
     return this.prisma.emailSubScriber.delete({
       where: {id}

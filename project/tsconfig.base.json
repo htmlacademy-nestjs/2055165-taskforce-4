@@ -20,6 +20,7 @@
       "@project/database-service": ["libs/database-service/src/index.ts"],
       "@project/models": ["libs/models/src/index.ts"],
       "@project/shared/app-types": ["libs/shared/app-types/src/index.ts"],
+      "@project/shared/notify": ["libs/shared/notify/src/index.ts"],
       "@project/shared/shared-pipes": ["libs/shared/shared-pipes/src/index.ts"],
       "@project/shared/validate-decorators": [
         "libs/shared/validate-decorators/src/index.ts"

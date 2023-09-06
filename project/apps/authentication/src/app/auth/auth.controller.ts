@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { fillRDO } from '@project/util/util-core';
 import { AuthService } from './auth.service';
 import CreateUserDTO from './dto/create-user.dto';
 import UserBasicRDO from './rdo/user-basic.rdo';
 import AuthUserDTO from './dto/auth-user.dto';
 import AuthUserRDO from './rdo/auth-user.rdo';
-import { NotifyService } from '../notify/notify.service';
+import { NotifyService } from '@project/shared/notify';
+import { RabbitRouting } from '@project/shared/app-types';
 
 @Controller('auth')
 export class AuthController {
@@ -19,7 +20,7 @@ export class AuthController {
     const newUser = await this.authService.register(data);
 
     const { email, name } = newUser;
-    await this.notifyService.registerSubscriber({ email, name })
+    await this.notifyService.sendNotification({ email, name }, RabbitRouting.WelcomeMessage)
 
     return fillRDO(UserBasicRDO, newUser);
   }
@@ -29,11 +30,6 @@ export class AuthController {
     const verifiedUser = await this.authService.authorize(dto);
     const accessToken = await this.authService.createUserToken(verifiedUser);
     return fillRDO(AuthUserRDO, Object.assign(verifiedUser, accessToken));
-  }
-
-  @Get('/')
-  public async checkUserAuth() {
-    throw new Error('Will be implemented after JWT tokens realization')
   }
 }
 
