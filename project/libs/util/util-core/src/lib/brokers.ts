@@ -8,19 +8,19 @@ export function getRabbitMQOptions(optionSpace: string) {
     useFactory: async (config: ConfigService) => ({
       exchanges: [
           {
-            name: config.get(`${optionSpace}.queue`) as string,
+            name: config.getOrThrow<string>(`${optionSpace}.queue`),
             type: 'direct'
           }
-        ],
-        uri:getRabbitMQConnectionString({
-          host: config.get(`${optionSpace}.host`) as string,
-          password: config.get(`${optionSpace}.password`) as string,
-          user: config.get(`${optionSpace}.user`) as string,
-          port: config.get(`${optionSpace}.port`) as string
-        }),
-        connectionInitOptions: { wait: true },
-        enableControllerDiscovery: true,
+      ],
+      uri:getRabbitMQConnectionString({
+        host: config.getOrThrow<string>(`${optionSpace}.host`),
+        password: config.getOrThrow<string>(`${optionSpace}.password`),
+        user: config.getOrThrow<string>(`${optionSpace}.user`),
+        port: config.getOrThrow<string>(`${optionSpace}.port`),
       }),
+      connectionInitOptions: { wait: true },
+      enableControllerDiscovery: true,
+    }),
     inject: [ConfigService]
   }
 }

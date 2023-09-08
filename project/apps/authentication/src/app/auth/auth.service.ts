@@ -1,18 +1,25 @@
+import * as crypto from 'node:crypto';
+
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 import { UserRepository, EmployerEntity, ExecutorEntity, UserEntity } from '@project/database-service';
 import { User, UserRole } from '@project/shared/app-types';
 import AuthUserDTO from './dto/auth-user.dto';
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './auth.constants';
 import CreateUserDTO from './dto/create-user.dto';
+import { getJwtAccessOptions, getJwtRefreshOptions } from '@project/config-service';
+import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly jwtService: JwtService
+    private readonly refreshTokenService: RefreshTokenService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService
   ) {}
 
 
@@ -73,7 +80,14 @@ export class AuthService {
   }
 
 
-  public createUserToken = async ({id, name, email, role}: User) => ({
-      accessToken: await this.jwtService.signAsync({ id, name, email, role })
-  })
+  public createUserToken = async ({id, name, email, role}: User) => {
+
+    const tokenId = crypto.randomUUID();
+    await this.refreshTokenService.createRefreshSession({sub: id, tokenId})
+
+    return {
+      accessToken: await this.jwtService.signAsync({ sub: id, name, email, role }, await getJwtAccessOptions(this.configService)),
+      refreshToken: await this.jwtService.signAsync({ sub: id, tokenId }, await getJwtRefreshOptions(this.configService))
+    }
+  }
 }

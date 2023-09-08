@@ -23,7 +23,7 @@ export class DeleteCommentGuard implements CanActivate {
       throw new UnauthorizedException('Permission denied. Only for authorized users.')
     }
 
-    const {id} = this.jwtService.decode(token) as TokenPayload;
+    const {sub: id} = this.jwtService.decode(token) as TokenPayload;
     const {commentId} = body;
 
 

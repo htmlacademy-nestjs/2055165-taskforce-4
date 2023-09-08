@@ -46,7 +46,7 @@ export class ModifyTaskGuard implements CanActivate {
       throw new UnauthorizedException('Permission denied. Only for authorized users.')
     }
 
-      const {id, role} = this.jwtService.decode(token) as TokenPayload;
+      const {sub: id, role} = this.jwtService.decode(token) as TokenPayload;
       const {taskId} = params;
       const taskIdParsed = Number.parseInt(taskId)
       const {status} = body as {status: TaskStatus};

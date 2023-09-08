@@ -9,7 +9,7 @@ import { FeedbackQuery } from "../queries/feedback/feedback.query";
 @Injectable()
 export class FeedbackRepository implements CRUDRepository<FeedbackEntity, string, Feedback> {
   private prisma;
-  constructor (dbService: DatabaseService) {
+  constructor (private readonly dbService: DatabaseService) {
     this.prisma = dbService.prismaBaseMongoConnector
   }
 

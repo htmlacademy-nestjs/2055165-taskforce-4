@@ -5,6 +5,7 @@ import { UserEntity } from '../entities/user.entity';
 import { UpdateUserData, User } from '@project/shared/app-types';
 import { DatabaseService } from '../prisma/database.service';
 
+
 @Injectable()
 export class UserRepository implements CRUDRepository<UserEntity, UpdateUserData, User> {
   private prisma;

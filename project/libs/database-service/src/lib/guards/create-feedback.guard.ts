@@ -23,7 +23,7 @@ export class CreateFeedbackGuard implements CanActivate {
       throw new UnauthorizedException('Permission denied. Only for authorized users.')
     }
 
-    const {id: employerId} = this.jwtService.decode(token) as TokenPayload;
+    const {sub: employerId} = this.jwtService.decode(token) as TokenPayload;
     const {taskId, executorId} = body;
     const taskIdParsed = Number.parseInt(taskId)
 

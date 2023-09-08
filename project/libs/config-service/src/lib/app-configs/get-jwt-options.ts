@@ -1,12 +1,21 @@
 import { ConfigService } from '@nestjs/config';
-import { JwtModuleOptions } from '@nestjs/jwt';
+import { JwtSignOptions } from '@nestjs/jwt';
 
-export async function getJwtOptions(configService: ConfigService): Promise<JwtModuleOptions> {
+export async function getJwtAccessOptions(configService: ConfigService): Promise<JwtSignOptions> {
   return {
-    secret: configService.get<string>('jwt.accessTokenSecret'),
-    signOptions: {
-      expiresIn: configService.get<string>('jwt.accessTokenExpiresIn'),
-      algorithm: 'HS256',
-    }
+    secret: configService.getOrThrow<string>('jwt.accessTokenSecret'),
+    expiresIn: configService.getOrThrow<string>('jwt.accessTokenExpiresIn'),
+    algorithm: 'HS256',
   }
 }
+
+
+export async function getJwtRefreshOptions(configService: ConfigService): Promise<JwtSignOptions> {
+  return {
+    secret: configService.getOrThrow<string>('jwt.refreshTokenSecret'),
+    expiresIn: configService.getOrThrow<string>('jwt.refreshTokenExpiresIn'),
+    algorithm: 'HS256',
+  }
+
+}
+

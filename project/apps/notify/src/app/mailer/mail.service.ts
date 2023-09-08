@@ -84,7 +84,7 @@ export class MailService {
 
     await this.tasksDB.$disconnect();
 
-    subscribers.forEach(async ({email, name}) => {
+    subscribers.forEach(async ({email, name}: EmailSubscriber) => {
       if (newTasks.length === 0) {
 
         await this.mailerService.sendMail({

@@ -12,7 +12,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
   app.useGlobalPipes(new ValidationPipe({whitelist: true, transform: true}))
 
-  const port = configService.get('auth-application.port');
+  const port = configService.getOrThrow<string>('auth-application.port');
   await app.listen(port);
 
   Logger.log( `🚀  Auth Application is running on: http://localhost:${port}/${globalPrefix}` );

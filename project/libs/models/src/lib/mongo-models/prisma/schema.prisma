@@ -55,6 +55,16 @@ model FeedBack {
   @@map("feedbacks")
 }
 
+model RefreshSession {
+  id                  String     @id @default(auto()) @map("_id") @db.ObjectId
+  tokenId             String     @unique
+  userId              String
+  expiresIn           DateTime
+  createdAt           DateTime   @default(now())
+
+  @@map("refresh-sessions")
+}
+
 enum City {
   Moscow
   SaintPetersburg

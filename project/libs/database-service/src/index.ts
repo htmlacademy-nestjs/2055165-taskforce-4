@@ -8,6 +8,7 @@ export * from './lib/entities/comment.entity';
 export * from './lib/entities/feedback.entity';
 export * from './lib/entities/file-data.entity';
 export * from './lib/entities/email-subscriber.entity'
+export * from './lib/entities/refresh-token.entity'
 
 export * from './lib/repositories/user.repository';
 export * from './lib/repositories/category.repository';
@@ -17,6 +18,7 @@ export * from './lib/repositories/reply.repository';
 export * from './lib/repositories/comment.repository';
 export * from './lib/repositories/feedback.repository';
 export * from './lib/repositories/email-subscriber.repository'
+export * from './lib/repositories/refresh-token.repository'
 
 export * from './lib/prisma/database.module';
 export * from './lib/prisma/database.service'
@@ -29,6 +31,8 @@ export * from './lib/queries/feedback/feedback.query'
 export * from './lib/strategies/jwt-access.strategy'
 
 export * from './lib/guards/jwt-auth.guard'
+export * from './lib/guards/jwt-refresh.guard'
+export * from './lib/guards/local-auth.guard'
 export * from './lib/guards/modify-task.guard'
 export * from './lib/guards/role.guard'
 export * from './lib/guards/pin-task.guard'
