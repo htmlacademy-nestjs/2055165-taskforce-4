@@ -28,7 +28,7 @@ export class ProfileController {
   @Patch('/profile/edit')
   public async updateUserInfo
     (
-      @AuthUser('id') userId: string,
+      @AuthUser('sub') userId: string,
       @Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateUserDTO
     ) {
 

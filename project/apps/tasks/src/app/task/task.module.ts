@@ -4,7 +4,7 @@ import { TaskController } from './task.controller';
 import { JwtModule } from '@nestjs/jwt';
 
 import { CategoryRepository, DatabaseModule, JwtAccessStrategy, ReplyRepository, TaskRepository } from '@project/database-service';
-import { ConfigAppsModule, getJwtOptions } from '@project/config-service';
+import { ConfigAppsModule, getJwtAccessOptions } from '@project/config-service';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
@@ -14,7 +14,7 @@ import { ConfigService } from '@nestjs/config';
     JwtModule.registerAsync({
       imports: [ConfigAppsModule],
       inject: [ConfigService],
-      useFactory: getJwtOptions
+      useFactory: getJwtAccessOptions
     })],
   providers: [
     TaskService,

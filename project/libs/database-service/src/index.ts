@@ -26,6 +26,7 @@ export * from './lib/seed'
 
 export * from './lib/queries/task/task.query';
 export * from './lib/queries/task/user-tasks.query'
+export * from './lib/queries/task/user-tasks-count.query'
 export * from './lib/queries/feedback/feedback.query'
 
 export * from './lib/strategies/jwt-access.strategy'

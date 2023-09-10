@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { TaskRepository, TaskEntity, CategoryRepository, UserTasksQuery, ReplyRepository } from '@project/database-service'
+import { TaskRepository, TaskEntity, CategoryRepository, UserTasksQuery, ReplyRepository, UserTasksCountQuery } from '@project/database-service'
 import { Task, TaskStatus, UserRole } from '@project/shared/app-types';
 import { TaskQuery } from '@project/database-service';
 import CreateTaskDTO from './dto/create-task.dto';
@@ -38,9 +38,15 @@ export class TaskService {
     return this.taskRepository.findNewTasks(query);
   }
 
+
   public async getUserTasks(query: UserTasksQuery, userId: string, role: UserRole) {
     const tasks = await this.taskRepository.findUserTasks(query, userId, role);
     return tasks;
+  }
+
+
+  public async getUserTasksCount({userId, role}: UserTasksCountQuery) {
+    return this.taskRepository.getUserTasksCount(userId, role);
   }
 
 
@@ -81,7 +87,6 @@ export class TaskService {
   public async pinTask(taskId: number, executorId: string) {
 
     await this.replyRepository.pinTask(taskId, executorId);
-    //обновление исполнителя через брокер
     await this.taskRepository.update(taskId, {status: TaskStatus.InProgress});
   }
 }

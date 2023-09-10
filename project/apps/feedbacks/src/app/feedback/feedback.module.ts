@@ -5,7 +5,7 @@ import { DatabaseModule, FeedbackRepository, JwtAccessStrategy, UserRepository }
 import { CommentModule } from '../comment/comment.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { ConfigAppsModule, getJwtOptions } from '@project/config-service';
+import { ConfigAppsModule, getJwtAccessOptions } from '@project/config-service';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { ConfigAppsModule, getJwtOptions } from '@project/config-service';
     JwtModule.registerAsync({
       imports: [ConfigAppsModule],
       inject: [ConfigService],
-      useFactory: getJwtOptions
+      useFactory: getJwtAccessOptions
     })
   ],
   providers: [FeedbackService, FeedbackRepository, UserRepository, JwtAccessStrategy],

@@ -19,7 +19,7 @@ export class ReplyController {
   @Roles(UserRole.Executor)
   @UseGuards(RoleGuard, CreateReplyGuard)
   public async createReply(
-    @AuthUser('id') executorId: string,
+    @AuthUser('sub') executorId: string,
     @Body() dto: CreateReplyDTO
     ) {
 
@@ -39,7 +39,7 @@ export class ReplyController {
   @Roles(UserRole.Executor)
   @UseGuards(RoleGuard)
   public async deleteReply(
-    @AuthUser('id') executorId: string,
+    @AuthUser('sub') executorId: string,
     @Body() {taskId}: DeleteReplyDTO
     ) {
 

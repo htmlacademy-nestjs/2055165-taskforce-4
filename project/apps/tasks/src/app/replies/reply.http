@@ -1,15 +1,14 @@
-# 64ebc8ae9b9f8e5d31b778db
-# 64ebc8ae9b9f8e5d31b778dc
+@tokenExecutor = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkOGUwMjNjOWQzNTU2MGM2MWYwYjMiLCJuYW1lIjoiRXhlY3V0b3IxIiwiZW1haWwiOiJFeGVjdXRvcjFAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkV4ZWN1dG9yIiwiaWF0IjoxNjk0MzM4NTgxLCJleHAiOjE2OTQzMzkxODF9.F3YbfkdWlpUhJZcxY8AmaOQP0lB65oeXWf1KU5lU4q4
+
 
 # Create new reply
 POST http://localhost:4000/api/replies/create HTTP/1.1
+Authorization: {{tokenExecutor}}
 Content-Type: application/json
 
 {
   "text": "Новый Отклик",
-  "taskId": 27,
-  "executorId": "64ebc8ae9b9f8e5d31b778db"
-
+  "taskId": 32
 }
 
 ###

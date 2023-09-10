@@ -17,6 +17,7 @@ export * from './lib/refresh-token-payload.interface'
 export * from './lib/email-subscriber.interface'
 export * from './lib/rabbit-routing.enum'
 export * from './lib/request-with-user.interface'
+export * from './lib/request-with-token-payload.interface'
 export * from './lib/token.interface'
 
 export {Role as UserRole, City} from '.prisma/mongo-schema/index'

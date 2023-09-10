@@ -4,7 +4,7 @@ import { CategoryController } from './category.controller';
 import { CategoryRepository, DatabaseModule, JwtAccessStrategy } from '@project/database-service';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigAppsModule, getJwtOptions } from '@project/config-service';
+import { ConfigAppsModule, getJwtAccessOptions } from '@project/config-service';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { ConfigAppsModule, getJwtOptions } from '@project/config-service';
     JwtModule.registerAsync({
       imports: [ConfigAppsModule],
       inject: [ConfigService],
-      useFactory: getJwtOptions
+      useFactory: getJwtAccessOptions
     })
   ],
   providers: [CategoryService, CategoryRepository, JwtAccessStrategy],

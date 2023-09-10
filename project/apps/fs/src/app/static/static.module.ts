@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { StaticController } from './static.controller';
 import { StaticService } from './static.service';
-import { ConfigAppsModule, getJwtOptions } from '@project/config-service';
+import { ConfigAppsModule, getJwtAccessOptions } from '@project/config-service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseModule, FileDataRepository, JwtAccessStrategy } from '@project/database-service';
@@ -15,7 +15,7 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.registerAsync({
       imports: [ConfigAppsModule],
       inject: [ConfigService],
-      useFactory: getJwtOptions
+      useFactory: getJwtAccessOptions
     }),
     ServeStaticModule.forRootAsync({
       imports: [ConfigAppsModule],

@@ -25,7 +25,7 @@ export class FeedbackController {
 
   @Post('/comment/create')
   public async createComment(
-    @AuthUser('id') authorId: string,
+    @AuthUser('sub') authorId: string,
     @Body(new ValidationPipe({whitelist: true, transform: true})) dto: CreateCommentDTO
     ) {
     const newComment = await this.commentService.createComment(dto, authorId);
@@ -56,7 +56,7 @@ export class FeedbackController {
   @Roles(UserRole.Employer)
   @UseGuards(RoleGuard, CreateFeedbackGuard)
   public async createFeedback(
-    @AuthUser('id') employerId: string,
+    @AuthUser('sub') employerId: string,
     @Body(new ValidationPipe({whitelist: true, transform: true})) dto: CreateFeedbackDTO) {
 
     const newFeedBack = await this.feedbackService.createFeedBack(dto, employerId);

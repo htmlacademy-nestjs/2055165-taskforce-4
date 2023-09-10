@@ -1,15 +1,15 @@
-@tokenExecutor = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjYzZWViNDUzOWZkZTZjMmVhZDJiMyIsIm5hbWUiOiJFeGVjdXRvcjQiLCJlbWFpbCI6IkV4ZWN1dG9yNEBleGVjdXRvcnMubG9jYWwiLCJyb2xlIjoiRXhlY3V0b3IiLCJpYXQiOjE2OTM4NTk1NzQsImV4cCI6MTY5Mzk0NTk3NH0.P-LrpIIbY_C3Q0UebrJ2AQT7ZIMrswcu2kkbewlXzx4
-@tokenEmployer = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjY0ZTkwZmFlMmU4NTgzZGM2NGJjYiIsIm5hbWUiOiJFbXBsb3llcjQiLCJlbWFpbCI6IkVtcGxveWVyNEBleGVjdXRvcnMubG9jYWwiLCJyb2xlIjoiRW1wbG95ZXIiLCJpYXQiOjE2OTM4NjM1NzYsImV4cCI6MTY5Mzk0OTk3Nn0.bGXSsrDkG3d6xy90IHMNRryjqv0MQNPwoloRRUAkEVg
-@tokenEmployer2 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjY1ZTIwMzcyYWNhZjE4YTFmNDcyNiIsIm5hbWUiOiJFbXBsb3llcjUiLCJlbWFpbCI6IkVtcGxveWVyNUBleGVjdXRvcnMubG9jYWwiLCJyb2xlIjoiRW1wbG95ZXIiLCJpYXQiOjE2OTM4Njc1NjEsImV4cCI6MTY5Mzk1Mzk2MX0.0B3AflFYfIKf0ZGZrZyRw_FdkS8sLxaLvoQv5Mhk6pQ
+@tokenExecutor = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkOGUwMjNjOWQzNTU2MGM2MWYwYjMiLCJuYW1lIjoiRXhlY3V0b3IxIiwiZW1haWwiOiJFeGVjdXRvcjFAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkV4ZWN1dG9yIiwiaWF0IjoxNjk0MzM4NTgxLCJleHAiOjE2OTQzMzkxODF9.F3YbfkdWlpUhJZcxY8AmaOQP0lB65oeXWf1KU5lU4q4
+@tokenEmployer = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkOGU1MDNjOWQzNTU2MGM2MWYwYjUiLCJuYW1lIjoiRW1wbG95ZXIxIiwiZW1haWwiOiJFbXBsb3llcjFAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkVtcGxveWVyIiwiaWF0IjoxNjk0MzM4NjQ5LCJleHAiOjE2OTQzMzkyNDl9.PfIvP7IedXuTETrvf60FKRIuVfHciGn-JoHG_OfMVI4
+@tokenEmployer2 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkOGU3MTNjOWQzNTU2MGM2MWYwYjciLCJuYW1lIjoiRW1wbG95ZXIyIiwiZW1haWwiOiJFbXBsb3llcjJAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkVtcGxveWVyIiwiaWF0IjoxNjk0MzM4Njc2LCJleHAiOjE2OTQzMzkyNzZ9.SMGxyoxFrDQnaOKD135B0Ka7QvAOO8ykxVMBT8lTupo
 
 #Get task by id
-GET http://localhost:4000/api/tasks/5 HTTP/1.1
+GET http://localhost:4000/api/tasks/28 HTTP/1.1
 Authorization: {{tokenEmployer}}
 ###
 
 #Create task
 POST http://localhost:4000/api/tasks/create HTTP/1.1
-Authorization: {{tokenEmployer}}
+Authorization: {{tokenEmployer2}}
 Content-Type: application/json
 
 {
@@ -18,7 +18,6 @@ Content-Type: application/json
   "categoryId": 3,
   "price": 2323.8999,
   "city": "Vladivostok",
-  "employerId": "64e92572e629a8445238b337",
   "tags": ["tag1", "tag1", "tag1", "tag1", "tag1"]
 }
 ###
@@ -40,8 +39,8 @@ DELETE http://localhost:4000/api/tasks/17 HTTP/1.1
 
 
 #Get User Tasks
-GET http://localhost:4000/api/tasks/mytasks?userId=64ebc8ae9b9f8e5d31b778db HTTP/1.1
-
+GET http://localhost:4000/api/tasks/mytasks HTTP/1.1
+Authorization: {{tokenEmployer}}
 ###
 
 
@@ -50,6 +49,23 @@ GET http://localhost:4000/api/tasks HTTP/1.1
 Authorization: {{tokenExecutor}}
 
 ###
+
+#Get User Tasks Count
+GET http://localhost:4000/api/tasks/count HTTP/1.1
+Authorization: {{tokenExecutor}}
+Content-Type: application/json
+
+{
+  "userId": "64fd8e023c9d35560c61f0b3",
+  "role": "Executor"
+}
+
+
+###
+
+
+
+
 
 #Pin Task
 POST http://localhost:4000/api/tasks/27/pin-task HTTP/1.1
