@@ -1,4 +1,4 @@
-import { IsInt, IsMongoId, IsPositive, Max, MaxLength, Min, MinLength } from "class-validator";
+import { IsInt, IsMongoId, IsNotEmpty, IsPositive, Max, MaxLength, Min, MinLength } from "class-validator";
 import { FEEDBACK_LENGTH, FEEDBACK_RATING } from "../feedback.constants";
 
 export default class CreateFeedbackDTO {
@@ -12,6 +12,7 @@ export default class CreateFeedbackDTO {
   public taskId!: number;
 
   @IsMongoId()
+  @IsNotEmpty()
   public executorId!: string;
 
   @Min(FEEDBACK_RATING.MIN)

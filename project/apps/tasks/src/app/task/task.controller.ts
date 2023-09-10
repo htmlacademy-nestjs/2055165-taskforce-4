@@ -43,6 +43,12 @@ export class TaskController {
   }
 
 
+  @Get('/failed-count')
+  public async getFailedTasksCount() {
+    return this.taskService.getFailedTasksCount();
+  }
+
+
   @Post('/create')
   @Roles(UserRole.Employer)
   @UseGuards(JwtAuthGuard, RoleGuard)
@@ -82,7 +88,6 @@ export class TaskController {
     const updatedTask = await this.taskService.updateTask(taskId, data);
     return fillRDO(TaskFullRDO, updatedTask);
   }
-
 
 
 

@@ -8,11 +8,14 @@ import { TaskStatus, TokenPayload } from "@project/shared/app-types";
 @Injectable()
 export class CreateFeedbackGuard implements CanActivate {
   private prismaPsqlConnector;
+  private prismaMongoConnector;
+
   constructor(
     @Inject(JwtService) private readonly jwtService: JwtService,
     @Inject(DatabaseService) private readonly dbService: DatabaseService
   ){
     this.prismaPsqlConnector = dbService.prismaPostgresConnector;
+    this.prismaMongoConnector = dbService.prismaBaseMongoConnector;
   }
 
   async canActivate(cxt: ExecutionContext) {
@@ -27,6 +30,9 @@ export class CreateFeedbackGuard implements CanActivate {
     const {taskId, executorId} = body;
     const taskIdParsed = Number.parseInt(taskId)
 
+    if (!taskId || !executorId) {
+      throw new BadRequestException('Some required fields are missing. Check your request.');
+    }
 
     const task = await this.prismaPsqlConnector.task.findUnique({
       where: {taskId: taskIdParsed}
@@ -41,9 +47,17 @@ export class CreateFeedbackGuard implements CanActivate {
       }
     })
 
-    await this.prismaPsqlConnector.$disconnect()
+
+    const existFeedback = await this.prismaMongoConnector.feedBack.findUnique({
+      where: {taskId}
+    })
+
+    await this.prismaPsqlConnector.$disconnect();
+    await this.prismaMongoConnector.$disconnect();
 
     if (!task) throw new BadRequestException('Task not found')
+
+    if (existFeedback) throw new ConflictException('There is already another feedback on this task.')
 
     if (task.employerId !== employerId) throw new ForbiddenException('You aren\'t employer of this task.')
 

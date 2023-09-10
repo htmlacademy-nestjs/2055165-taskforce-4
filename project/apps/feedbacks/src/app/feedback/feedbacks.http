@@ -1,0 +1,22 @@
+#Get Executor info
+@employerToken1 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkOGU1MDNjOWQzNTU2MGM2MWYwYjUiLCJuYW1lIjoiRW1wbG95ZXIxIiwiZW1haWwiOiJFbXBsb3llcjFAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkVtcGxveWVyIiwiaWF0IjoxNjk0MzU1NDIyLCJleHAiOjE2OTQzNTYwMjJ9.Wc-prw0tIAVphK7To5-kJZ0dfLNAPnJ9USyKP65NutA
+@employerToken2 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkOGU3MTNjOWQzNTU2MGM2MWYwYjciLCJuYW1lIjoiRW1wbG95ZXIyIiwiZW1haWwiOiJFbXBsb3llcjJAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkVtcGxveWVyIiwiaWF0IjoxNjk0MzU1NDcwLCJleHAiOjE2OTQzNTYwNzB9.6fe6pbkwVL_Hg4bVUfSSShAdwZZ5qvkdeMPKokxan00
+
+#
+GET  http://localhost:3002/api/feedbacks/feedback/test HTTP/1.1
+Authorization: {{employerToken1}}
+
+###
+
+#
+POST  http://localhost:3002/api/feedbacks/feedback/create HTTP/1.1
+Authorization: {{employerToken2}}
+Content-Type: application/json
+
+{
+  "taskId": 36,
+  "rating": 1,
+  "executorId": "64fdda7b5da4da02acbf0361",
+  "text": "2222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
+}
+###

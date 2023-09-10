@@ -1,6 +1,4 @@
 import { City, UserRole } from "@project/shared/app-types";
-import { Expose, Transform } from "class-transformer";
-import dayjs from "dayjs";
 
 export default class UserAuthRDO {
   public id!: number;

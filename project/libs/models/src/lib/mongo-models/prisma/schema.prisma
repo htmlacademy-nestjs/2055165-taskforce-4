@@ -47,7 +47,7 @@ model FeedBack {
   feedbackId String @id @default(auto()) @map("_id") @db.ObjectId
   text       String
   rating     Int
-  taskId     Int
+  taskId     Int    @unique
   executorId String @db.ObjectId
   employer   User   @relation(fields: [employerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   employerId String @db.ObjectId

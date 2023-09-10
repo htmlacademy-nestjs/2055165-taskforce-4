@@ -5,7 +5,7 @@ import { AuthController } from './auth.controller';
 import { UserRepository, DatabaseModule, JwtAccessStrategy} from '@project/database-service';
 import { JwtService } from '@nestjs/jwt';
 
-import {ConfigAppsModule,} from '@project/config-service'
+import {ConfigAppsModule} from '@project/config-service'
 import { NotifyModule } from '@project/shared/notify';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
@@ -16,7 +16,7 @@ import { RefreshTokenModule } from '../refresh-token/refresh-token.module';
     ConfigAppsModule,
     DatabaseModule,
     NotifyModule,
-    RefreshTokenModule
+    RefreshTokenModule,
   ],
   providers: [
     JwtService,

@@ -16,12 +16,14 @@ import UserAuthRDO from './rdo/user-auth.rdo';
 @UseFilters(AxiosExceptionFilter)
 export class AuthenticationController {
   private baseAuthUrl: string;
+  private baseUsersUrl: string;
   private baseTasksUrl: string;
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService
   ) {
     this.baseAuthUrl = this.configService.getOrThrow<string>('gateway.serviceURLs.auth');
+    this.baseUsersUrl = this.configService.getOrThrow<string>('gateway.serviceURLs.users');
     this.baseTasksUrl = this.configService.getOrThrow<string>('gateway.serviceURLs.tasks');
   }
 
@@ -35,8 +37,8 @@ export class AuthenticationController {
   @Post('/login')
   public async login(@Body() dto: LoginUserDTO) {
     const { data: authUser } = await this.httpService.axiosRef.post<UserAuthRDO>(`${this.baseAuthUrl}/login`, dto);
-    const { data: userTasksCount } = await this.httpService.axiosRef.get<TasksCountRDO>(`${this.baseTasksUrl}/count?userId=${authUser.id}&role=${authUser.role}`);
-    return fillRDO(UserAuthFullRDO, Object.assign(authUser, userTasksCount), [authUser.role]);
+    const { data: user } = await this.httpService.axiosRef.get<UserAuthRDO>(`${this.baseUsersUrl}/${authUser.id}`);
+    return fillRDO(UserAuthFullRDO, Object.assign(authUser, user), [authUser.role]);
   }
 
 

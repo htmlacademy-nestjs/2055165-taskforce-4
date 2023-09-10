@@ -50,6 +50,11 @@ export class TaskService {
   }
 
 
+  public async getFailedTasksCount() {
+    return this.taskRepository.getFailedTasksCount();
+  }
+
+
   public async getTaskDetails(taskId: number) {
     const existTask = await this.taskRepository.findById(taskId);
     if (! existTask) {

@@ -6,7 +6,7 @@ import UserBasicRDO from './rdo/user-basic.rdo';
 import { NotifyService } from '@project/shared/notify';
 import { RabbitRouting, RequestWithTokenPayload, RequestWithUser } from '@project/shared/app-types';
 import { JwtAuthGuard, JwtRefreshGuard, LocalAuthGuard } from '@project/database-service';
-import UserAuthRDO from './rdo/user-auth.rdo';
+
 
 @Controller('auth')
 export class AuthController {
@@ -30,8 +30,8 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   public async loginUser(@Req() { user }: RequestWithUser) {
-   const tokens = await this.authService.createUserToken(user);
-   return Object.assign(user, tokens);
+    const tokens = await this.authService.createUserToken(user);
+    return Object.assign(user, tokens);
   }
 
 

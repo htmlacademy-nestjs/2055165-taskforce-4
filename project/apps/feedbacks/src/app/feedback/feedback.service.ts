@@ -32,14 +32,19 @@ export class FeedbackService {
     return this.feedbackRepository.create(new FeedbackEntity(newFeedback));
   }
 
-  public async getExecutorFeedbacks(executorId: string, query: FeedbackQuery) {
 
-    return this.feedbackRepository.findByExecutorId(executorId, query);
+  public async getExecutorFeedbacks(query: FeedbackQuery) {
+    return this.feedbackRepository.findByExecutorId(query);
   }
 
 
   public async deleteFeedback(feedbackId: string) {
     await this.feedbackRepository.delete(feedbackId)
       .catch(() => {throw new NotFoundException('Feedback not found')});
+  }
+
+
+  public async getExecutorRatingStats() {
+    return this.feedbackRepository.getExecutorRatingStats();
   }
 }

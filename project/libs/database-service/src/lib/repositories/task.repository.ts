@@ -150,37 +150,49 @@ export class TaskRepository implements CRUDRepository<TaskEntity, Partial<Omit<T
 
 
   public async getUserTasksCount(userId: string, role: UserRole) {
+
     if (role === UserRole.Employer) {
-      const newTasksCount = await this.prisma.task.findMany({
+      const newTasksCount = await this.prisma.task.count({
         where: {
           employerId: userId,
           status: TaskStatus.New
         }
-      }).then((tasks) => tasks.length);
+      })
 
-
-      const publishedTasksCount = await this.prisma.task.findMany({
+      const publishedTasksCount = await this.prisma.task.count({
         where: {employerId: userId}
-      }).then((tasks) => tasks.length);
+      })
 
       return {newTasksCount, publishedTasksCount}
     }
 
 
-    const completedTasksCount = await this.prisma.task.findMany({
+    const [completed, failed] = await this.prisma.task.groupBy({
       where: {
-        status: TaskStatus.Completed,
-        replies: {every: { executorId: userId }}
+        replies: {every: { executorId: userId }},
+        OR: [
+          {status: TaskStatus.Failed},
+          {status: TaskStatus.Completed}
+        ]
       },
-    }).then((tasks) => tasks.length);
+      by: ['status'],
+      _count: true
+    })
 
-    const failedTasksCount = await this.prisma.task.findMany({
+    return {
+      completedTasksCount: completed?._count || 0,
+      failedTasksCount: failed?._count || 0
+    };
+  }
+
+
+  public async getFailedTasksCount() {
+    return this.prisma.reply.groupBy({
       where: {
-        status: TaskStatus.Failed,
-        replies: {every: {executorId: userId}}
+        task: {status: TaskStatus.Failed}
       },
-    }).then((tasks) => tasks.length);
-
-    return {completedTasksCount, failedTasksCount};
+      by: 'executorId',
+      _count: true
+    }).then((agg) => agg.map(({_count, executorId}) => ({failedTasksCount: _count || 0, executorId})))
   }
 }

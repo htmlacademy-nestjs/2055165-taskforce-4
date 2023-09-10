@@ -19,6 +19,8 @@ export * from './lib/rabbit-routing.enum'
 export * from './lib/request-with-user.interface'
 export * from './lib/request-with-token-payload.interface'
 export * from './lib/token.interface'
+export * from './lib/rating-stats.type'
+export * from './lib/failed-executors-tasks-count.type'
 
 export {Role as UserRole, City} from '.prisma/mongo-schema/index'
 export { TaskStatus } from '.prisma/postgres-schema/index'
