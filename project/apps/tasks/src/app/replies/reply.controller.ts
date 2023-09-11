@@ -4,12 +4,11 @@ import { ReplyService } from './reply.service';
 import CreateReplyDTO from './dto/create-reply.dto';
 import ReplyRDO from './rdo/reply.rdo';
 import DeleteReplyDTO from './dto/delete-reply.dto';
-import { AuthUser, CreateReplyGuard, JwtAuthGuard, RoleGuard, Roles } from '@project/database-service';
+import { CreateReplyGuard, DeleteReplyGuard, RoleGuard, Roles } from '@project/database-service';
 import { UserRole } from '@project/shared/app-types';
 
 @Controller('replies')
 @UsePipes(new ValidationPipe({whitelist: true, transform: true}))
-@UseGuards(JwtAuthGuard)
 export class ReplyController {
   constructor(
     private readonly replyService: ReplyService
@@ -18,12 +17,8 @@ export class ReplyController {
   @Post('/create')
   @Roles(UserRole.Executor)
   @UseGuards(RoleGuard, CreateReplyGuard)
-  public async createReply(
-    @AuthUser('sub') executorId: string,
-    @Body() dto: CreateReplyDTO
-    ) {
-
-    const newReply = await this.replyService.createReply(dto, executorId);
+  public async createReply(@Body() dto: CreateReplyDTO) {
+    const newReply = await this.replyService.createReply(dto);
     return fillRDO(ReplyRDO, newReply);
   }
 
@@ -37,13 +32,9 @@ export class ReplyController {
 
   @Delete('/delete')
   @Roles(UserRole.Executor)
-  @UseGuards(RoleGuard)
-  public async deleteReply(
-    @AuthUser('sub') executorId: string,
-    @Body() {taskId}: DeleteReplyDTO
-    ) {
-
-    await this.replyService.deleteReply(taskId, executorId);
+  @UseGuards(RoleGuard, DeleteReplyGuard)
+  public async deleteReply(@Body() dto: DeleteReplyDTO) {
+    await this.replyService.deleteReply(dto);
     return 'OK';
   }
 }

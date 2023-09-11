@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { CommentService } from '../comment/comment.service';
 import { FeedbackService } from './feedback.service';
@@ -8,13 +8,12 @@ import CommentRDO from '../comment/rdo/comment.rdo';
 import CreateFeedbackDTO from './dto/create-feedback.dto';
 import FeedbackRDO from './rdo/feedback.rdo';
 import DeleteCommentDTO from '../comment/dto/delete-comment.dto';
-import { AuthUser, CreateFeedbackGuard, DeleteCommentGuard, FeedbackQuery, JwtAuthGuard, RoleGuard, Roles } from '@project/database-service';
-import { GetTaskCommentsDTO } from '../comment/dto/get-task-comments.dto';
+import { CommentQuery, CreateFeedbackGuard, DeleteCommentGuard, DeleteFeedbackGuard, FeedbackQuery, RoleGuard, Roles } from '@project/database-service';
 import DeleteFeedbackDTO from './dto/delete-feedback.dto';
 import { UserRole } from '@project/shared/app-types';
 
 @Controller('feedbacks')
-@UsePipes(ValidationPipe)
+@UsePipes(new ValidationPipe({whitelist: true, transform: true}))
 export class FeedbackController {
   constructor(
     private readonly commentService: CommentService,
@@ -23,9 +22,7 @@ export class FeedbackController {
 
 
   @Post('/comment/create')
-  public async createComment(
-    @Body(new ValidationPipe({whitelist: true, transform: true})) dto: CreateCommentDTO
-    ) {
+  public async createComment(@Body() dto: CreateCommentDTO) {
     const newComment = await this.commentService.createComment(dto);
     return fillRDO(CommentRDO, newComment);
   }
@@ -40,44 +37,36 @@ export class FeedbackController {
 
 
   @Get('/comment')
-  @UseGuards(JwtAuthGuard)
-  public async getTaskComments(
-    @Query(new ValidationPipe({transform: true, whitelist: true})) query: FeedbackQuery,
-    @Body(new ValidationPipe({transform: true, whitelist: true})) {taskId}: GetTaskCommentsDTO
-    ) {
-
-      const comments = await this.commentService.getTaskComments(taskId, query);
-      return fillRDO(CommentRDO, comments)
+  public async getTaskComments(@Query() query: CommentQuery) {
+    const comments = await this.commentService.getTaskComments(query);
+    return fillRDO(CommentRDO, comments)
   }
 
 
   @Post('/feedback/create')
   @Roles(UserRole.Employer)
-  @UseGuards(JwtAuthGuard, RoleGuard, CreateFeedbackGuard)
-  public async createFeedback(
-    @AuthUser('sub') employerId: string,
-    @Body() dto: CreateFeedbackDTO) {
-    const newFeedBack = await this.feedbackService.createFeedBack(dto, employerId);
+  @UseGuards(RoleGuard, CreateFeedbackGuard)
+  public async createFeedback(@Body() dto: CreateFeedbackDTO) {
+    const newFeedBack = await this.feedbackService.createFeedBack(dto);
     return fillRDO(FeedbackRDO, newFeedBack);
   }
 
 
   @Delete('/feedback/delete')
   @Roles(UserRole.Employer)
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  public async deleteFeedback(@Body(new ValidationPipe({whitelist: true})) {feedbackId}: DeleteFeedbackDTO) {
+  @UseGuards(RoleGuard, DeleteFeedbackGuard)
+  public async deleteFeedback(@Body() {feedbackId}: DeleteFeedbackDTO) {
     await this.feedbackService.deleteFeedback(feedbackId)
     return 'OK'
   }
 
 
   @Get('/feedback')
-  @UseGuards(JwtAuthGuard)
   public async getExecutorFeedbacks(
     @Query(new ValidationPipe({transform: true, whitelist: true})) query: FeedbackQuery,
     ) {
       const feedbacks = await this.feedbackService.getExecutorFeedbacks(query);
-      return fillRDO(CommentRDO, feedbacks)
+      return fillRDO(FeedbackRDO, feedbacks)
   }
 
 

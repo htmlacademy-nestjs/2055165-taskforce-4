@@ -33,7 +33,6 @@ export class AuthenticationController {
   @Post('/login')
   public async login(@Body() dto: LoginUserDTO) {
     const { data: authInfo } = await this.httpService.axiosRef.post<UserAuthRDO>(`${this.baseAuthUrl}/login`, dto);
-    console.log('lrl', authInfo);
     const { data: user } = await this.httpService.axiosRef.get(`${this.baseUsersUrl}/${authInfo.id}`);
     return Object.assign(authInfo, user);
   }

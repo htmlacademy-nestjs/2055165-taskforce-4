@@ -10,10 +10,10 @@ export class FeedbackService {
     private readonly userRepository: UserRepository
   ){}
 
-  public async createFeedBack(dto: CreateFeedbackDTO, employerId: string) {
-    const {text, taskId, executorId, rating} = dto;
+  public async createFeedBack(dto: CreateFeedbackDTO) {
+    const {text, taskId, executorId, rating, userId} = dto;
 
-    const existEmployer = await this.userRepository.findById(employerId);
+    const existEmployer = await this.userRepository.findById(userId);
     if (!existEmployer) {
       throw new BadRequestException('Employer with such id not found');
     }

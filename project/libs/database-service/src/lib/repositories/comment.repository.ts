@@ -4,7 +4,7 @@ import { CRUDRepository } from '@project/util/util-types';
 import { Comment } from '@project/shared/app-types';
 import { CommentEntity } from '../entities/comment.entity';
 import { DatabaseService } from '../prisma/database.service';
-import { FeedbackQuery } from '../queries/feedback/feedback.query';
+import { CommentQuery } from '../queries/feedback/comment.query';
 
 @Injectable()
 export class CommentRepository implements CRUDRepository<CommentEntity, string, Comment> {
@@ -21,7 +21,7 @@ export class CommentRepository implements CRUDRepository<CommentEntity, string, 
   }
 
 
-  public async getCommentsByTaskId(taskId: number, {limit, page}: FeedbackQuery): Promise<Comment[]> {
+  public async getCommentsByTaskId({limit, page, taskId}: CommentQuery): Promise<Comment[]> {
     return this.prisma.comment.findMany({
       where: {taskId},
       take: limit,
@@ -29,6 +29,7 @@ export class CommentRepository implements CRUDRepository<CommentEntity, string, 
       skip: page && page > 0 ? limit * (page - 1) : undefined
     })
   }
+
 
   public async create(item: CommentEntity): Promise<Comment> {
     const commentData = item.toObject()

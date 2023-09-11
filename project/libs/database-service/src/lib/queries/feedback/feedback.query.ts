@@ -6,6 +6,7 @@ export class FeedbackQuery {
   @IsMongoId()
   public executorId!: string
 
+
   @IsInt()
   @Type(() => Number)
   @IsOptional()

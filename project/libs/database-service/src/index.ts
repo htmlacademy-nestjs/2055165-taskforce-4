@@ -26,6 +26,7 @@ export * from './lib/queries/task/task.query';
 export * from './lib/queries/task/user-tasks.query'
 export * from './lib/queries/task/user-tasks-count.query'
 export * from './lib/queries/feedback/feedback.query'
+export * from './lib/queries/feedback/comment.query'
 
 export * from './lib/strategies/jwt-access.strategy'
 
@@ -36,8 +37,10 @@ export * from './lib/guards/modify-task.guard'
 export * from './lib/guards/role.guard'
 export * from './lib/guards/pin-task.guard'
 export * from './lib/guards/create-reply.guard'
+export * from './lib/guards/delete-reply.guard'
 export * from './lib/guards/delete-comment.guard'
 export * from './lib/guards/create-feedback.guard'
+export * from './lib/guards/delete-feedback.guard'
 
 export * from './lib/decorators/auth-user.decorator'
 export * from './lib/decorators/roles.decorator'

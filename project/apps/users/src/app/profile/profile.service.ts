@@ -43,17 +43,16 @@ export class ProfileService {
   }
 
 
-  public async updateUserProfile(id: string, dto: UpdateUserDTO) {
-    const {password, newPassword, ...profileData} = dto;
+  public async updateUserProfile(dto: UpdateUserDTO) {
+    const {password, newPassword, userId, ...profileData} = dto;
 
-    const existUser = await this.userRepository.findById(id);
+    const existUser = await this.userRepository.findById(userId);
 
     if (!existUser) {
       throw new NotFoundException('User not found');
     }
 
     let userEntity = new UserEntity(existUser);
-
     let updateData: UpdateUserData;
 
     if (password && ! await userEntity.comparePassword(password)) {
@@ -70,7 +69,7 @@ export class ProfileService {
       updateData = profileData
     }
 
-    return this.userRepository.update(id, updateData);
+     await this.userRepository.update(userId, updateData);
   }
 
   private calcExecutorRating(executorId:string, stats: RawRatingStats[], tasksCount: RawFailedExecutorsTasksCount[]): RatingInfo {

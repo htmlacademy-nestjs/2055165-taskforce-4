@@ -2,6 +2,8 @@ import { IsInt, IsMongoId, IsNotEmpty, IsPositive, Max, MaxLength, Min, MinLengt
 import { FEEDBACK_LENGTH, FEEDBACK_RATING } from "../feedback.constants";
 
 export default class CreateFeedbackDTO {
+  @IsMongoId()
+  public userId!: string
 
   @MinLength(FEEDBACK_LENGTH.MIN)
   @MaxLength(FEEDBACK_LENGTH.MAX)

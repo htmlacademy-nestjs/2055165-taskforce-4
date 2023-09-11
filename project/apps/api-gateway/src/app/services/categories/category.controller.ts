@@ -4,7 +4,7 @@ import { CreateCategoryDTO } from "./dto/create-category.dto";
 import { HttpService } from "@nestjs/axios";
 import { ConfigService } from "@nestjs/config";
 import { AxiosExceptionFilter } from "../../shared/filters/axios-exception.filter";
-import { UserIdAndRoleRoleInterceptor } from "../../shared/interceptors/user-id-role.interceptor";
+import { UserIdAndRoleInterceptor } from "../../shared/interceptors/user-id-role.interceptor";
 
 @Controller('categories')
 @UseFilters(AxiosExceptionFilter)
@@ -20,7 +20,7 @@ export class CategoryController {
   }
 
   @Post('/create')
-  @UseInterceptors(UserIdAndRoleRoleInterceptor)
+  @UseInterceptors(UserIdAndRoleInterceptor)
   public async createOrGetExist(@Body() dto: CreateCategoryDTO) {
     const {data: category} = await this.httpService.axiosRef.post(`${this.baseCategoriesUrl}/create`, dto)
     return category

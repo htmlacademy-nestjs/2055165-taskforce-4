@@ -5,7 +5,7 @@ import { ProfileService } from './profile.service';
 import { fillRDO } from '@project/util/util-core';
 import UpdateUserDTO from './dto/update-user.dto';
 import UserFullRDO from './rdo/user-full.rdo';
-import { AuthUser, JwtAuthGuard, RoleGuard, Roles } from '@project/database-service';
+import { JwtAuthGuard, RoleGuard, Roles } from '@project/database-service';
 import { NotifyService } from '@project/shared/notify';
 import { RabbitRouting, UserRole } from '@project/shared/app-types';
 
@@ -25,14 +25,10 @@ export class ProfileController {
 
 
   @Patch('/profile/edit')
-  @UseGuards(JwtAuthGuard)
-  public async updateUserInfo
-    (
-      @AuthUser('sub') userId: string,
-      @Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateUserDTO
-    ) {
+  public async updateUserInfo(@Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateUserDTO) {
+    await this.profileService.updateUserProfile(data);
 
-    const updatedUser = await this.profileService.updateUserProfile(userId, data);
+    const updatedUser = await this.profileService.getUserProfile(data.userId)
     return fillRDO(UserFullRDO, updatedUser, [updatedUser.role]);
   }
 

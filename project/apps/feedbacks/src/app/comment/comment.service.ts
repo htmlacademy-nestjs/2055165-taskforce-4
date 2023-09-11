@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
-import {CommentRepository, CommentEntity, UserRepository, FeedbackQuery} from '@project/database-service';
+import {CommentRepository, CommentEntity, UserRepository, CommentQuery} from '@project/database-service';
 import CreateCommentDTO from './dto/create-comment.dto';
 
 @Injectable()
@@ -27,8 +27,8 @@ export class CommentService {
   }
 
 
-  public async getTaskComments(taskId: number, query: FeedbackQuery) {
-    return this.commentRepository.getCommentsByTaskId(taskId, query);
+  public async getTaskComments(query: CommentQuery) {
+    return this.commentRepository.getCommentsByTaskId(query);
   }
 
 
