@@ -33,10 +33,10 @@ export class CategoryRepository implements CRUDRepository<CategoryEntity, string
     })
   }
 
-  update(id: string, item: string): Promise<Category> {
+  update(): Promise<Category> {
     throw new Error("Method not implemented.");
   }
-  delete(id: string): Promise<void> {
+  delete(): Promise<void> {
     throw new Error("Method not implemented.");
   }
 }
