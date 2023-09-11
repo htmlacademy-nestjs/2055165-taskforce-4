@@ -6,7 +6,6 @@ import { TokenPayload, UserRole } from '@project/shared/app-types';
 export class RoleGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
-
   canActivate(cxt: ExecutionContext) {
     const roles = this.reflector.get<UserRole[]>('roles', cxt.getHandler());
     if (!roles) {
@@ -14,9 +13,9 @@ export class RoleGuard implements CanActivate {
     }
 
     const request = cxt.switchToHttp().getRequest();
-    const user = request.user as TokenPayload;
+    const {role} = request.body as TokenPayload;
 
-    if (!roles.includes(user.role)) {
+    if (!roles.includes(role)) {
       throw new ForbiddenException(`Forbidden resource. This endpoint only for ${roles.join(' ')} role.`)
     }
 

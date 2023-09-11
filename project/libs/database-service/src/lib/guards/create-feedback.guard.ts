@@ -1,18 +1,19 @@
 import { BadRequestException, CanActivate, ConflictException, ExecutionContext, ForbiddenException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
-import { JwtService }  from "@nestjs/jwt"
 
 import { DatabaseService } from "../prisma/database.service";
-import { TaskStatus, TokenPayload } from "@project/shared/app-types";
+import { TaskStatus } from "@project/shared/app-types";
 
 @Injectable()
 export class CreateFeedbackGuard implements CanActivate {
   private prismaPsqlConnector;
+  private prismaMongoConnector;
+
   constructor(
-    @Inject(JwtService) private readonly jwtService: JwtService,
     @Inject(DatabaseService) private readonly dbService: DatabaseService
   ){
     this.prismaPsqlConnector = dbService.prismaPostgresConnector;
+    this.prismaMongoConnector = dbService.prismaBaseMongoConnector;
   }
 
   async canActivate(cxt: ExecutionContext) {
@@ -23,10 +24,12 @@ export class CreateFeedbackGuard implements CanActivate {
       throw new UnauthorizedException('Permission denied. Only for authorized users.')
     }
 
-    const {id: employerId} = this.jwtService.decode(token) as TokenPayload;
-    const {taskId, executorId} = body;
+    const {taskId, executorId, userId} = body;
     const taskIdParsed = Number.parseInt(taskId)
 
+    if (!taskId || !executorId) {
+      throw new BadRequestException('Some required fields are missing. Check your request.');
+    }
 
     const task = await this.prismaPsqlConnector.task.findUnique({
       where: {taskId: taskIdParsed}
@@ -41,11 +44,18 @@ export class CreateFeedbackGuard implements CanActivate {
       }
     })
 
-    await this.prismaPsqlConnector.$disconnect()
+    const existFeedback = await this.prismaMongoConnector.feedBack.findUnique({
+      where: {taskId: taskIdParsed}
+    })
+
+    await this.prismaPsqlConnector.$disconnect();
+    await this.prismaMongoConnector.$disconnect();
 
     if (!task) throw new BadRequestException('Task not found')
 
-    if (task.employerId !== employerId) throw new ForbiddenException('You aren\'t employer of this task.')
+    if (existFeedback) throw new ConflictException('There is already another feedback on this task.')
+
+    if (task.employerId !== userId) throw new ForbiddenException('You aren\'t employer of this task.')
 
     if (!pinnedReply) throw new BadRequestException('This task was pinned to another executor')
 

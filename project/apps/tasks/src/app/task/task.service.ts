@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { TaskRepository, TaskEntity, CategoryRepository, UserTasksQuery, ReplyRepository } from '@project/database-service'
+import { TaskRepository, TaskEntity, CategoryRepository, UserTasksQuery, ReplyRepository, UserTasksCountQuery } from '@project/database-service'
 import { Task, TaskStatus, UserRole } from '@project/shared/app-types';
 import { TaskQuery } from '@project/database-service';
 import CreateTaskDTO from './dto/create-task.dto';
@@ -14,7 +14,7 @@ export class TaskService {
     private readonly replyRepository: ReplyRepository
   ){}
 
-  public async createTask(data: CreateTaskDTO, employerId: string) {
+  public async createTask(data: CreateTaskDTO) {
     const category = await this.categoryRepository.findById(data.categoryId);
 
     if (!category) {
@@ -25,7 +25,7 @@ export class TaskService {
       ...data,
       category,
       status: TaskStatus.New,
-      employerId,
+      employerId: data.userId,
       commentsCount: 0,
       repliesCount: 0
     }
@@ -38,9 +38,20 @@ export class TaskService {
     return this.taskRepository.findNewTasks(query);
   }
 
+
   public async getUserTasks(query: UserTasksQuery, userId: string, role: UserRole) {
     const tasks = await this.taskRepository.findUserTasks(query, userId, role);
     return tasks;
+  }
+
+
+  public async getUserTasksCount({userId, role}: UserTasksCountQuery) {
+    return this.taskRepository.getUserTasksCount(userId, role);
+  }
+
+
+  public async getFailedTasksCount() {
+    return this.taskRepository.getFailedTasksCount();
   }
 
 
@@ -81,7 +92,6 @@ export class TaskService {
   public async pinTask(taskId: number, executorId: string) {
 
     await this.replyRepository.pinTask(taskId, executorId);
-    //обновление исполнителя через брокер
     await this.taskRepository.update(taskId, {status: TaskStatus.InProgress});
   }
 }

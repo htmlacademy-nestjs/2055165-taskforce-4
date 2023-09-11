@@ -1,15 +1,15 @@
-# 64ebc8ae9b9f8e5d31b778db
-# 64ebc8ae9b9f8e5d31b778dc
+@tokenExecutor1 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkOGUwMjNjOWQzNTU2MGM2MWYwYjMiLCJuYW1lIjoiRXhlY3V0b3IxIiwiZW1haWwiOiJFeGVjdXRvcjFAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkV4ZWN1dG9yIiwiaWF0IjoxNjk0MzM4NTgxLCJleHAiOjE2OTQzMzkxODF9.F3YbfkdWlpUhJZcxY8AmaOQP0lB65oeXWf1KU5lU4q4
+@tokenExecutor2 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkZGE3YjVkYTRkYTAyYWNiZjAzNjEiLCJuYW1lIjoiRXhlY3V0b3IyIiwiZW1haWwiOiJFeGVjdXRvcjJAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkV4ZWN1dG9yIiwiaWF0IjoxNjk0MzU4MTU4LCJleHAiOjE2OTQzNTg3NTh9.ZArv_05aDtjU-XqWcfIec3wlf4FuavK8x7SoIq8WARk
 
+@tokenExecutor3 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZlMDVmMGEyYmQyMzQ1NjQyZDc3MDkiLCJuYW1lIjoiRXhlY3V0b3IzIiwiZW1haWwiOiJFeGVjdXRvcjNAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkV4ZWN1dG9yIiwiaWF0IjoxNjk0MzY5MjgxLCJleHAiOjE2OTQzNjk4ODF9.AAteue7lxaYZ2SrdIS3Em0KhZ3NqsI5PSKJGsVPspNg
 # Create new reply
 POST http://localhost:4000/api/replies/create HTTP/1.1
+Authorization: {{tokenExecutor3}}
 Content-Type: application/json
 
 {
   "text": "Новый Отклик",
-  "taskId": 27,
-  "executorId": "64ebc8ae9b9f8e5d31b778db"
-
+  "taskId": 39
 }
 
 ###

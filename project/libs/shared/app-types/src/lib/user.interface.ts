@@ -11,4 +11,5 @@ export interface User {
   birthDate: Date,
   city: City
   role: UserRole,
+  specialization?: string[]
 }

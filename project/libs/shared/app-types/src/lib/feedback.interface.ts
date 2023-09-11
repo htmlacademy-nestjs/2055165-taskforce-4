@@ -1,10 +1,10 @@
-import { Employer } from "./employer.interface";
+import { User } from "./user.interface";
 
 export interface Feedback {
   readonly feedbackId: string;
   text: string;
   taskId: number;
-  employer: Employer;
+  employer: User;
   executorId: string;
   rating: number;
 }

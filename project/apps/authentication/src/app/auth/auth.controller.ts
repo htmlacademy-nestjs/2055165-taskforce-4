@@ -1,12 +1,12 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { fillRDO } from '@project/util/util-core';
 import { AuthService } from './auth.service';
 import CreateUserDTO from './dto/create-user.dto';
 import UserBasicRDO from './rdo/user-basic.rdo';
-import AuthUserDTO from './dto/auth-user.dto';
-import AuthUserRDO from './rdo/auth-user.rdo';
 import { NotifyService } from '@project/shared/notify';
-import { RabbitRouting } from '@project/shared/app-types';
+import { RabbitRouting, RequestWithTokenPayload, RequestWithUser } from '@project/shared/app-types';
+import { JwtAuthGuard, JwtRefreshGuard, LocalAuthGuard } from '@project/database-service';
+
 
 @Controller('auth')
 export class AuthController {
@@ -15,21 +15,38 @@ export class AuthController {
     private readonly notifyService: NotifyService
   ) {}
 
+
   @Post('/register')
   public async createUser(@Body() data: CreateUserDTO) {
     const newUser = await this.authService.register(data);
 
     const { email, name } = newUser;
-    await this.notifyService.sendNotification({ email, name }, RabbitRouting.WelcomeMessage)
+    await this.notifyService.sendNotification({ email, name }, RabbitRouting.WelcomeMessage);
 
-    return fillRDO(UserBasicRDO, newUser);
+    return fillRDO(UserBasicRDO, newUser, [newUser.role]);
   }
 
+
+  @UseGuards(LocalAuthGuard)
   @Post('/login')
-  public async loginUser(@Body() dto: AuthUserDTO) {
-    const verifiedUser = await this.authService.authorize(dto);
-    const accessToken = await this.authService.createUserToken(verifiedUser);
-    return fillRDO(AuthUserRDO, Object.assign(verifiedUser, accessToken));
+  public async loginUser(@Req() { user }: RequestWithUser) {
+    const tokens = await this.authService.createUserToken(user);
+    console.log(tokens);
+    return Object.assign(tokens, {id: user.id});
+  }
+
+
+  @UseGuards(JwtRefreshGuard)
+  @Post('/refresh')
+  public async refreshToken(@Req() { user }: RequestWithUser) {
+    return this.authService.createUserToken(user);
+  }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/')
+  public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
+    return payload;
   }
 }
 

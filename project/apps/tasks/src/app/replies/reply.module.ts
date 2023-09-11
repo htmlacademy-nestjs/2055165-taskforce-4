@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ReplyService } from './reply.service';
 import { ReplyController } from './reply.controller';
 import { DatabaseModule, JwtAccessStrategy, ReplyRepository, TaskRepository } from '@project/database-service';
-import { ConfigAppsModule, getJwtOptions } from '@project/config-service';
+import { ConfigAppsModule, getJwtAccessOptions } from '@project/config-service';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -13,7 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.registerAsync({
       imports: [ConfigAppsModule],
       inject: [ConfigService],
-      useFactory: getJwtOptions
+      useFactory: getJwtAccessOptions
     })
   ],
   providers: [ReplyService, ReplyRepository, TaskRepository, JwtAccessStrategy],

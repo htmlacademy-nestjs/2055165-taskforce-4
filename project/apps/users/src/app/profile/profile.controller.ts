@@ -5,11 +5,11 @@ import { ProfileService } from './profile.service';
 import { fillRDO } from '@project/util/util-core';
 import UpdateUserDTO from './dto/update-user.dto';
 import UserFullRDO from './rdo/user-full.rdo';
-import { AuthUser, JwtAuthGuard, RoleGuard, Roles } from '@project/database-service';
+import { RoleGuard, Roles } from '@project/database-service';
 import { NotifyService } from '@project/shared/notify';
 import { RabbitRouting, UserRole } from '@project/shared/app-types';
+import SubscriberDTO from './dto/subscriber.dto';
 
-@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class ProfileController {
   constructor(
@@ -26,22 +26,20 @@ export class ProfileController {
 
 
   @Patch('/profile/edit')
-  public async updateUserInfo
-    (
-      @AuthUser('id') userId: string,
-      @Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateUserDTO
-    ) {
+  public async updateUserInfo(@Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateUserDTO) {
+    await this.profileService.updateUserProfile(data);
 
-    const updatedUser = await this.profileService.updateUserProfile(userId, data);
+    const updatedUser = await this.profileService.getUserProfile(data.userId)
     return fillRDO(UserFullRDO, updatedUser, [updatedUser.role]);
   }
 
 
-  @Post('/:id/subscribe')
+  @Post('/profile/subscribe')
   @Roles(UserRole.Executor)
   @UseGuards(RoleGuard)
-  public async addSubscriber(@Param('id', MongoidValidationPipe) userId: string) {
+  public async addSubscriber(@Body() {userId}: SubscriberDTO) {
     const {email, name} = await this.profileService.getUserProfile(userId);
     await this.notifyService.sendNotification({email, name}, RabbitRouting.AddSubscriber)
+    return 'Subscribed successfully.'
   }
 }

@@ -1,7 +1,7 @@
 import { UserRole } from "..";
 
 export interface TokenPayload {
-  id: string;
+  sub: string;
   name: string;
   email: string;
   role: UserRole;

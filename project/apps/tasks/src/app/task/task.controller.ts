@@ -5,12 +5,12 @@ import { fillRDO } from '@project/util/util-core';
 import TaskFullRDO from './rdo/task-full.rdo';
 import UpdateTaskDTO from './dto/update-task.dto';
 import TaskBasicRDO from './rdo/task-basic.rdo';
-import { AuthUser, JwtAuthGuard, ModifyTaskGuard, PinTaskGuard, RoleGuard, Roles, TaskQuery, UserTasksQuery } from '@project/database-service';
+import {  DeleteTaskGuard, ModifyTaskGuard, PinTaskGuard, RoleGuard, Roles, TaskQuery, UserTasksCountQuery, UserTasksQuery } from '@project/database-service';
 import PinTaskDTO from './dto/pin-task.dto';
-import { TokenPayload, UserRole } from '@project/shared/app-types';
+import { UserRole } from '@project/shared/app-types';
+import UserDTO from './dto/user.dto';
 
 @Controller('tasks')
-@UseGuards(JwtAuthGuard)
 export class TaskController {
   constructor(
     private readonly taskService: TaskService
@@ -25,13 +25,26 @@ export class TaskController {
     return fillRDO(TaskBasicRDO, tasks);
   }
 
+
   @Get('/mytasks')
   public async getUserTasks(
-    @AuthUser() userData: TokenPayload,
-    @Query(new ValidationPipe({whitelist: true, transform: true})) query: UserTasksQuery) {
-    const {id, role} = userData;
-    const tasks = await this.taskService.getUserTasks(query, id, role);
+    @Query(new ValidationPipe({whitelist: true, transform: true})) query: UserTasksQuery,
+    @Body() {userId, role}: UserDTO) {
+    const tasks = await this.taskService.getUserTasks(query, userId, role);
     return fillRDO(TaskBasicRDO, tasks);
+  }
+
+
+  @Get('/count')
+  public async getUserTasksCount(
+    @Query(new ValidationPipe({whitelist: true})) query: UserTasksCountQuery) {
+    return this.taskService.getUserTasksCount(query);
+  }
+
+
+  @Get('/failed-count')
+  public async getFailedTasksCount() {
+    return this.taskService.getFailedTasksCount();
   }
 
 
@@ -39,10 +52,9 @@ export class TaskController {
   @Roles(UserRole.Employer)
   @UseGuards(RoleGuard)
   public async createTask(
-    @AuthUser('id') userId: string,
     @Body(new ValidationPipe({whitelist: true, transform: true})) data: CreateTaskDTO) {
 
-    const newTask = await this.taskService.createTask(data, userId);
+    const newTask = await this.taskService.createTask(data);
     return fillRDO(TaskFullRDO, newTask);
   }
 
@@ -56,7 +68,7 @@ export class TaskController {
 
   @Delete('/:taskId')
   @Roles(UserRole.Employer)
-  @UseGuards(RoleGuard, ModifyTaskGuard)
+  @UseGuards(RoleGuard, DeleteTaskGuard)
   public async deleteTask(@Param('taskId', ParseIntPipe) taskId: number) {
     await this.taskService.deleteTask(taskId);
     return 'OK';

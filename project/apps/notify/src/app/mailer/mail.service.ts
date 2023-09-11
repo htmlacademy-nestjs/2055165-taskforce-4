@@ -3,7 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import dayjs from 'dayjs';
 
 import { Injectable } from '@nestjs/common';
-import { EMAIL_ADD_SUBSCRIBER_SUBJECT, NEW_TASKS_SUBJECT } from './mail.constants';
+import { EMAIL_ADD_SUBSCRIBER_SUBJECT, NEWCOMER_SUBJECT, NEW_TASKS_SUBJECT } from './mail.constants';
 import { ConfigService } from '@nestjs/config';
 import { SubscriberDTO } from '../email-subscriber/dto/subscriber.dto';
 import { EmailSubscriber, TaskStatus } from '@project/shared/app-types';
@@ -27,7 +27,7 @@ export class MailService {
     await this.mailerService.sendMail({
       from: this.configService.get('notify-app.mailer.from'),
       to: user.email,
-      subject: EMAIL_ADD_SUBSCRIBER_SUBJECT,
+      subject: NEWCOMER_SUBJECT,
       template: './welcome-email',
       context: {
         user: `${user.name}`,
@@ -84,7 +84,7 @@ export class MailService {
 
     await this.tasksDB.$disconnect();
 
-    subscribers.forEach(async ({email, name}) => {
+    await Promise.allSettled(subscribers.map(async({email, name}: EmailSubscriber) => {
       if (newTasks.length === 0) {
 
         await this.mailerService.sendMail({
@@ -122,7 +122,7 @@ export class MailService {
           );
         });
       }
-    })
+    }))
   }
 
 }

@@ -12,6 +12,7 @@ export class MongoidValidationPipe implements PipeTransform {
     }
 
     if (!ObjectID.isValid(value)) {
+      console.log(value);
       throw new BadRequestException(BAD_MONGOID_ERROR);
     }
 

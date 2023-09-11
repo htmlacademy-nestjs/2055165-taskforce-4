@@ -7,6 +7,8 @@ import { Transform } from "class-transformer";
 import dayjs from "dayjs";
 
 export default class UpdateUserDTO {
+  @IsMongoId()
+  public userId!: string
 
   @MinLength(NAME_LENGTH.MIN)
   @MaxLength(NAME_LENGTH.MAX)

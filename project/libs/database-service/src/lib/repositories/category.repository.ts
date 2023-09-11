@@ -33,18 +33,10 @@ export class CategoryRepository implements CRUDRepository<CategoryEntity, string
     })
   }
 
-
-  public async update(categoryId: number, newTitle: string): Promise<Category> {
-    return this.prisma.category.update({
-      where: {categoryId},
-      data: {title: newTitle}
-    })
+  update(id: string, item: string): Promise<Category> {
+    throw new Error("Method not implemented.");
   }
-
-
-  public async delete(categoryId: number): Promise<void> {
-    await this.prisma.category.delete({
-      where: {categoryId}
-    });
+  delete(id: string): Promise<void> {
+    throw new Error("Method not implemented.");
   }
 }

@@ -1,3 +1,7 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZhNTBjMDZlNjJlNGY5YTVhOTA4OTgiLCJuYW1lIjoiRXhlY3V0b3Itc3ViNyIsImVtYWlsIjoiRXhlY3V0b3Itc3ViN0BleGVjdXRvcnMubG9jYWwiLCJyb2xlIjoiRXhlY3V0b3IiLCJpYXQiOjE2OTQyNzY2NjMsImV4cCI6MTY5NDI3NzI2M30.EqqlWPNtQa68vQbPP4L9j8jZZyVujDgkOOY6umOxkr4
+
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZhNTBjMDZlNjJlNGY5YTVhOTA4OTgiLCJ0b2tlbklkIjoiNjkwNzMxNmEtYzMwOS00ZDRiLTllZTItZWI4MjAxMjAyM2M2IiwiaWF0IjoxNjk0MjE1NzU0LCJleHAiOjE2OTY4MDc3NTR9.GVAbCfhXbIzmgevGKBHCVA0bVR5n6s2uskI28et5O30
+
 # Create a new user
 POST http://localhost:3001/api/auth/register HTTP/1.1
 Content-Type: application/json
@@ -18,8 +22,19 @@ POST http://localhost:3001/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "Employer5@executors.local",
+  "email": "Executor1@executors.local",
   "password": "123456"
 }
 
+###
+
+# Get new JWT pair
+POST http://localhost:3001/api/auth/refresh HTTP/1.1
+Authorization: Bearer {{refreshToken}}
+###
+
+
+#Check access Token
+GET http://localhost:3001/api/auth/ HTTP/1.1
+Authorization: Bearer {{accessToken}}
 ###

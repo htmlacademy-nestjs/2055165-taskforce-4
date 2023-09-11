@@ -1,0 +1,33 @@
+@tokenExecutor = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkOGUwMjNjOWQzNTU2MGM2MWYwYjMiLCJuYW1lIjoiRXhlY3V0b3IxIiwiZW1haWwiOiJFeGVjdXRvcjFAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkV4ZWN1dG9yIiwiaWF0IjoxNjk0Mzg3NDk1LCJleHAiOjE2OTQzODgwOTV9.TR73WodgWD_35J6x-tFapozp-djNKHLSpX9r6vAKbGE
+@tokenEmployer = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZlZmM1YmNkNDEyMWI1NWExYmNiYjYiLCJuYW1lIjoiRW1wbG95ZXIxIiwiZW1haWwiOiJFbXBsb3llcjFAZW1wbG95ZXJzLmxvY2FsIiwicm9sZSI6IkVtcGxveWVyIiwiaWF0IjoxNjk0NDM0MDI2LCJleHAiOjE2OTQ0MzQ2MjZ9.VhsjAr5wSKZV38QKLwUn05zuqj4oNRPgmccrt8mtimk
+@tokenEmployer2 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkOGU3MTNjOWQzNTU2MGM2MWYwYjciLCJuYW1lIjoiRW1wbG95ZXIyIiwiZW1haWwiOiJFbXBsb3llcjJAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkVtcGxveWVyIiwiaWF0IjoxNjk0MzM4Njc2LCJleHAiOjE2OTQzMzkyNzZ9.SMGxyoxFrDQnaOKD135B0Ka7QvAOO8ykxVMBT8lTupo
+
+#
+POST  http://localhost:7007/api/feedbacks/comment/create HTTP/1.1
+Authorization: {{tokenEmployer}}
+Content-Type: application/json
+
+{
+  "taskId": 30,
+  "text": "tttttttttttttttttttttttttttttttttttttttttext"
+}
+###
+
+#
+DELETE  http://localhost:7007/api/feedbacks/comment/delete/ HTTP/1.1
+Authorization: {{tokenEmployer}}
+Content-Type: application/json
+
+{
+  "commentId": "64ff031b58d3440f04601fc5"
+}
+
+###
+
+#
+
+GET http://localhost:7007/api/feedbacks/comment?taskId=30&limit=2 HTTP/1.1
+Authorization: {{tokenEmployer}}
+Content-Type: application/json
+
+###

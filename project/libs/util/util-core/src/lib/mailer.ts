@@ -10,12 +10,12 @@ export function getMailerAsyncOptions(optionSpace: string): MailerAsyncOptions {
     useFactory: async (configService: ConfigService) => {
       return {
         transport: {
-          host: configService.get<string>(`${optionSpace}.host`),
-          port: configService.get<number>(`${optionSpace}.port`),
+          host: configService.getOrThrow<string>(`${optionSpace}.host`),
+          port: configService.getOrThrow<number>(`${optionSpace}.port`),
           secure: false,
           auth: {
-            user: configService.get<string>(`${optionSpace}.user`),
-            pass: configService.get<string>(`${optionSpace}.password`)
+            user: configService.getOrThrow<string>(`${optionSpace}.user`),
+            pass: configService.getOrThrow<string>(`${optionSpace}.password`)
           }
         },
         defaults: {

@@ -1,9 +1,9 @@
-import { Employer, Feedback } from "@project/shared/app-types";
+import { User, Feedback } from "@project/shared/app-types";
 
 export class FeedbackEntity implements Omit<Feedback, 'feedbackId'> {
   text!: string;
   taskId!: number;
-  employer!: Employer;
+  employer!: User;
   executorId!: string;
   rating!: number;
 

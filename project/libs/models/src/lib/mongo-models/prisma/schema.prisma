@@ -19,12 +19,6 @@ model User {
   city                City
   role                Role
   specialization      String[]
-  completedTasksCount Int?
-  failedTasksCount    Int?
-  rating              Float?
-  ratingPosition      Int?
-  publishedTasksCount Int?
-  newTasksCount       Int?
   comments            Comment[]
   feedbacks           FeedBack[]
   createdAt           DateTime   @default(now())
@@ -47,12 +41,22 @@ model FeedBack {
   feedbackId String @id @default(auto()) @map("_id") @db.ObjectId
   text       String
   rating     Int
-  taskId     Int
+  taskId     Int    @unique
   executorId String @db.ObjectId
   employer   User   @relation(fields: [employerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   employerId String @db.ObjectId
 
   @@map("feedbacks")
+}
+
+model RefreshSession {
+  id                  String     @id @default(auto()) @map("_id") @db.ObjectId
+  tokenId             String     @unique
+  userId              String
+  expiresIn           DateTime
+  createdAt           DateTime   @default(now())
+
+  @@map("refresh-sessions")
 }
 
 enum City {

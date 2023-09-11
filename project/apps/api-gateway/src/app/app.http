@@ -1,0 +1,18 @@
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZhNTBjMDZlNjJlNGY5YTVhOTA4OTgiLCJ0b2tlbklkIjoiY2QzYWZkZGMtNDdkZi00OTJlLTlmMDYtNDBkNTFjYmVlZTRjIiwiaWF0IjoxNjk0MjY3OTQ2LCJleHAiOjE2OTY4NTk5NDZ9.WGgUIWcpa2-hP_pcYsAQd3qTv_g66SNKpudCx79ABJk
+
+# Login user by email and password
+POST http://localhost:7007/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "Executor-sub7@executors.local",
+  "password": "123456"
+}
+
+###
+
+# Get new JWT pair
+POST http://localhost:7007/api/auth/refresh HTTP/1.1
+Authorization: Bearer {{refreshToken}}
+
+###

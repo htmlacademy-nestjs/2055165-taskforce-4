@@ -1,8 +1,7 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CategoryRepository, CategoryEntity } from '@project/database-service';
 import { CreateCategoryDTO } from './dto/create-category.dto';
-import { UpdateCategoryDTO } from './dto/update-category.dto';
 
 
 
@@ -36,22 +35,5 @@ export class CategoryService {
       throw new NotFoundException('Category not found');
     }
     return existCategory
-  }
-
-
-  public async updateCategory(categoryId: number, dto: UpdateCategoryDTO) {
-    const {title: newTitle} = dto;
-    const existCategory = await this.categoryRepository.findByTitle(newTitle);
-
-    if (existCategory) {
-      throw new ConflictException('The category with such title already exists.')
-    }
-
-    return this.categoryRepository.update(categoryId, newTitle);
-  }
-
-
-  public async deleteCategory(categoryId: number) {
-    return this.categoryRepository.delete(categoryId);
   }
 }

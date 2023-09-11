@@ -6,6 +6,7 @@ import {PrismaClient as PrismaPostgresClient} from ".prisma/postgres-schema"
 import {PrismaClient as PrismaFsClient } from ".prisma/file-schema"
 import {PrismaClient as PrismaNotifyClient } from ".prisma/subscriber-schema";
 import { getMongoConnectionString, getPostgresConnectionString } from "@project/util/util-core"
+import { DbConfig } from "@project/config-service";
 
 
 @Injectable()
@@ -18,37 +19,23 @@ export class DatabaseService implements OnModuleInit {
 
   constructor(private configService: ConfigService) {
 
-    const mongoConfig = configService.get('mongo-db');
-    const mongoURL = getMongoConnectionString(mongoConfig)
-
-    const mongoFsConfig = configService.get('mongo-db-fs');
-    const mongoFsURL = getMongoConnectionString(mongoFsConfig);
-
-    const mongoNotifyConfig = configService.get('mongo-db-notify');
-    const mongoNotifyURL = getMongoConnectionString(mongoNotifyConfig);
-
-    const postgresConfig = configService.get('postgres-db');
-    const postgresURL = getPostgresConnectionString(postgresConfig)
-
-
-
     this.mongoBaseConnector = new PrismaBaseMongoClient({
-      datasources: { db: { url: mongoURL } }
+      datasources: { db: { url: getMongoConnectionString(configService.getOrThrow<DbConfig>('mongo-db')) } }
     })
 
 
     this.mongoFsConnector = new PrismaFsClient({
-      datasources: { db: { url: mongoFsURL } }
+      datasources: { db: { url: getMongoConnectionString(configService.getOrThrow<DbConfig>('mongo-db-fs')) } }
     })
 
 
     this.mongoNotifyConnector = new PrismaNotifyClient({
-      datasources: { db: { url: mongoNotifyURL } }
+      datasources: { db: { url: getMongoConnectionString(configService.getOrThrow<DbConfig>('mongo-db-notify')) } }
     })
 
 
     this.psqlConnector = new PrismaPostgresClient({
-      datasources: { db: { url: postgresURL } }
+      datasources: { db: { url: getPostgresConnectionString(configService.getOrThrow<DbConfig>('postgres-db')) } }
     })
   }
 
