@@ -9,7 +9,6 @@ import { AuthUser, JwtAuthGuard, RoleGuard, Roles } from '@project/database-serv
 import { NotifyService } from '@project/shared/notify';
 import { RabbitRouting, UserRole } from '@project/shared/app-types';
 
-@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class ProfileController {
   constructor(
@@ -26,6 +25,7 @@ export class ProfileController {
 
 
   @Patch('/profile/edit')
+  @UseGuards(JwtAuthGuard)
   public async updateUserInfo
     (
       @AuthUser('sub') userId: string,
@@ -39,7 +39,7 @@ export class ProfileController {
 
   @Post('/:id/subscribe')
   @Roles(UserRole.Executor)
-  @UseGuards(RoleGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   public async addSubscriber(@Param('id', MongoidValidationPipe) userId: string) {
     const {email, name} = await this.profileService.getUserProfile(userId);
     await this.notifyService.sendNotification({email, name}, RabbitRouting.AddSubscriber)

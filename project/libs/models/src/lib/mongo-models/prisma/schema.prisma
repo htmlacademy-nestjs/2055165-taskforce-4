@@ -19,12 +19,6 @@ model User {
   city                City
   role                Role
   specialization      String[]
-  completedTasksCount Int?
-  failedTasksCount    Int?
-  rating              Float?
-  ratingPosition      Int?
-  publishedTasksCount Int?
-  newTasksCount       Int?
   comments            Comment[]
   feedbacks           FeedBack[]
   createdAt           DateTime   @default(now())

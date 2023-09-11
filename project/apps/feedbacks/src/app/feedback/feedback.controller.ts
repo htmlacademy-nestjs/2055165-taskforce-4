@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { CommentService } from '../comment/comment.service';
 import { FeedbackService } from './feedback.service';
@@ -23,20 +23,17 @@ export class FeedbackController {
 
 
   @Post('/comment/create')
-  @UseGuards(JwtAuthGuard)
   public async createComment(
-    @AuthUser('sub') authorId: string,
     @Body(new ValidationPipe({whitelist: true, transform: true})) dto: CreateCommentDTO
     ) {
-    const newComment = await this.commentService.createComment(dto, authorId);
+    const newComment = await this.commentService.createComment(dto);
     return fillRDO(CommentRDO, newComment);
   }
 
 
   @Delete('/comment/delete')
-  @UseGuards(JwtAuthGuard)
   @UseGuards(DeleteCommentGuard)
-  public async deleteComment(@Body(new ValidationPipe({whitelist: true})) {commentId}: DeleteCommentDTO) {
+  public async deleteComment(@Body() {commentId}: DeleteCommentDTO) {
     await this.commentService.deleteComment(commentId)
     return 'OK'
   }

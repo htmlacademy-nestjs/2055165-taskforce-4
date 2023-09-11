@@ -4,11 +4,13 @@ import { ConfigService } from '@nestjs/config';
 
 import { AppModule } from './app/app.module';
 import { RequestIdInterceptor } from './app/shared/interceptors/request-id.interceptor';
+import { AxiosExceptionFilter } from './app/shared/filters/axios-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+  app.useGlobalFilters(new AxiosExceptionFilter())
   app.useGlobalInterceptors(new RequestIdInterceptor());
 
   const configService = app.get(ConfigService)

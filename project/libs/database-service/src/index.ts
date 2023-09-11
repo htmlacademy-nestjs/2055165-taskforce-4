@@ -1,6 +1,4 @@
 export * from './lib/entities/user.entity';
-export * from './lib/entities/employer.entity';
-export * from './lib/entities/executor.entity';
 export * from './lib/entities/category.entity';
 export * from './lib/entities/task.entity';
 export * from './lib/entities/reply.entity';

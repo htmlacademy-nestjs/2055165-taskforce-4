@@ -21,7 +21,7 @@ POST http://localhost:7007/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "Executor1@executors.local",
+  "email": "Employer1@employers.local",
   "password": "123456"
 }
 

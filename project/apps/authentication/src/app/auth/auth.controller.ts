@@ -21,7 +21,7 @@ export class AuthController {
     const newUser = await this.authService.register(data);
 
     const { email, name } = newUser;
-    await this.notifyService.sendNotification({ email, name }, RabbitRouting.WelcomeMessage)
+    await this.notifyService.sendNotification({ email, name }, RabbitRouting.WelcomeMessage);
 
     return fillRDO(UserBasicRDO, newUser, [newUser.role]);
   }
@@ -31,7 +31,8 @@ export class AuthController {
   @Post('/login')
   public async loginUser(@Req() { user }: RequestWithUser) {
     const tokens = await this.authService.createUserToken(user);
-    return Object.assign(user, tokens);
+    console.log(tokens);
+    return Object.assign(tokens, {id: user.id});
   }
 
 

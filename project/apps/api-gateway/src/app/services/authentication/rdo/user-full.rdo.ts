@@ -2,7 +2,7 @@ import { City, UserRole } from "@project/shared/app-types";
 import { Expose, Transform } from "class-transformer";
 import dayjs from "dayjs";
 
-export default class UserAuthFullRDO {
+export default class UserFullRDO {
   @Expose()
   public id!: number;
 
@@ -55,10 +55,4 @@ export default class UserAuthFullRDO {
 
   @Expose({groups: [UserRole.Executor]})
   public ratingPosition!: number;
-
-  @Expose()
-  public accessToken!: string;
-
-  @Expose()
-  public refreshToken!: string;
 }

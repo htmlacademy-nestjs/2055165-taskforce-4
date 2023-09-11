@@ -1,7 +1,5 @@
 export * from './lib/app-config.interface'
 export * from './lib/user.interface';
-export * from './lib/employer.interface';
-export * from './lib/executor.interface';
 export * from './lib/update-user-data.type';
 export * from './lib/feedback.interface';
 export * from './lib/task.interface';

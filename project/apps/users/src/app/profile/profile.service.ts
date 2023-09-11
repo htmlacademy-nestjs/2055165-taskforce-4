@@ -7,7 +7,6 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import TasksCountRDO from './rdo/tasks-count.rdo';
 
-
 type RatingInfo = {
   rating?: number,
   ratingPosition?: number
@@ -33,19 +32,14 @@ export class ProfileService {
     const baseFeedbacksUrl = this.configService.getOrThrow<string>('gateway.serviceURLs.feedbacks')
 
     const { data: userTasksCount } = await this.httpService.axiosRef.get<TasksCountRDO>(`${baseTasksUrl}/count?userId=${existUser.id}&role=${existUser.role}`);
-
+    let ratingInfo = {};
     if (existUser.role === UserRole.Executor) {
-      const {data: executorsRatingStats} = await this.httpService.axiosRef.get<RawRatingStats[]>(`${baseFeedbacksUrl}/feedback/executors-stats`).catch((err) => {console.log(err); throw new Error(err)});
-      const {data: failedExecutorsTasksCount } = await this.httpService.axiosRef.get<RawFailedExecutorsTasksCount[]>(`${baseTasksUrl}/failed-count`).catch((err) => {console.log(err); throw new Error(err)});
-      const ratingInfo = this.calcExecutorRating(existUser.id, executorsRatingStats, failedExecutorsTasksCount);
-      console.log(ratingInfo);
-
+      const {data: executorsRatingStats} = await this.httpService.axiosRef.get<RawRatingStats[]>(`${baseFeedbacksUrl}/feedback/executors-stats`);
+      const {data: failedExecutorsTasksCount } = await this.httpService.axiosRef.get<RawFailedExecutorsTasksCount[]>(`${baseTasksUrl}/failed-count`);
+      ratingInfo = this.calcExecutorRating(existUser.id, executorsRatingStats, failedExecutorsTasksCount);
     }
 
-    // console.log(userTasksCount);
-
-
-    return existUser;
+    return Object.assign(existUser, userTasksCount, ratingInfo);
   }
 
 
@@ -90,8 +84,6 @@ export class ProfileService {
       return {executorId, rating};
     })
 
-    console.log(info);
-
     info.sort((a, b) => b.rating - a.rating);
     const ratingValue = info.find((executorInfo) => executorInfo.executorId === executorId)?.rating;
 
@@ -99,6 +91,5 @@ export class ProfileService {
       rating: ratingValue,
       ratingPosition: ratingValue ? info.findIndex((executorInfo) => executorInfo.executorId === executorId) + 1 : ratingValue
     }
-
   }
 }

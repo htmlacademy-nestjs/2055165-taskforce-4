@@ -10,10 +10,9 @@ export class CommentService {
     private readonly userRepository: UserRepository
   ) {}
 
-  public async createComment(dto: CreateCommentDTO, authorId: string) {
-    const {taskId, text} = dto;
+  public async createComment({taskId, text, userId}: CreateCommentDTO) {
 
-    const existUser = await this.userRepository.findById(authorId);
+    const existUser = await this.userRepository.findById(userId);
     if (!existUser) {
       throw new BadRequestException('Author with such id not found');
     }

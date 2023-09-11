@@ -2,7 +2,6 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 
 import { FeedbackEntity, FeedbackQuery, FeedbackRepository, UserRepository } from '@project/database-service';
 import CreateFeedbackDTO from './dto/create-feedback.dto';
-import { Employer } from '@project/shared/app-types';
 
 @Injectable()
 export class FeedbackService {
@@ -14,9 +13,7 @@ export class FeedbackService {
   public async createFeedBack(dto: CreateFeedbackDTO, employerId: string) {
     const {text, taskId, executorId, rating} = dto;
 
-
-
-    const existEmployer = await this.userRepository.findById(employerId) as Employer;
+    const existEmployer = await this.userRepository.findById(employerId);
     if (!existEmployer) {
       throw new BadRequestException('Employer with such id not found');
     }

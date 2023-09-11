@@ -4,8 +4,8 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
-import { UserRepository, EmployerEntity, ExecutorEntity, UserEntity } from '@project/database-service';
-import { User, UserRole } from '@project/shared/app-types';
+import { UserRepository, UserEntity } from '@project/database-service';
+import { User } from '@project/shared/app-types';
 import AuthUserDTO from './dto/auth-user.dto';
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './auth.constants';
 import CreateUserDTO from './dto/create-user.dto';
@@ -22,32 +22,6 @@ export class AuthService {
     private readonly configService: ConfigService
   ) {}
 
-
-  private generateEmployerAdditionalFields = (user: Omit<User, 'id'>): EmployerEntity =>
-    new EmployerEntity(Object.assign(user, {
-      publishedTasksCount: 0,
-      newTasksCount: 0
-    })
-  );
-
-
-  private generateExecutorAdditionalFields = (user: Omit<User, 'id'>): ExecutorEntity =>
-    new ExecutorEntity(Object.assign(user, {
-      specialization: [],
-      completedTasksCount: 0,
-      failedTasksCount: 0,
-      rating: 0,
-      ratingPosition: 0
-    })
-  );
-
-
-  private readonly additionalFields = {
-    [UserRole.Employer]: this.generateEmployerAdditionalFields,
-    [UserRole.Executor]: this.generateExecutorAdditionalFields
-  }
-
-
   public async register(data: CreateUserDTO): Promise<User> {
     const {password, ...profileData} = data;
 
@@ -57,7 +31,7 @@ export class AuthService {
       throw new ConflictException(AUTH_USER_EXISTS);
     }
 
-    const newUser = await this.additionalFields[profileData.role](profileData).setPassword(password);
+    const newUser = await new UserEntity(profileData).setPassword(password);
 
     return this.userRepository.create(newUser);
   }
