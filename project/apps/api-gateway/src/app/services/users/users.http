@@ -1,0 +1,38 @@
+@tokenExecutor1 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkOGUwMjNjOWQzNTU2MGM2MWYwYjMiLCJuYW1lIjoiRXhlY3V0b3IxIiwiZW1haWwiOiJFeGVjdXRvcjFAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkV4ZWN1dG9yIiwiaWF0IjoxNjk0MzM4NTgxLCJleHAiOjE2OTQzMzkxODF9.F3YbfkdWlpUhJZcxY8AmaOQP0lB65oeXWf1KU5lU4q4
+@tokenExecutor2 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZkZGE3YjVkYTRkYTAyYWNiZjAzNjEiLCJuYW1lIjoiRXhlY3V0b3IyIiwiZW1haWwiOiJFeGVjdXRvcjJAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkV4ZWN1dG9yIiwiaWF0IjoxNjk0MzU4MTU4LCJleHAiOjE2OTQzNTg3NTh9.ZArv_05aDtjU-XqWcfIec3wlf4FuavK8x7SoIq8WARk
+
+@tokenExecutor3 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGZlMDVmMGEyYmQyMzQ1NjQyZDc3MDkiLCJuYW1lIjoiRXhlY3V0b3IzIiwiZW1haWwiOiJFeGVjdXRvcjNAZXhlY3V0b3JzLmxvY2FsIiwicm9sZSI6IkV4ZWN1dG9yIiwiaWF0IjoxNjk0MzY5MjgxLCJleHAiOjE2OTQzNjk4ODF9.AAteue7lxaYZ2SrdIS3Em0KhZ3NqsI5PSKJGsVPspNg
+
+#Get Employer info
+GET  http://localhost:7007/api/users/64fd8e503c9d35560c61f0b5 HTTP/1.1
+
+###
+
+#Get Executor info
+GET  http://localhost:7007/api/users/64fdda7b5da4da02acbf0361 HTTP/1.1
+
+
+###
+
+#Update user info
+Patch  http://localhost:7007/api/users/profile/edit HTTP/1.1
+Authorization: {{tokenExecutor1}}
+Content-Type: application/json
+
+{
+  "name": "update name2"
+}
+###
+
+#Subscribe user
+Post  http://localhost:7007/api/users/profile/subscribe HTTP/1.1
+Authorization: {{tokenExecutor1}}
+Content-Type: application/json
+
+{
+  "userId": "64fd8e023c9d35560c61f0b3",
+  "role": "Executor"
+}
+###
+
+

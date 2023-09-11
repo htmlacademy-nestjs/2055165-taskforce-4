@@ -5,9 +5,10 @@ import { fillRDO } from '@project/util/util-core';
 import TaskFullRDO from './rdo/task-full.rdo';
 import UpdateTaskDTO from './dto/update-task.dto';
 import TaskBasicRDO from './rdo/task-basic.rdo';
-import { AuthUser, JwtAuthGuard, ModifyTaskGuard, PinTaskGuard, RoleGuard, Roles, TaskQuery, UserTasksCountQuery, UserTasksQuery } from '@project/database-service';
+import {  DeleteTaskGuard, ModifyTaskGuard, PinTaskGuard, RoleGuard, Roles, TaskQuery, UserTasksCountQuery, UserTasksQuery } from '@project/database-service';
 import PinTaskDTO from './dto/pin-task.dto';
-import { TokenPayload, UserRole } from '@project/shared/app-types';
+import { UserRole } from '@project/shared/app-types';
+import UserDTO from './dto/user.dto';
 
 @Controller('tasks')
 export class TaskController {
@@ -18,7 +19,7 @@ export class TaskController {
 
   @Get('/')
   @Roles(UserRole.Executor)
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseGuards(RoleGuard)
   public async getNewTasks(@Query(new ValidationPipe({whitelist: true, transform: true})) query: TaskQuery) {
     const tasks = await this.taskService.getNewTasks(query);
     return fillRDO(TaskBasicRDO, tasks);
@@ -26,11 +27,9 @@ export class TaskController {
 
 
   @Get('/mytasks')
-  @UseGuards(JwtAuthGuard)
   public async getUserTasks(
-    @AuthUser() userData: TokenPayload,
-    @Query(new ValidationPipe({whitelist: true, transform: true})) query: UserTasksQuery) {
-    const {sub: userId, role} = userData;
+    @Query(new ValidationPipe({whitelist: true, transform: true})) query: UserTasksQuery,
+    @Body() {userId, role}: UserDTO) {
     const tasks = await this.taskService.getUserTasks(query, userId, role);
     return fillRDO(TaskBasicRDO, tasks);
   }
@@ -51,18 +50,16 @@ export class TaskController {
 
   @Post('/create')
   @Roles(UserRole.Employer)
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseGuards(RoleGuard)
   public async createTask(
-    @AuthUser('sub') userId: string,
     @Body(new ValidationPipe({whitelist: true, transform: true})) data: CreateTaskDTO) {
 
-    const newTask = await this.taskService.createTask(data, userId);
+    const newTask = await this.taskService.createTask(data);
     return fillRDO(TaskFullRDO, newTask);
   }
 
 
   @Get('/:taskId')
-  @UseGuards(JwtAuthGuard)
   public async getTask(@Param('taskId', ParseIntPipe) taskId: number) {
     const existTask = await this.taskService.getTaskDetails(taskId);
     return fillRDO(TaskFullRDO, existTask);
@@ -71,7 +68,7 @@ export class TaskController {
 
   @Delete('/:taskId')
   @Roles(UserRole.Employer)
-  @UseGuards(JwtAuthGuard, RoleGuard, ModifyTaskGuard)
+  @UseGuards(RoleGuard, DeleteTaskGuard)
   public async deleteTask(@Param('taskId', ParseIntPipe) taskId: number) {
     await this.taskService.deleteTask(taskId);
     return 'OK';
@@ -79,7 +76,7 @@ export class TaskController {
 
 
   @Patch('/:taskId')
-  @UseGuards(JwtAuthGuard, ModifyTaskGuard)
+  @UseGuards(ModifyTaskGuard)
   public async updateTask(
     @Param('taskId', ParseIntPipe) taskId: number,
     @Body(new ValidationPipe({whitelist: true, transform: true})) data: UpdateTaskDTO
@@ -90,10 +87,9 @@ export class TaskController {
   }
 
 
-
   @Post('/:taskId/pin-task')
   @Roles(UserRole.Employer)
-  @UseGuards(JwtAuthGuard, RoleGuard, PinTaskGuard)
+  @UseGuards(RoleGuard, PinTaskGuard)
   public async pinTask(
     @Param('taskId', ParseIntPipe) taskId: number,
     @Body(ValidationPipe) {executorId}: PinTaskDTO

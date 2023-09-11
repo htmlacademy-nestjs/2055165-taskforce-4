@@ -14,7 +14,7 @@ export class TaskService {
     private readonly replyRepository: ReplyRepository
   ){}
 
-  public async createTask(data: CreateTaskDTO, employerId: string) {
+  public async createTask(data: CreateTaskDTO) {
     const category = await this.categoryRepository.findById(data.categoryId);
 
     if (!category) {
@@ -25,7 +25,7 @@ export class TaskService {
       ...data,
       category,
       status: TaskStatus.New,
-      employerId,
+      employerId: data.userId,
       commentsCount: 0,
       repliesCount: 0
     }

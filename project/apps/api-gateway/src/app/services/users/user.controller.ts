@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Patch, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CheckAuthGuard } from '../../shared/guards/check-auth-guard';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { UserIdAndRoleInterceptor } from '../../shared/interceptors/user-id-role.interceptor';
 import UpdateUserDTO from './dto/update-user.dto';
+import SubscriberDTO from './dto/subscriber.dto';
 
 @Controller('users')
 export class UserController {
@@ -29,5 +30,12 @@ export class UserController {
   public async updateUserInfo(@Body() data: UpdateUserDTO) {
     const {data: updatedUser} = await this.httpService.axiosRef.patch(`${this.baseUsersUrl}/profile/edit`, data)
     return updatedUser
+  }
+
+
+  @Post('/profile/subscribe')
+  @UseGuards(CheckAuthGuard)
+  public async addSubscriber(@Body() dto: SubscriberDTO) {
+    return this.httpService.axiosRef.post(`${this.baseUsersUrl}/profile/subscribe`, dto);
   }
 }

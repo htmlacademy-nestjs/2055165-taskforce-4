@@ -6,6 +6,9 @@ import { Transform, Type } from "class-transformer";
 
 export default class CreateTaskDTO {
 
+  @IsMongoId()
+  public userId!: string
+
   @MinLength(TITLE_LENGTH.MIN)
   @MaxLength(TITLE_LENGTH.MAX)
   public title!: string;
